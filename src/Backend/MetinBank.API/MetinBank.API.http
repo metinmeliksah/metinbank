@@ -1,0 +1,6 @@
+@MetinBank.API_HostAddress = http://localhost:5128
+
+GET {{MetinBank.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
