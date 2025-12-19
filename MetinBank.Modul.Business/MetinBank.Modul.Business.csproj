@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MetinBank.Entities\MetinBank.Entities.csproj" />
+    <ProjectReference Include="..\MetinBank.Modul.Interface\MetinBank.Modul.Interface.csproj" />
+    <ProjectReference Include="..\MetinBank.Modul.SPObject\MetinBank.Modul.SPObject.csproj" />
+  </ItemGroup>
+
+</Project>
