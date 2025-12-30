@@ -78,6 +78,7 @@ namespace MetinBank.Forms
             this.Name = "FrmMusteriIslem";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Müşteri İşlemleri";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmMusteriIslem_Load);
             ((System.ComponentModel.ISupportInitialize)(this.txtArama.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMusteriler)).EndInit();

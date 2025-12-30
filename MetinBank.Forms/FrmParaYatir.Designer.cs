@@ -97,6 +97,7 @@ namespace MetinBank.Forms
             this.Name = "FrmParaYatir";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Para Yatır";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmParaYatir_Load);
             ((System.ComponentModel.ISupportInitialize)(this.txtHesapID.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTutar)).EndInit();

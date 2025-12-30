@@ -137,6 +137,7 @@ namespace MetinBank.Forms
             this.Name = "FrmHesapIslem";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hesap İşlemleri";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmHesapIslem_Load);
             ((System.ComponentModel.ISupportInitialize)(this.txtMusteriID.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbHesapTipi.Properties)).EndInit();

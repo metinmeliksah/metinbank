@@ -80,6 +80,7 @@ namespace MetinBank.Forms
             this.Name = "FrmOnayBekleyenler";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Onay Bekleyen İşlemler";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmOnayBekleyenler_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridOnaylar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewOnaylar)).EndInit();

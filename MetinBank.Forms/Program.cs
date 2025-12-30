@@ -17,7 +17,6 @@ namespace MetinBank.Forms
             Application.SetCompatibleTextRenderingDefault(false);
             
             // DevExpress Tema Ayarları
-            DevExpress.UserSkins.BonusSkins.Register();
             UserLookAndFeel.Default.SetSkinStyle("Office 2019 Colorful");
             
             Application.Run(new FrmGiris());

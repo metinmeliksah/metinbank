@@ -153,6 +153,7 @@ namespace MetinBank.Forms
             this.Name = "FrmHavaleEFT";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Havale / EFT";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmHavaleEFT_Load);
             ((System.ComponentModel.ISupportInitialize)(this.cmbIslemTipi.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtKaynakHesapID.Properties)).EndInit();

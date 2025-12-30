@@ -53,6 +53,7 @@
     <Reference Include="DevExpress.Utils.v25.1, Version=25.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Sparkline.v25.1.Core, Version=25.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraEditors.v25.1, Version=25.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraBars.v25.1, Version=25.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Printing.v25.1.Core, Version=25.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraGrid.v25.1, Version=25.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraLayout.v25.1, Version=25.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -111,6 +112,18 @@
     </Compile>
     <Compile Include="FrmMusteriEkle.Designer.cs">
       <DependentUpon>FrmMusteriEkle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmKartlar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmKartlar.Designer.cs">
+      <DependentUpon>FrmKartlar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmBasvurular.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBasvurular.Designer.cs">
+      <DependentUpon>FrmBasvurular.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

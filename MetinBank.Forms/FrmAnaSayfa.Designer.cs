@@ -3,15 +3,25 @@ namespace MetinBank.Forms
     partial class FrmAnaSayfa
     {
         private System.ComponentModel.IContainer components = null;
-        private DevExpress.XtraEditors.LabelControl lblHosgeldin;
-        private DevExpress.XtraEditors.LabelControl lblRol;
-        private DevExpress.XtraEditors.LabelControl lblSube;
-        private DevExpress.XtraEditors.SimpleButton btnMusteriIslem;
-        private DevExpress.XtraEditors.SimpleButton btnHesapIslem;
-        private DevExpress.XtraEditors.SimpleButton btnParaYatir;
-        private DevExpress.XtraEditors.SimpleButton btnParaCek;
-        private DevExpress.XtraEditors.SimpleButton btnHavaleEFT;
-        private DevExpress.XtraEditors.SimpleButton btnOnayBekleyenler;
+        private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPageIslemler;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPageYonetim;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroupMusteri;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroupHesap;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroupIslem;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroupKart;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroupOnay;
+        private DevExpress.XtraBars.BarButtonItem btnMusteriIslem;
+        private DevExpress.XtraBars.BarButtonItem btnHesapIslem;
+        private DevExpress.XtraBars.BarButtonItem btnParaYatir;
+        private DevExpress.XtraBars.BarButtonItem btnParaCek;
+        private DevExpress.XtraBars.BarButtonItem btnHavaleEFT;
+        private DevExpress.XtraBars.BarButtonItem btnKartlar;
+        private DevExpress.XtraBars.BarButtonItem btnBasvurular;
+        private DevExpress.XtraBars.BarButtonItem btnOnayBekleyenler;
+        private DevExpress.XtraBars.BarStaticItem barStaticKullanici;
+        private DevExpress.XtraBars.BarStaticItem barStaticRol;
+        private DevExpress.XtraBars.BarStaticItem barStaticSube;
 
         protected override void Dispose(bool disposing)
         {
@@ -24,92 +34,179 @@ namespace MetinBank.Forms
 
         private void InitializeComponent()
         {
-            this.lblHosgeldin = new DevExpress.XtraEditors.LabelControl();
-            this.lblRol = new DevExpress.XtraEditors.LabelControl();
-            this.lblSube = new DevExpress.XtraEditors.LabelControl();
-            this.btnMusteriIslem = new DevExpress.XtraEditors.SimpleButton();
-            this.btnHesapIslem = new DevExpress.XtraEditors.SimpleButton();
-            this.btnParaYatir = new DevExpress.XtraEditors.SimpleButton();
-            this.btnParaCek = new DevExpress.XtraEditors.SimpleButton();
-            this.btnHavaleEFT = new DevExpress.XtraEditors.SimpleButton();
-            this.btnOnayBekleyenler = new DevExpress.XtraEditors.SimpleButton();
+            this.components = new System.ComponentModel.Container();
+            this.ribbonControl = new DevExpress.XtraBars.Ribbon.RibbonControl();
+            this.btnMusteriIslem = new DevExpress.XtraBars.BarButtonItem();
+            this.btnHesapIslem = new DevExpress.XtraBars.BarButtonItem();
+            this.btnParaYatir = new DevExpress.XtraBars.BarButtonItem();
+            this.btnParaCek = new DevExpress.XtraBars.BarButtonItem();
+            this.btnHavaleEFT = new DevExpress.XtraBars.BarButtonItem();
+            this.btnKartlar = new DevExpress.XtraBars.BarButtonItem();
+            this.btnBasvurular = new DevExpress.XtraBars.BarButtonItem();
+            this.btnOnayBekleyenler = new DevExpress.XtraBars.BarButtonItem();
+            this.barStaticKullanici = new DevExpress.XtraBars.BarStaticItem();
+            this.barStaticRol = new DevExpress.XtraBars.BarStaticItem();
+            this.barStaticSube = new DevExpress.XtraBars.BarStaticItem();
+            this.ribbonPageIslemler = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonPageGroupMusteri = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroupHesap = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroupIslem = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroupKart = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageYonetim = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonPageGroupOnay = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl)).BeginInit();
             this.SuspendLayout();
             
-            this.lblHosgeldin.Location = new System.Drawing.Point(20, 20);
-            this.lblHosgeldin.Name = "lblHosgeldin";
-            this.lblHosgeldin.Size = new System.Drawing.Size(200, 13);
-            this.lblHosgeldin.TabIndex = 0;
-            this.lblHosgeldin.Text = "Hoş geldiniz";
+            // ribbonControl
+            this.ribbonControl.ExpandCollapseItem.Id = 0;
+            this.ribbonControl.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+                this.ribbonControl.ExpandCollapseItem,
+                this.btnMusteriIslem,
+                this.btnHesapIslem,
+                this.btnParaYatir,
+                this.btnParaCek,
+                this.btnHavaleEFT,
+                this.btnKartlar,
+                this.btnBasvurular,
+                this.btnOnayBekleyenler,
+                this.barStaticKullanici,
+                this.barStaticRol,
+                this.barStaticSube});
+            this.ribbonControl.Location = new System.Drawing.Point(0, 0);
+            this.ribbonControl.MaxItemId = 12;
+            this.ribbonControl.Name = "ribbonControl";
+            this.ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
+                this.ribbonPageIslemler,
+                this.ribbonPageYonetim});
+            this.ribbonControl.Size = new System.Drawing.Size(1200, 158);
             
-            this.lblRol.Location = new System.Drawing.Point(20, 50);
-            this.lblRol.Name = "lblRol";
-            this.lblRol.Size = new System.Drawing.Size(200, 13);
-            this.lblRol.TabIndex = 1;
-            this.lblRol.Text = "Rol:";
-            
-            this.lblSube.Location = new System.Drawing.Point(20, 70);
-            this.lblSube.Name = "lblSube";
-            this.lblSube.Size = new System.Drawing.Size(200, 13);
-            this.lblSube.TabIndex = 2;
-            this.lblSube.Text = "Şube:";
-            
-            this.btnMusteriIslem.Location = new System.Drawing.Point(20, 100);
+            // btnMusteriIslem
+            this.btnMusteriIslem.Caption = "Müşteri İşlemleri";
+            this.btnMusteriIslem.Id = 1;
             this.btnMusteriIslem.Name = "btnMusteriIslem";
-            this.btnMusteriIslem.Size = new System.Drawing.Size(150, 40);
-            this.btnMusteriIslem.TabIndex = 3;
-            this.btnMusteriIslem.Text = "Müşteri İşlemleri";
-            this.btnMusteriIslem.Click += new System.EventHandler(this.BtnMusteriIslem_Click);
+            this.btnMusteriIslem.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnMusteriIslem.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnMusteriIslem_Click);
             
-            this.btnHesapIslem.Location = new System.Drawing.Point(190, 100);
+            // btnHesapIslem
+            this.btnHesapIslem.Caption = "Hesap İşlemleri";
+            this.btnHesapIslem.Id = 2;
             this.btnHesapIslem.Name = "btnHesapIslem";
-            this.btnHesapIslem.Size = new System.Drawing.Size(150, 40);
-            this.btnHesapIslem.TabIndex = 4;
-            this.btnHesapIslem.Text = "Hesap İşlemleri";
-            this.btnHesapIslem.Click += new System.EventHandler(this.BtnHesapIslem_Click);
+            this.btnHesapIslem.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnHesapIslem.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnHesapIslem_Click);
             
-            this.btnParaYatir.Location = new System.Drawing.Point(20, 160);
+            // btnParaYatir
+            this.btnParaYatir.Caption = "Para Yatır";
+            this.btnParaYatir.Id = 3;
             this.btnParaYatir.Name = "btnParaYatir";
-            this.btnParaYatir.Size = new System.Drawing.Size(150, 40);
-            this.btnParaYatir.TabIndex = 5;
-            this.btnParaYatir.Text = "Para Yatır";
-            this.btnParaYatir.Click += new System.EventHandler(this.BtnParaYatir_Click);
+            this.btnParaYatir.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnParaYatir.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnParaYatir_Click);
             
-            this.btnParaCek.Location = new System.Drawing.Point(190, 160);
+            // btnParaCek
+            this.btnParaCek.Caption = "Para Çek";
+            this.btnParaCek.Id = 4;
             this.btnParaCek.Name = "btnParaCek";
-            this.btnParaCek.Size = new System.Drawing.Size(150, 40);
-            this.btnParaCek.TabIndex = 6;
-            this.btnParaCek.Text = "Para Çek";
-            this.btnParaCek.Click += new System.EventHandler(this.BtnParaCek_Click);
+            this.btnParaCek.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnParaCek.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnParaCek_Click);
             
-            this.btnHavaleEFT.Location = new System.Drawing.Point(20, 220);
+            // btnHavaleEFT
+            this.btnHavaleEFT.Caption = "Havale / EFT";
+            this.btnHavaleEFT.Id = 5;
             this.btnHavaleEFT.Name = "btnHavaleEFT";
-            this.btnHavaleEFT.Size = new System.Drawing.Size(150, 40);
-            this.btnHavaleEFT.TabIndex = 7;
-            this.btnHavaleEFT.Text = "Havale / EFT";
-            this.btnHavaleEFT.Click += new System.EventHandler(this.BtnHavaleEFT_Click);
+            this.btnHavaleEFT.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnHavaleEFT.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnHavaleEFT_Click);
             
-            this.btnOnayBekleyenler.Location = new System.Drawing.Point(190, 220);
+            // btnKartlar
+            this.btnKartlar.Caption = "Kartlar";
+            this.btnKartlar.Id = 6;
+            this.btnKartlar.Name = "btnKartlar";
+            this.btnKartlar.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnKartlar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnKartlar_Click);
+            
+            // btnBasvurular
+            this.btnBasvurular.Caption = "Başvurular";
+            this.btnBasvurular.Id = 7;
+            this.btnBasvurular.Name = "btnBasvurular";
+            this.btnBasvurular.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnBasvurular.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnBasvurular_Click);
+            
+            // btnOnayBekleyenler
+            this.btnOnayBekleyenler.Caption = "Onay Bekleyenler";
+            this.btnOnayBekleyenler.Id = 8;
             this.btnOnayBekleyenler.Name = "btnOnayBekleyenler";
-            this.btnOnayBekleyenler.Size = new System.Drawing.Size(150, 40);
-            this.btnOnayBekleyenler.TabIndex = 8;
-            this.btnOnayBekleyenler.Text = "Onay Bekleyenler";
-            this.btnOnayBekleyenler.Click += new System.EventHandler(this.BtnOnayBekleyenler_Click);
+            this.btnOnayBekleyenler.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnOnayBekleyenler.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnOnayBekleyenler_Click);
             
-            this.ClientSize = new System.Drawing.Size(400, 300);
-            this.Controls.Add(this.btnOnayBekleyenler);
-            this.Controls.Add(this.btnHavaleEFT);
-            this.Controls.Add(this.btnParaCek);
-            this.Controls.Add(this.btnParaYatir);
-            this.Controls.Add(this.btnHesapIslem);
-            this.Controls.Add(this.btnMusteriIslem);
-            this.Controls.Add(this.lblSube);
-            this.Controls.Add(this.lblRol);
-            this.Controls.Add(this.lblHosgeldin);
+            // barStaticKullanici
+            this.barStaticKullanici.Caption = "Kullanıcı: ";
+            this.barStaticKullanici.Id = 9;
+            this.barStaticKullanici.Name = "barStaticKullanici";
+            
+            // barStaticRol
+            this.barStaticRol.Caption = "Rol: ";
+            this.barStaticRol.Id = 10;
+            this.barStaticRol.Name = "barStaticRol";
+            
+            // barStaticSube
+            this.barStaticSube.Caption = "Şube: ";
+            this.barStaticSube.Id = 11;
+            this.barStaticSube.Name = "barStaticSube";
+            
+            // ribbonPageIslemler
+            this.ribbonPageIslemler.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+                this.ribbonPageGroupMusteri,
+                this.ribbonPageGroupHesap,
+                this.ribbonPageGroupIslem,
+                this.ribbonPageGroupKart});
+            this.ribbonPageIslemler.Name = "ribbonPageIslemler";
+            this.ribbonPageIslemler.Text = "İşlemler";
+            
+            // ribbonPageGroupMusteri
+            this.ribbonPageGroupMusteri.ItemLinks.Add(this.btnMusteriIslem);
+            this.ribbonPageGroupMusteri.Name = "ribbonPageGroupMusteri";
+            this.ribbonPageGroupMusteri.Text = "Müşteri";
+            
+            // ribbonPageGroupHesap
+            this.ribbonPageGroupHesap.ItemLinks.Add(this.btnHesapIslem);
+            this.ribbonPageGroupHesap.Name = "ribbonPageGroupHesap";
+            this.ribbonPageGroupHesap.Text = "Hesap";
+            
+            // ribbonPageGroupIslem
+            this.ribbonPageGroupIslem.ItemLinks.Add(this.btnParaYatir);
+            this.ribbonPageGroupIslem.ItemLinks.Add(this.btnParaCek);
+            this.ribbonPageGroupIslem.ItemLinks.Add(this.btnHavaleEFT);
+            this.ribbonPageGroupIslem.Name = "ribbonPageGroupIslem";
+            this.ribbonPageGroupIslem.Text = "Para İşlemleri";
+            
+            // ribbonPageGroupKart
+            this.ribbonPageGroupKart.ItemLinks.Add(this.btnKartlar);
+            this.ribbonPageGroupKart.ItemLinks.Add(this.btnBasvurular);
+            this.ribbonPageGroupKart.Name = "ribbonPageGroupKart";
+            this.ribbonPageGroupKart.Text = "Kart İşlemleri";
+            
+            // ribbonPageYonetim
+            this.ribbonPageYonetim.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+                this.ribbonPageGroupOnay});
+            this.ribbonPageYonetim.Name = "ribbonPageYonetim";
+            this.ribbonPageYonetim.Text = "Yönetim";
+            
+            // ribbonPageGroupOnay
+            this.ribbonPageGroupOnay.ItemLinks.Add(this.btnOnayBekleyenler);
+            this.ribbonPageGroupOnay.Name = "ribbonPageGroupOnay";
+            this.ribbonPageGroupOnay.Text = "Onay İşlemleri";
+            
+            // FrmAnaSayfa
+            this.ClientSize = new System.Drawing.Size(1200, 700);
+            this.Controls.Add(this.ribbonControl);
+            this.IsMdiContainer = true;
             this.Name = "FrmAnaSayfa";
+            this.Ribbon = this.ribbonControl;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Ana Sayfa";
+            this.Text = "Metin Bank - Ana Sayfa";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmAnaSayfa_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
         }
     }
 }
