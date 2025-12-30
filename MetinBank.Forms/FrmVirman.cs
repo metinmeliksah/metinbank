@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using MetinBank.Models;
 using MetinBank.Service;
+using MetinBank.Util;
 
 namespace MetinBank.Forms
 {
@@ -88,9 +89,8 @@ namespace MetinBank.Forms
                 if (e.RowHandle < 0) return;
 
                 object musteriIDObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "MusteriID");
-                if (musteriIDObj == null || musteriIDObj == DBNull.Value) return;
-
-                _seciliMusteriID = Convert.ToInt32(musteriIDObj);
+                _seciliMusteriID = CommonFunctions.DbNullToInt(musteriIDObj);
+                if (_seciliMusteriID == 0) return;
                 HesaplariYukle();
             }
             catch (Exception ex)
@@ -130,15 +130,14 @@ namespace MetinBank.Forms
                 if (e.RowHandle < 0) return;
 
                 object hesapIDObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "HesapID");
-                if (hesapIDObj == null || hesapIDObj == DBNull.Value) return;
-
-                int hesapID = Convert.ToInt32(hesapIDObj);
+                int hesapID = CommonFunctions.DbNullToInt(hesapIDObj);
+                if (hesapID == 0) return;
                 
                 object ibanObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "IBAN");
                 object bakiyeObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "Bakiye");
 
-                string iban = ibanObj != null && ibanObj != DBNull.Value ? ibanObj.ToString() : "";
-                decimal bakiye = bakiyeObj != null && bakiyeObj != DBNull.Value ? Convert.ToDecimal(bakiyeObj) : 0;
+                string iban = CommonFunctions.DbNullToString(ibanObj);
+                decimal bakiye = CommonFunctions.DbNullToDecimal(bakiyeObj);
 
                 // Kaynak hesap seçimi
                 if (cmbKaynakHesap.SelectedIndex == 0)
@@ -188,6 +187,13 @@ namespace MetinBank.Forms
                 if (numTutar.Value <= 0)
                 {
                     MessageBox.Show("Tutar 0'dan büyük olmalıdır.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!_kullanici.SubeID.HasValue)
+                {
+                    MessageBox.Show("Kullanıcının şube bilgisi bulunamadı.", "Hata", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 

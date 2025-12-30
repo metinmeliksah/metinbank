@@ -25,6 +25,8 @@ namespace MetinBank.Forms
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem6;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem7;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem8;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem9;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem10;
 
         protected override void Dispose(bool disposing)
         {
@@ -59,6 +61,8 @@ namespace MetinBank.Forms
             this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem7 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem8 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem10 = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtMusteriArama.Properties)).BeginInit();
@@ -80,6 +84,8 @@ namespace MetinBank.Forms
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem10)).BeginInit();
             this.SuspendLayout();
             
             // layoutControl1
@@ -210,7 +216,9 @@ namespace MetinBank.Forms
                 this.layoutControlItem5,
                 this.layoutControlItem6,
                 this.layoutControlItem7,
-                this.layoutControlItem8});
+                this.layoutControlItem8,
+                this.layoutControlItem9,
+                this.layoutControlItem10});
             this.layoutControlGroup1.Name = "Root";
             this.layoutControlGroup1.Size = new System.Drawing.Size(1200, 700);
             this.layoutControlGroup1.TextVisible = false;
@@ -279,6 +287,22 @@ namespace MetinBank.Forms
             this.layoutControlItem8.Text = "Açıklama:";
             this.layoutControlItem8.TextSize = new System.Drawing.Size(76, 13);
             
+            // layoutControlItem9
+            this.layoutControlItem9.Control = this.btnYatir;
+            this.layoutControlItem9.Location = new System.Drawing.Point(0, 582);
+            this.layoutControlItem9.Name = "layoutControlItem9";
+            this.layoutControlItem9.Size = new System.Drawing.Size(592, 44);
+            this.layoutControlItem9.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem9.TextVisible = false;
+            
+            // layoutControlItem10
+            this.layoutControlItem10.Control = this.btnKapat;
+            this.layoutControlItem10.Location = new System.Drawing.Point(592, 582);
+            this.layoutControlItem10.Name = "layoutControlItem10";
+            this.layoutControlItem10.Size = new System.Drawing.Size(588, 44);
+            this.layoutControlItem10.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem10.TextVisible = false;
+            
             // FrmParaYatir
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -310,6 +334,8 @@ namespace MetinBank.Forms
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem10)).EndInit();
             this.ResumeLayout(false);
         }
     }

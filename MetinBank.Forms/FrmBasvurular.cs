@@ -87,9 +87,8 @@ namespace MetinBank.Forms
                 if (e.RowHandle < 0) return;
 
                 object musteriIDObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "MusteriID");
-                if (musteriIDObj == null || musteriIDObj == DBNull.Value) return;
-
-                _seciliMusteriID = Convert.ToInt32(musteriIDObj);
+                _seciliMusteriID = CommonFunctions.DbNullToInt(musteriIDObj);
+                if (_seciliMusteriID == 0) return;
                 BasvurulariYukle();
             }
             catch (Exception ex)
