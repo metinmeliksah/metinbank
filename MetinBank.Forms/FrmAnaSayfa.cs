@@ -63,9 +63,23 @@ namespace MetinBank.Forms
             frm.Show();
         }
 
-        private void BtnHavaleEFT_Click(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void BtnHavale_Click(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            FrmHavaleEFT frm = new FrmHavaleEFT(_kullanici);
+            FrmHavale frm = new FrmHavale(_kullanici);
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void BtnEFT_Click(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            FrmEFT frm = new FrmEFT(_kullanici);
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void BtnVirman_Click(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            FrmVirman frm = new FrmVirman(_kullanici);
             frm.MdiParent = this;
             frm.Show();
         }

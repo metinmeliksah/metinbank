@@ -15,7 +15,9 @@ namespace MetinBank.Forms
         private DevExpress.XtraBars.BarButtonItem btnHesapIslem;
         private DevExpress.XtraBars.BarButtonItem btnParaYatir;
         private DevExpress.XtraBars.BarButtonItem btnParaCek;
-        private DevExpress.XtraBars.BarButtonItem btnHavaleEFT;
+        private DevExpress.XtraBars.BarButtonItem btnHavale;
+        private DevExpress.XtraBars.BarButtonItem btnEFT;
+        private DevExpress.XtraBars.BarButtonItem btnVirman;
         private DevExpress.XtraBars.BarButtonItem btnKartlar;
         private DevExpress.XtraBars.BarButtonItem btnBasvurular;
         private DevExpress.XtraBars.BarButtonItem btnOnayBekleyenler;
@@ -40,7 +42,9 @@ namespace MetinBank.Forms
             this.btnHesapIslem = new DevExpress.XtraBars.BarButtonItem();
             this.btnParaYatir = new DevExpress.XtraBars.BarButtonItem();
             this.btnParaCek = new DevExpress.XtraBars.BarButtonItem();
-            this.btnHavaleEFT = new DevExpress.XtraBars.BarButtonItem();
+            this.btnHavale = new DevExpress.XtraBars.BarButtonItem();
+            this.btnEFT = new DevExpress.XtraBars.BarButtonItem();
+            this.btnVirman = new DevExpress.XtraBars.BarButtonItem();
             this.btnKartlar = new DevExpress.XtraBars.BarButtonItem();
             this.btnBasvurular = new DevExpress.XtraBars.BarButtonItem();
             this.btnOnayBekleyenler = new DevExpress.XtraBars.BarButtonItem();
@@ -65,7 +69,9 @@ namespace MetinBank.Forms
                 this.btnHesapIslem,
                 this.btnParaYatir,
                 this.btnParaCek,
-                this.btnHavaleEFT,
+                this.btnHavale,
+                this.btnEFT,
+                this.btnVirman,
                 this.btnKartlar,
                 this.btnBasvurular,
                 this.btnOnayBekleyenler,
@@ -73,7 +79,7 @@ namespace MetinBank.Forms
                 this.barStaticRol,
                 this.barStaticSube});
             this.ribbonControl.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl.MaxItemId = 12;
+            this.ribbonControl.MaxItemId = 14;
             this.ribbonControl.Name = "ribbonControl";
             this.ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
                 this.ribbonPageIslemler,
@@ -108,47 +114,61 @@ namespace MetinBank.Forms
             this.btnParaCek.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.btnParaCek.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnParaCek_Click);
             
-            // btnHavaleEFT
-            this.btnHavaleEFT.Caption = "Havale / EFT";
-            this.btnHavaleEFT.Id = 5;
-            this.btnHavaleEFT.Name = "btnHavaleEFT";
-            this.btnHavaleEFT.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            this.btnHavaleEFT.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnHavaleEFT_Click);
+            // btnHavale
+            this.btnHavale.Caption = "Havale";
+            this.btnHavale.Id = 5;
+            this.btnHavale.Name = "btnHavale";
+            this.btnHavale.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnHavale.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnHavale_Click);
+            
+            // btnEFT
+            this.btnEFT.Caption = "EFT";
+            this.btnEFT.Id = 6;
+            this.btnEFT.Name = "btnEFT";
+            this.btnEFT.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnEFT.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnEFT_Click);
+            
+            // btnVirman
+            this.btnVirman.Caption = "Virman";
+            this.btnVirman.Id = 7;
+            this.btnVirman.Name = "btnVirman";
+            this.btnVirman.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnVirman.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnVirman_Click);
             
             // btnKartlar
             this.btnKartlar.Caption = "Kartlar";
-            this.btnKartlar.Id = 6;
+            this.btnKartlar.Id = 8;
             this.btnKartlar.Name = "btnKartlar";
             this.btnKartlar.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.btnKartlar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnKartlar_Click);
             
             // btnBasvurular
             this.btnBasvurular.Caption = "Başvurular";
-            this.btnBasvurular.Id = 7;
+            this.btnBasvurular.Id = 9;
             this.btnBasvurular.Name = "btnBasvurular";
             this.btnBasvurular.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.btnBasvurular.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnBasvurular_Click);
             
             // btnOnayBekleyenler
             this.btnOnayBekleyenler.Caption = "Onay Bekleyenler";
-            this.btnOnayBekleyenler.Id = 8;
+            this.btnOnayBekleyenler.Id = 10;
             this.btnOnayBekleyenler.Name = "btnOnayBekleyenler";
             this.btnOnayBekleyenler.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.btnOnayBekleyenler.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnOnayBekleyenler_Click);
             
             // barStaticKullanici
             this.barStaticKullanici.Caption = "Kullanıcı: ";
-            this.barStaticKullanici.Id = 9;
+            this.barStaticKullanici.Id = 11;
             this.barStaticKullanici.Name = "barStaticKullanici";
             
             // barStaticRol
             this.barStaticRol.Caption = "Rol: ";
-            this.barStaticRol.Id = 10;
+            this.barStaticRol.Id = 12;
             this.barStaticRol.Name = "barStaticRol";
             
             // barStaticSube
             this.barStaticSube.Caption = "Şube: ";
-            this.barStaticSube.Id = 11;
+            this.barStaticSube.Id = 13;
             this.barStaticSube.Name = "barStaticSube";
             
             // ribbonPageIslemler
@@ -173,7 +193,9 @@ namespace MetinBank.Forms
             // ribbonPageGroupIslem
             this.ribbonPageGroupIslem.ItemLinks.Add(this.btnParaYatir);
             this.ribbonPageGroupIslem.ItemLinks.Add(this.btnParaCek);
-            this.ribbonPageGroupIslem.ItemLinks.Add(this.btnHavaleEFT);
+            this.ribbonPageGroupIslem.ItemLinks.Add(this.btnHavale);
+            this.ribbonPageGroupIslem.ItemLinks.Add(this.btnEFT);
+            this.ribbonPageGroupIslem.ItemLinks.Add(this.btnVirman);
             this.ribbonPageGroupIslem.Name = "ribbonPageGroupIslem";
             this.ribbonPageGroupIslem.Text = "Para İşlemleri";
             

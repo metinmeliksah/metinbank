@@ -7,17 +7,18 @@ using MetinBank.Service;
 
 namespace MetinBank.Forms
 {
-    public partial class FrmParaYatir : XtraForm
+    public partial class FrmVirman : XtraForm
     {
         private KullaniciModel _kullanici;
         private SIslem _sIslem;
         private SMusteri _sMusteri;
         private SHesap _sHesap;
         private int _seciliMusteriID;
-        private int _seciliHesapID;
+        private int _kaynakHesapID;
+        private int _hedefHesapID;
         private System.Windows.Forms.Timer _aramaTimer;
 
-        public FrmParaYatir(KullaniciModel kullanici)
+        public FrmVirman(KullaniciModel kullanici)
         {
             InitializeComponent();
             _kullanici = kullanici;
@@ -25,7 +26,6 @@ namespace MetinBank.Forms
             _sMusteri = new SMusteri();
             _sHesap = new SHesap();
             
-            // Canlı arama timer'ı
             _aramaTimer = new System.Windows.Forms.Timer();
             _aramaTimer.Interval = 500;
             _aramaTimer.Tick += (s, e) => {
@@ -34,9 +34,9 @@ namespace MetinBank.Forms
             };
         }
 
-        private void FrmParaYatir_Load(object sender, EventArgs e)
+        private void FrmVirman_Load(object sender, EventArgs e)
         {
-            this.Text = "Para Yatır";
+            this.Text = "Virman";
         }
 
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
@@ -132,7 +132,7 @@ namespace MetinBank.Forms
                 object hesapIDObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "HesapID");
                 if (hesapIDObj == null || hesapIDObj == DBNull.Value) return;
 
-                _seciliHesapID = Convert.ToInt32(hesapIDObj);
+                int hesapID = Convert.ToInt32(hesapIDObj);
                 
                 object ibanObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "IBAN");
                 object bakiyeObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "Bakiye");
@@ -140,9 +140,22 @@ namespace MetinBank.Forms
                 string iban = ibanObj != null && ibanObj != DBNull.Value ? ibanObj.ToString() : "";
                 decimal bakiye = bakiyeObj != null && bakiyeObj != DBNull.Value ? Convert.ToDecimal(bakiyeObj) : 0;
 
-                txtHesapID.Text = _seciliHesapID.ToString();
-                txtIBAN.Text = iban;
-                txtBakiye.Text = bakiye.ToString("N2") + " TL";
+                // Kaynak hesap seçimi
+                if (cmbKaynakHesap.SelectedIndex == 0)
+                {
+                    _kaynakHesapID = hesapID;
+                    txtKaynakHesapID.Text = hesapID.ToString();
+                    txtKaynakIBAN.Text = iban;
+                    txtKaynakBakiye.Text = bakiye.ToString("N2") + " TL";
+                }
+                // Hedef hesap seçimi
+                else if (cmbKaynakHesap.SelectedIndex == 1)
+                {
+                    _hedefHesapID = hesapID;
+                    txtHedefHesapID.Text = hesapID.ToString();
+                    txtHedefIBAN.Text = iban;
+                    txtHedefBakiye.Text = bakiye.ToString("N2") + " TL";
+                }
             }
             catch (Exception ex)
             {
@@ -150,34 +163,38 @@ namespace MetinBank.Forms
             }
         }
 
-        private void BtnYatir_Click(object sender, EventArgs e)
+        private void BtnGonder_Click(object sender, EventArgs e)
         {
             try
             {
-                if (_seciliMusteriID == 0)
+                if (_kaynakHesapID == 0)
                 {
-                    MessageBox.Show("Lütfen önce bir müşteri seçiniz.", "Uyarı", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Lütfen kaynak hesap seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                if (_seciliHesapID == 0)
+                if (_hedefHesapID == 0)
                 {
-                    MessageBox.Show("Lütfen bir hesap seçiniz.", "Uyarı", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Lütfen hedef hesap seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (_kaynakHesapID == _hedefHesapID)
+                {
+                    MessageBox.Show("Kaynak ve hedef hesap aynı olamaz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
                 if (numTutar.Value <= 0)
                 {
-                    MessageBox.Show("Tutar 0'dan büyük olmalıdır.", "Uyarı", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Tutar 0'dan büyük olmalıdır.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
                 long islemID;
-                string hata = _sIslem.ParaYatir(
-                    _seciliHesapID,
+                string hata = _sIslem.Virman(
+                    _kaynakHesapID,
+                    _hedefHesapID,
                     numTutar.Value,
                     txtAciklama.Text,
                     _kullanici.KullaniciID,
@@ -191,12 +208,20 @@ namespace MetinBank.Forms
                     return;
                 }
 
-                MessageBox.Show($"Para yatırma işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
+                MessageBox.Show($"Virman işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
                     "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 HesaplariYukle();
                 numTutar.Value = 0;
                 txtAciklama.Text = "";
+                _kaynakHesapID = 0;
+                _hedefHesapID = 0;
+                txtKaynakHesapID.Text = "";
+                txtKaynakIBAN.Text = "";
+                txtKaynakBakiye.Text = "";
+                txtHedefHesapID.Text = "";
+                txtHedefIBAN.Text = "";
+                txtHedefBakiye.Text = "";
             }
             catch (Exception ex)
             {
@@ -210,3 +235,4 @@ namespace MetinBank.Forms
         }
     }
 }
+

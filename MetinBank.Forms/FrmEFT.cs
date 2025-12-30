@@ -4,10 +4,11 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using MetinBank.Models;
 using MetinBank.Service;
+using MetinBank.Util;
 
 namespace MetinBank.Forms
 {
-    public partial class FrmParaYatir : XtraForm
+    public partial class FrmEFT : XtraForm
     {
         private KullaniciModel _kullanici;
         private SIslem _sIslem;
@@ -17,7 +18,7 @@ namespace MetinBank.Forms
         private int _seciliHesapID;
         private System.Windows.Forms.Timer _aramaTimer;
 
-        public FrmParaYatir(KullaniciModel kullanici)
+        public FrmEFT(KullaniciModel kullanici)
         {
             InitializeComponent();
             _kullanici = kullanici;
@@ -25,7 +26,6 @@ namespace MetinBank.Forms
             _sMusteri = new SMusteri();
             _sHesap = new SHesap();
             
-            // Canlı arama timer'ı
             _aramaTimer = new System.Windows.Forms.Timer();
             _aramaTimer.Interval = 500;
             _aramaTimer.Tick += (s, e) => {
@@ -34,9 +34,9 @@ namespace MetinBank.Forms
             };
         }
 
-        private void FrmParaYatir_Load(object sender, EventArgs e)
+        private void FrmEFT_Load(object sender, EventArgs e)
         {
-            this.Text = "Para Yatır";
+            this.Text = "EFT";
         }
 
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
@@ -140,9 +140,9 @@ namespace MetinBank.Forms
                 string iban = ibanObj != null && ibanObj != DBNull.Value ? ibanObj.ToString() : "";
                 decimal bakiye = bakiyeObj != null && bakiyeObj != DBNull.Value ? Convert.ToDecimal(bakiyeObj) : 0;
 
-                txtHesapID.Text = _seciliHesapID.ToString();
-                txtIBAN.Text = iban;
-                txtBakiye.Text = bakiye.ToString("N2") + " TL";
+                txtKaynakHesapID.Text = _seciliHesapID.ToString();
+                txtKaynakIBAN.Text = iban;
+                txtKaynakBakiye.Text = bakiye.ToString("N2") + " TL";
             }
             catch (Exception ex)
             {
@@ -150,36 +150,42 @@ namespace MetinBank.Forms
             }
         }
 
-        private void BtnYatir_Click(object sender, EventArgs e)
+        private void BtnGonder_Click(object sender, EventArgs e)
         {
             try
             {
-                if (_seciliMusteriID == 0)
+                if (_seciliHesapID == 0)
                 {
-                    MessageBox.Show("Lütfen önce bir müşteri seçiniz.", "Uyarı", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Lütfen kaynak hesap seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                if (_seciliHesapID == 0)
+                if (string.IsNullOrWhiteSpace(txtHedefIBAN.Text))
                 {
-                    MessageBox.Show("Lütfen bir hesap seçiniz.", "Uyarı", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Hedef IBAN giriniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
                 if (numTutar.Value <= 0)
                 {
-                    MessageBox.Show("Tutar 0'dan büyük olmalıdır.", "Uyarı", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Tutar 0'dan büyük olmalıdır.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string ibanHata = IbanHelper.ValidateIban(txtHedefIBAN.Text);
+                if (ibanHata != null)
+                {
+                    MessageBox.Show(ibanHata, "Geçersiz IBAN", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 long islemID;
-                string hata = _sIslem.ParaYatir(
+                string hata = _sIslem.EFT(
                     _seciliHesapID,
+                    txtHedefIBAN.Text,
                     numTutar.Value,
                     txtAciklama.Text,
+                    txtAliciAdi.Text,
                     _kullanici.KullaniciID,
                     _kullanici.SubeID.Value,
                     out islemID
@@ -191,12 +197,15 @@ namespace MetinBank.Forms
                     return;
                 }
 
-                MessageBox.Show($"Para yatırma işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
+                string onayMesaji = numTutar.Value > 5000 ? "\n\nNOT: İşlem onay bekliyor." : "";
+                MessageBox.Show($"EFT işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL{onayMesaji}", 
                     "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 HesaplariYukle();
                 numTutar.Value = 0;
                 txtAciklama.Text = "";
+                txtAliciAdi.Text = "";
+                txtHedefIBAN.Text = "";
             }
             catch (Exception ex)
             {
@@ -210,3 +219,4 @@ namespace MetinBank.Forms
         }
     }
 }
+
