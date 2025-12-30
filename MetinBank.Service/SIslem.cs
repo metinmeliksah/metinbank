@@ -1,0 +1,178 @@
+using System;
+using System.Data;
+using MetinBank.Business;
+using MetinBank.Util;
+
+namespace MetinBank.Service
+{
+    public class SIslem
+    {
+        private readonly BIslem _bIslem;
+        private readonly BLog _bLog;
+
+        public SIslem()
+        {
+            _bIslem = new BIslem();
+            _bLog = new BLog();
+        }
+
+        public string ParaYatir(int hesapID, decimal tutar, string aciklama, int kullaniciID, int subeID, out long islemID)
+        {
+            islemID = 0;
+
+            try
+            {
+                string hata = _bIslem.ParaYatir(hesapID, tutar, aciklama, kullaniciID, subeID, out islemID);
+
+                _bLog.IslemLoguKaydet(
+                    kullaniciID,
+                    "ParaYatir",
+                    "Islem",
+                    islemID,
+                    null,
+                    $"HesapID: {hesapID}, Tutar: {tutar}",
+                    $"Para yatırma: {CommonFunctions.FormatCurrency(tutar)}",
+                    CommonFunctions.GetLocalIPAddress(),
+                    hata == null,
+                    hata
+                );
+
+                return hata;
+            }
+            catch (Exception ex)
+            {
+                return $"Servis hatası: {ex.Message}";
+            }
+        }
+
+        public string ParaCek(int hesapID, decimal tutar, string aciklama, int kullaniciID, int subeID, out long islemID)
+        {
+            islemID = 0;
+
+            try
+            {
+                string hata = _bIslem.ParaCek(hesapID, tutar, aciklama, kullaniciID, subeID, out islemID);
+
+                _bLog.IslemLoguKaydet(
+                    kullaniciID,
+                    "ParaCek",
+                    "Islem",
+                    islemID,
+                    null,
+                    $"HesapID: {hesapID}, Tutar: {tutar}",
+                    $"Para çekme: {CommonFunctions.FormatCurrency(tutar)}",
+                    CommonFunctions.GetLocalIPAddress(),
+                    hata == null,
+                    hata
+                );
+
+                return hata;
+            }
+            catch (Exception ex)
+            {
+                return $"Servis hatası: {ex.Message}";
+            }
+        }
+
+        public string Havale(int kaynakHesapID, string hedefIBAN, decimal tutar, string aciklama, string aliciAdi, 
+                            int kullaniciID, int subeID, out long islemID)
+        {
+            islemID = 0;
+
+            try
+            {
+                string hata = _bIslem.Havale(kaynakHesapID, hedefIBAN, tutar, aciklama, aliciAdi, kullaniciID, subeID, out islemID);
+
+                _bLog.IslemLoguKaydet(
+                    kullaniciID,
+                    "Havale",
+                    "Islem",
+                    islemID,
+                    null,
+                    $"Kaynak: {kaynakHesapID}, Hedef: {hedefIBAN}, Tutar: {tutar}",
+                    $"Havale: {CommonFunctions.FormatCurrency(tutar)} - {aliciAdi}",
+                    CommonFunctions.GetLocalIPAddress(),
+                    hata == null,
+                    hata
+                );
+
+                if (hata == null && tutar > 5000)
+                {
+                    _bLog.GuvenlikLoguKaydet(
+                        "YuksekTutarliHavale",
+                        kullaniciID,
+                        CommonFunctions.GetLocalIPAddress(),
+                        $"Yüksek tutarlı havale: {CommonFunctions.FormatCurrency(tutar)}",
+                        tutar > 10000 ? "Yuksek" : "Orta"
+                    );
+                }
+
+                return hata;
+            }
+            catch (Exception ex)
+            {
+                return $"Servis hatası: {ex.Message}";
+            }
+        }
+
+        public string EFT(int kaynakHesapID, string hedefIBAN, decimal tutar, string aciklama, string aliciAdi, 
+                         int kullaniciID, int subeID, out long islemID)
+        {
+            islemID = 0;
+
+            try
+            {
+                string hata = _bIslem.EFT(kaynakHesapID, hedefIBAN, tutar, aciklama, aliciAdi, kullaniciID, subeID, out islemID);
+
+                _bLog.IslemLoguKaydet(
+                    kullaniciID,
+                    "EFT",
+                    "Islem",
+                    islemID,
+                    null,
+                    $"Kaynak: {kaynakHesapID}, Hedef: {hedefIBAN}, Tutar: {tutar}",
+                    $"EFT: {CommonFunctions.FormatCurrency(tutar)} - {aliciAdi}",
+                    CommonFunctions.GetLocalIPAddress(),
+                    hata == null,
+                    hata
+                );
+
+                return hata;
+            }
+            catch (Exception ex)
+            {
+                return $"Servis hatası: {ex.Message}";
+            }
+        }
+
+        public string Virman(int kaynakHesapID, int hedefHesapID, decimal tutar, string aciklama, int kullaniciID, int subeID, out long islemID)
+        {
+            islemID = 0;
+
+            try
+            {
+                string hata = _bIslem.Virman(kaynakHesapID, hedefHesapID, tutar, aciklama, kullaniciID, subeID, out islemID);
+
+                _bLog.IslemLoguKaydet(
+                    kullaniciID,
+                    "Virman",
+                    "Islem",
+                    islemID,
+                    null,
+                    $"Kaynak: {kaynakHesapID}, Hedef: {hedefHesapID}, Tutar: {tutar}",
+                    $"Virman: {CommonFunctions.FormatCurrency(tutar)}",
+                    CommonFunctions.GetLocalIPAddress(),
+                    hata == null,
+                    hata
+                );
+
+                return hata;
+            }
+            catch (Exception ex)
+            {
+                return $"Servis hatası: {ex.Message}";
+            }
+        }
+    }
+}
+

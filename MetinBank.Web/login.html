@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metin Bank - Müşteri Girişi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+        }
+
+        .left-panel {
+            background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+            color: white;
+            padding: 60px 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .left-panel h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .left-panel p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .features {
+            list-style: none;
+        }
+
+        .features li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .right-panel {
+            padding: 60px 50px;
+            flex: 1;
+        }
+
+        .login-header {
+            margin-bottom: 40px;
+        }
+
+        .login-header h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #f44336;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+        }
+
+        .forgot-password {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: #0052a3;
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #0052a3;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #66bb6a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                padding: 40px 30px;
+            }
+
+            .right-panel {
+                padding: 40px 30px;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <h1>METİN BANK</h1>
+            <p>Dijital bankacılık hizmetlerimizle her zaman yanınızdayız</p>
+            <ul class="features">
+                <li>7/24 Hesap Yönetimi</li>
+                <li>Anında Havale ve EFT</li>
+                <li>Güvenli Para Transferi</li>
+                <li>Detaylı Hesap Ekstreleri</li>
+                <li>Banka Kartı Başvurusu</li>
+                <li>Anlık Bildirimler</li>
+            </ul>
+        </div>
+        
+        <div class="right-panel">
+            <div class="login-header">
+                <h2>Hoş Geldiniz</h2>
+                <p>Hesabınıza giriş yapın</p>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="musteriNo">Müşteri Numarası *</label>
+                    <input type="text" id="musteriNo" name="musteriNo" placeholder="M000000001" maxlength="10" required>
+                    <span class="error-message" id="musteriNoError">Müşteri numarası gereklidir</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="tckn">TC Kimlik Numarası *</label>
+                    <input type="text" id="tckn" name="tckn" placeholder="11 haneli TC Kimlik No" maxlength="11" required>
+                    <span class="error-message" id="tcknError">Geçerli bir TC Kimlik numarası giriniz</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="sifre">Şifre *</label>
+                    <input type="password" id="sifre" name="sifre" placeholder="••••••••" required>
+                    <span class="error-message" id="sifreError">Şifre gereklidir</span>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        Beni Hatırla
+                    </label>
+                    <a href="#" class="forgot-password">Şifremi Unuttum</a>
+                </div>
+
+                <button type="submit" class="btn-login" id="btnLogin">
+                    Giriş Yap
+                </button>
+
+                <div class="register-link">
+                    Hesabınız yok mu? <a href="#">Hemen Başvurun</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        // Form validation
+        function validateTCKN(tckn) {
+            if (!/^\d{11}$/.test(tckn)) return false;
+            if (tckn[0] === '0') return false;
+
+            let digits = tckn.split('').map(Number);
+            let sum1 = (digits[0] + digits[2] + digits[4] + digits[6] + digits[8]) * 7;
+            let sum2 = digits[1] + digits[3] + digits[5] + digits[7];
+            let digit10 = (sum1 - sum2) % 10;
+            
+            if (digit10 !== digits[9]) return false;
+            
+            let sum3 = digits.slice(0, 10).reduce((a, b) => a + b, 0);
+            let digit11 = sum3 % 10;
+            
+            return digit11 === digits[10];
+        }
+
+        function showError(inputId, errorId, message) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            input.classList.add('error');
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+
+        function clearError(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            input.classList.remove('error');
+            error.style.display = 'none';
+        }
+
+        function showAlert(message, type = 'error') {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = `alert alert-${type}`;
+            alertBox.textContent = message;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+
+        // Form submit
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Clear previous errors
+            clearError('musteriNo', 'musteriNoError');
+            clearError('tckn', 'tcknError');
+            clearError('sifre', 'sifreError');
+            
+            const musteriNo = document.getElementById('musteriNo').value.trim();
+            const tckn = document.getElementById('tckn').value.trim();
+            const sifre = document.getElementById('sifre').value;
+            
+            let isValid = true;
+            
+            // Validation
+            if (!musteriNo) {
+                showError('musteriNo', 'musteriNoError', 'Müşteri numarası gereklidir');
+                isValid = false;
+            }
+            
+            if (!tckn || !validateTCKN(tckn)) {
+                showError('tckn', 'tcknError', 'Geçerli bir TC Kimlik numarası giriniz');
+                isValid = false;
+            }
+            
+            if (!sifre) {
+                showError('sifre', 'sifreError', 'Şifre gereklidir');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Submit to API
+            const btnLogin = document.getElementById('btnLogin');
+            btnLogin.disabled = true;
+            btnLogin.innerHTML = '<span class="loading"></span> Giriş yapılıyor...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/Auth/MusteriLogin`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        musteriNo: musteriNo,
+                        tckn: tckn,
+                        sifre: sifre
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    // Save token
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('kullanici', JSON.stringify(data.kullanici));
+                    
+                    showAlert('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    showAlert(data.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.');
+                    btnLogin.disabled = false;
+                    btnLogin.textContent = 'Giriş Yap';
+                }
+            } catch (error) {
+                showAlert('Bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Giriş Yap';
+                console.error('Login error:', error);
+            }
+        });
+
+        // Real-time validation
+        document.getElementById('musteriNo').addEventListener('input', function() {
+            if (this.value.trim()) {
+                clearError('musteriNo', 'musteriNoError');
+            }
+        });
+
+        document.getElementById('tckn').addEventListener('input', function() {
+            // Only numbers
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length === 11 && validateTCKN(this.value)) {
+                clearError('tckn', 'tcknError');
+            }
+        });
+
+        document.getElementById('sifre').addEventListener('input', function() {
+            if (this.value) {
+                clearError('sifre', 'sifreError');
+            }
+        });
+    </script>
+</body>
+</html>
+

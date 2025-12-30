@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Entities", "MetinBank.Entities\MetinBank.Entities.csproj", "{A1B1C1D1-E1F1-4111-8111-111111111111}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Forms", "MetinBank.Forms\MetinBank.Forms.csproj", "{A1B2C3D4-E5F6-4789-A1B2-C3D4E5F67890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Modul.Interface", "MetinBank.Modul.Interface\MetinBank.Modul.Interface.csproj", "{A2B2C2D2-E2F2-4222-8222-222222222222}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Models", "MetinBank.Models\MetinBank.Models.csproj", "{B2C3D4E5-F6A7-4891-B2C3-D4E5F6A78901}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Modul.SPObject", "MetinBank.Modul.SPObject\MetinBank.Modul.SPObject.csproj", "{A3B3C3D3-E3F3-4333-8333-333333333333}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Util", "MetinBank.Util\MetinBank.Util.csproj", "{C3D4E5F6-A7B8-4912-C3D4-E5F6A7B89012}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Modul.Business", "MetinBank.Modul.Business\MetinBank.Modul.Business.csproj", "{A4B4C4D4-E4F4-4444-8444-444444444444}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Interface", "MetinBank.Interface\MetinBank.Interface.csproj", "{D4E5F6A7-B8C9-4123-D4E5-F6A7B8C91234}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Modul.Service", "MetinBank.Modul.Service\MetinBank.Modul.Service.csproj", "{A5B5C5D5-E5F5-4555-8555-555555555555}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Business", "MetinBank.Business\MetinBank.Business.csproj", "{E5F6A7B8-C9D1-4234-E5F6-A7B8C9D12345}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Modul.Forms", "MetinBank.Modul.Forms\MetinBank.Modul.Forms.csproj", "{A6B6C6D6-E6F6-4666-8666-666666666666}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Service", "MetinBank.Service\MetinBank.Service.csproj", "{F6A7B8C9-D1E2-4345-F6A7-B8C9D1E23456}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,32 +21,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A1B1C1D1-E1F1-4111-8111-111111111111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1B1C1D1-E1F1-4111-8111-111111111111}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1B1C1D1-E1F1-4111-8111-111111111111}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1B1C1D1-E1F1-4111-8111-111111111111}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2B2C2D2-E2F2-4222-8222-222222222222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2B2C2D2-E2F2-4222-8222-222222222222}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2B2C2D2-E2F2-4222-8222-222222222222}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2B2C2D2-E2F2-4222-8222-222222222222}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3B3C3D3-E3F3-4333-8333-333333333333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3B3C3D3-E3F3-4333-8333-333333333333}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3B3C3D3-E3F3-4333-8333-333333333333}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3B3C3D3-E3F3-4333-8333-333333333333}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4B4C4D4-E4F4-4444-8444-444444444444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4B4C4D4-E4F4-4444-8444-444444444444}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4B4C4D4-E4F4-4444-8444-444444444444}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4B4C4D4-E4F4-4444-8444-444444444444}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A5B5C5D5-E5F5-4555-8555-555555555555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A5B5C5D5-E5F5-4555-8555-555555555555}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A5B5C5D5-E5F5-4555-8555-555555555555}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A5B5C5D5-E5F5-4555-8555-555555555555}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6B6C6D6-E6F6-4666-8666-666666666666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6B6C6D6-E6F6-4666-8666-666666666666}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6B6C6D6-E6F6-4666-8666-666666666666}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6B6C6D6-E6F6-4666-8666-666666666666}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
+		{A1B2C3D4-E5F6-4789-A1B2-C3D4E5F67890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-E5F6-4789-A1B2-C3D4E5F67890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-E5F6-4789-A1B2-C3D4E5F67890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-E5F6-4789-A1B2-C3D4E5F67890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C3D4E5-F6A7-4891-B2C3-D4E5F6A78901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C3D4E5-F6A7-4891-B2C3-D4E5F6A78901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C3D4E5-F6A7-4891-B2C3-D4E5F6A78901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C3D4E5-F6A7-4891-B2C3-D4E5F6A78901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D4E5F6-A7B8-4912-C3D4-E5F6A7B89012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D4E5F6-A7B8-4912-C3D4-E5F6A7B89012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D4E5F6-A7B8-4912-C3D4-E5F6A7B89012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D4E5F6-A7B8-4912-C3D4-E5F6A7B89012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4E5F6A7-B8C9-4123-D4E5-F6A7B8C91234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E5F6A7-B8C9-4123-D4E5-F6A7B8C91234}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4E5F6A7-B8C9-4123-D4E5-F6A7B8C91234}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E5F6A7-B8C9-4123-D4E5-F6A7B8C91234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5F6A7B8-C9D1-4234-E5F6-A7B8C9D12345}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5F6A7B8-C9D1-4234-E5F6-A7B8C9D12345}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5F6A7B8-C9D1-4234-E5F6-A7B8C9D12345}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5F6A7B8-C9D1-4234-E5F6-A7B8C9D12345}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6A7B8C9-D1E2-4345-F6A7-B8C9D1E23456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A7B8C9-D1E2-4345-F6A7-B8C9D1E23456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A7B8C9-D1E2-4345-F6A7-B8C9D1E23456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A7B8C9-D1E2-4345-F6A7-B8C9D1E23456}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
+

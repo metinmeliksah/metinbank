@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MetinBank.Models\MetinBank.Models.csproj" />
+    <ProjectReference Include="..\MetinBank.Interface\MetinBank.Interface.csproj" />
+    <ProjectReference Include="..\MetinBank.Util\MetinBank.Util.csproj" />
+  </ItemGroup>
+
+</Project>
+

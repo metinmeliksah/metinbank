@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.32.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MetinBank.Models\MetinBank.Models.csproj" />
+    <ProjectReference Include="..\MetinBank.Interface\MetinBank.Interface.csproj" />
+    <ProjectReference Include="..\MetinBank.Business\MetinBank.Business.csproj" />
+    <ProjectReference Include="..\MetinBank.Util\MetinBank.Util.csproj" />
+  </ItemGroup>
+
+</Project>
+
