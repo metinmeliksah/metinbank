@@ -1,285 +1,367 @@
-# MetinBank - Banka Otomasyonu Sistemi
+# METİN BANK - Kapsamlı Bankacılık Uygulaması
 
-**Versiyon:** 1.0  
-**Hazırlayan:** Metin Melikşah Dermencioğlu  
-**Tarih:** 28 Ekim 2025
+## Proje Özeti
 
-## 📋 Proje Hakkında
+Metin Bank, şube işlemleri, genel merkez denetimi ve müşteri web portalı içeren kapsamlı bir bankacılık uygulamasıdır. 
+Proje, OOP prensipleri ile C# .NET platformunda geliştirilmiş, çok katmanlı mimari yapıda tasarlanmıştır.
 
-MetinBank, modern bankacılık ihtiyaçlarını karşılamak üzere tasarlanmış kapsamlı bir banka otomasyon sistemidir. Bireysel ve kurumsal müşteriler için eksiksiz bankacılık hizmetleri sunar.
+## Teknoloji Stack
 
-## 🏗️ Sistem Mimarisi
+- **Backend**: C# .NET Framework 4.8 (Windows Forms - DevExpress), .NET Core 6.0 Web API
+- **Frontend**: DevExpress (Windows), HTML/CSS/JS (Web Portal)
+- **Veritabanı**: MySQL 8.0
+- **Güvenlik**: JWT Token, SHA256 Hash, AES-256 Encryption
+- **ORM**: ADO.NET (Manual Data Access Layer)
 
-### Teknoloji Stack
-
-#### Backend
-- **Framework:** .NET 8 Web API
-- **Ana Veritabanı:** Oracle XE (İşlemsel veriler)
-- **Log/Analitik DB:** PostgreSQL
-- **Mesaj Kuyruğu:** RabbitMQ / Kafka
-- **Cache:** Redis (Oturum yönetimi)
-- **Analitik Servis:** Python (Flask/FastAPI)
-
-#### Frontend
-- **Web Şube:** React.js / Angular
-- **Mobil Uygulama:** React Native / Flutter (Android & iOS)
-- **Şube/ATM:** Windows Forms (.NET)
-
-#### Güvenlik
-- HTTPS (TLS 1.3)
-- JWT Token Based Authentication
-- OAuth2 Authorization
-- 2FA (SMS OTP & Mobile Push)
-- AES-256 Şifreleme
-- HSM Token Integration (Kart güvenliği)
-
-## 📁 Proje Yapısı
+## Proje Yapısı
 
 ```
-metinbank/
-├── src/
-│   ├── Backend/              # .NET 8 Web API
-│   │   ├── MetinBank.API/
-│   │   ├── MetinBank.Core/
-│   │   ├── MetinBank.Infrastructure/
-│   │   └── MetinBank.Services/
-│   ├── Frontend/             # Web Uygulaması (React/Angular)
-│   ├── Mobile/               # Mobil Uygulama (React Native/Flutter)
-│   ├── Desktop/              # Windows Forms (Şube & ATM)
-│   └── Python/               # Analytics & Risk Service
-├── database/                 # Database Scripts
-│   ├── oracle/
-│   └── postgresql/
-├── docs/                     # Dokümantasyon
-├── scripts/                  # Deployment & Utility Scripts
-└── tests/                    # Test Projeleri
+MetinBank/
+├── Database/
+│   └── MetinBank_Schema.sql          # Veritabanı şeması ve initial data
+├── MetinBank.Util/                    # Utility Layer
+│   ├── DataAccess.cs                  # MySQL bağlantı yönetimi
+│   ├── SecurityHelper.cs              # SHA256, AES şifreleme
+│   ├── IbanHelper.cs                  # IBAN üretim ve doğrulama
+│   ├── ValidationHelper.cs            # Veri doğrulama
+│   └── CommonFunctions.cs             # Ortak fonksiyonlar
+├── MetinBank.Models/                  # Model Layer
+│   ├── KullaniciModel.cs
+│   ├── MusteriModel.cs
+│   ├── HesapModel.cs
+│   ├── IslemModel.cs
+│   ├── BankaKartiModel.cs
+│   ├── SubeModel.cs
+│   ├── OnayModel.cs
+│   ├── LogModel.cs
+│   ├── BildirimModel.cs
+│   └── DovizKurModel.cs
+├── MetinBank.Interface/               # Interface Layer
+│   ├── IMusteri.cs
+│   ├── IHesap.cs
+│   ├── IIslem.cs
+│   ├── IAuth.cs
+│   ├── IOnay.cs
+│   └── ILog.cs
+├── MetinBank.Business/                # Business Logic Layer
+│   ├── BMusteri.cs
+│   ├── BHesap.cs
+│   ├── BIslem.cs
+│   ├── BAuth.cs
+│   ├── BOnay.cs
+│   └── BLog.cs
+├── MetinBank.Service/                 # Service Layer
+│   ├── SMusteri.cs
+│   ├── SHesap.cs
+│   ├── SIslem.cs
+│   ├── SAuth.cs
+│   ├── SOnay.cs
+│   ├── SIban.cs
+│   └── SLog.cs
+├── MetinBank.Forms/                   # Windows Forms Application
+│   ├── FrmGiris.cs
+│   ├── FrmAnaSayfa.cs
+│   ├── FrmMusteriIslem.cs
+│   ├── FrmHesapIslem.cs
+│   ├── FrmParaYatir.cs
+│   ├── FrmParaCek.cs
+│   ├── FrmHavaleEFT.cs
+│   └── ... (diğer formlar)
+├── MetinBank.WebAPI/                  # Web API (.NET Core 6.0)
+│   ├── Controllers/
+│   │   ├── AuthController.cs
+│   │   ├── MusteriController.cs
+│   │   ├── HesapController.cs
+│   │   └── IslemController.cs
+│   └── Middleware/
+│       ├── JwtMiddleware.cs
+│       └── LogMiddleware.cs
+└── MetinBank.Web/                     # Web Portal (Müşteri)
+    ├── index.html
+    ├── login.html
+    ├── dashboard.html
+    └── assets/
+        ├── css/
+        ├── js/
+        └── img/
 ```
 
-## 🎯 Özellikler
+## Veritabanı Kurulumu
 
-### Bireysel Bankacılık
-- ✅ **eKYC (Elektronik Müşteri Tanıma)**
-  - NFC ile kimlik okuma
-  - OCR ile belge tarama
-  - Canlılık testi (Liveness)
-  
-- ✅ **Hesap Yönetimi**
-  - Vadesiz, Vadeli, Döviz hesapları
-  - Kredili Mevduat Hesabı (KMH)
-  
-- ✅ **Kart İşlemleri**
-  - Banka Kartı (Debit)
-  - Kredi Kartı (Credit)
-  - Sanal Kart
-  
-- ✅ **Para Transferleri**
-  - Havale (Anlık)
-  - EFT (Simülasyon)
-  - QR ile transfer
-  
-- ✅ **Ödemeler**
-  - Fatura ödeme
-  - Vergi/SGK ödemeleri
-  - Otomatik ödeme talimatı
-  
-- ✅ **Yatırım Ürünleri**
-  - Yatırım fonları
-  - Hisse senedi
-  - Kıymetli maden (Altın/Gümüş)
-  
-- ✅ **Krediler**
-  - İhtiyaç kredisi
-  - Konut kredisi
-  - Otomatik kredi skoru
+### 1. MySQL 8.0 Kurulumu
 
-### Kurumsal Bankacılık
-- ✅ **Kullanıcı Yönetimi**
-  - Firma yöneticisi rolü
-  - Hazırlayıcı/Onaylayıcı rolleri
-  - Yetki matrisi yönetimi
-  
-- ✅ **Toplu Ödemeler**
-  - Maaş ödemeleri
-  - Tedarikçi ödemeleri
-  - Excel/CSV import
-  
-- ✅ **Ticari Krediler**
-  - İşletme kredisi
-  - Makine/Ekipman kredisi
-  
-- ✅ **Çek/Senet İşlemleri**
-  - Çek karnesiyönetimi
-  - Senet takibi
-  
-- ✅ **POS & Üye İşyeri**
-  - POS raporlama
-  - Mutabakat
-  
-- ✅ **Dış Ticaret**
-  - Teminat Mektubu (L/G)
-  - Akreditif (L/C)
+Windows için MySQL 8.0 indirin ve kurun: https://dev.mysql.com/downloads/mysql/
 
-### Diğer Özellikler
-- ✅ **ATM Simülasyonu**
-  - Para çekme/yatırma
-  - QR ile kartsız işlem
-  - Fatura ödeme
-  
-- ✅ **Chatbot**
-  - NLP tabanlı müşteri asistanı
-  - Bakiye sorgulama
-  - İşlem başlatma
-  
-- ✅ **Bildirim Sistemi**
-  - Mobile Push (FCM/APNS)
-  - SMS (OTP & Uyarılar)
-  - E-posta (Dekont & Ekstre)
+### 2. Veritabanı Oluşturma
 
-## 🔐 Güvenlik Özellikleri
-
-### Kimlik Doğrulama
-- OAuth2 + JWT Token
-- 2FA (İki Faktörlü Doğrulama)
-- Cihaz kayıt mekanizması
-- Biyometrik giriş desteği
-
-### Veri Güvenliği
-- AES-256 şifreleme
-- PBKDF2/bcrypt hash
-- Kart tokenizasyonu
-- HSM entegrasyonu
-
-### İşlem Güvenliği
-- Anlık risk analizi (Python ML)
-- Çok katmanlı onay mekanizması
-- Hiyerarşik yetkilendirme
-- RBAC (Role-Based Access Control)
-
-### Uyumluluk
-- KVKK (Kişisel Verilerin Korunması)
-- PCI-DSS (Kart güvenliği)
-- BDDK mevzuatı
-
-## 🚀 Kurulum
-
-### Gereksinimler
-- .NET 8 SDK
-- Oracle XE 21c
-- PostgreSQL 15+
-- Redis
-- RabbitMQ / Kafka
-- Python 3.11+
-- Node.js 18+ (Frontend için)
-
-### Backend Kurulum
 ```bash
-cd src/Backend
-dotnet restore
-dotnet build
-dotnet run --project MetinBank.API
+# MySQL'e bağlanın
+mysql -u root -p
+
+# Scripti çalıştırın
+source Database/MetinBank_Schema.sql
+
+# veya MySQL Workbench ile MetinBank_Schema.sql dosyasını çalıştırın
 ```
 
-### Python Analytics Kurulum
-```bash
-cd src/Python
-python -m venv venv
-venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-python app.py
+### 3. Bağlantı Yapılandırması
+
+`App.config` dosyasında bağlantı stringini güncelleyin:
+
+```xml
+<connectionStrings>
+  <add name="MetinBankDB" 
+       connectionString="Server=localhost;Database=MetinBankDB;Uid=root;Pwd=your_password;CharSet=utf8mb4;" 
+       providerName="MySql.Data.MySqlClient"/>
+</connectionStrings>
 ```
 
-### Frontend Kurulum
-```bash
-cd src/Frontend
-npm install
-npm start
+## Kullanıcı Rolleri ve Varsayılan Kullanıcılar
+
+### Genel Merkez
+- **Kullanıcı Adı**: `gm.admin`
+- **Şifre**: `Password123!`
+- **Yetkiler**: Tüm sistem yetkisi
+
+### Şube Müdürü
+- **Kullanıcı Adı**: `merkez.mudur`
+- **Şifre**: `Password123!`
+- **Yetkiler**: Şube yönetimi, orta seviye onaylar
+
+### Şube Çalışanı
+- **Kullanıcı Adı**: `merkez.calisan1`
+- **Şifre**: `Password123!`
+- **Yetkiler**: Hesap işlemleri, para işlemleri
+
+**NOT**: Tüm şifreler ilk kurulumda `TEMP_HASH` ve `TEMP_SALT` değerleri ile oluşturulmuştur. 
+İlk çalıştırmadan önce, gerçek hash değerleri ile güncellenmelidir.
+
+## Özellikler
+
+### 1. Hesap İşlemleri
+- ✅ Hesap Açma (TL, USD, EUR)
+- ✅ Hesap Kapatma/Pasif Etme
+- ✅ IBAN Otomatik Üretimi (Mod 97 Algoritması)
+- ✅ Hesap Türleri: Vadesiz, Vadeli, Çocuk Tasarruf, Maaş, Yatırım
+
+### 2. Para İşlemleri
+- ✅ Para Yatırma (Nakit, Transfer)
+- ✅ Para Çekme (Günlük limit: 50.000 TL)
+- ✅ Havale (IBAN ile, ücretsiz)
+- ✅ EFT (Farklı banka, 5 TL ücret)
+- ✅ Virman (Kendi hesapları arası, ücretsiz)
+- ✅ Döviz İşlemleri (Alış/Satış)
+
+### 3. Onay Mekanizması
+- ✅ Tutar Bazlı Onay Seviyeleri
+  - 0-5.000 TL: Çalışan (Direkt)
+  - 5.001-10.000 TL: Müdür Onayı
+  - 10.001 TL üzeri: Genel Merkez Onayı
+- ✅ Onay Süreci İş Akışı
+- ✅ Otomatik Bildirimler
+
+### 4. Banka Kartı İşlemleri
+- ✅ Kart Başvurusu
+- ✅ Kart Aktivasyon
+- ✅ Kart Bloke/Bloke Kaldırma
+- ✅ Kayıp/Çalıntı Bildirimi
+- ✅ Kart Limiti Belirleme
+
+### 5. Güvenlik
+- ✅ SHA256 + Salt ile Şifre Hash'leme
+- ✅ AES-256 ile CVV Şifreleme
+- ✅ JWT Token Authenticat ion (Web API)
+- ✅ IP ve MAC Adresi Takibi
+- ✅ 3 Başarısız Giriş = 30 Dakika Kilitleme
+- ✅ 5 Başarısız Giriş = Tam Kilitleme
+
+### 6. Log Yönetimi
+- ✅ İşlem Logları (7 yıl saklama)
+- ✅ Görüntüleme Logları
+- ✅ Sistem Logları
+- ✅ Güvenlik Logları
+- ✅ Login/Logout Logları
+
+### 7. Raporlama
+- ✅ Hesap Ekstres i (PDF, Excel)
+- ✅ Günlük İşlem Raporları
+- ✅ Şube Performans Raporları
+- ✅ Müşteri İstatistikleri
+
+## IBAN Üretim Sistemi
+
+### IBAN Yapısı (26 Karakter)
+```
+TR33 0001 0012 3456 7890 1234 56
+│ │  │    │    │                │
+│ │  │    │    │                └─ Hesap No (son 6 hane)
+│ │  │    │    └────────────────── Hesap No (16 hane)
+│ │  │    └─────────────────────── Şube Kodu (5 hane)
+│ │  └──────────────────────────── Banka Kodu + Rezerv (6 hane)
+│ └─────────────────────────────── Kontrol Rakamı (2 hane)
+└───────────────────────────────── Ülke Kodu (TR)
 ```
 
-## 📊 Performans Hedefleri
+### Kontrol Rakamı Hesaplama (Mod 97)
+1. IBAN'ı yeniden düzenle: Banka+Rezerv+Şube+Hesap+TR(2734)+00
+2. Harfleri sayıya çevir (A=10, B=11, ... Z=35)
+3. Mod 97 işlemi uygula
+4. Kontrol Rakamı = 98 - (Mod 97 sonucu)
 
-- **Eşzamanlı Kullanıcı:** 10,000
-- **API Yanıt Süresi:** < 200ms (ortalama)
-- **Risk Analizi:** < 500ms
-- **Başarı Oranı:** %95+
-- **Uptime:** %99.9
+### Örnek Kod
+```csharp
+string iban = IbanHelper.GenerateIban("00001", "0000000000000001");
+// Sonuç: TR33 0001 0000 0100 0000 0000 0001
 
-## 🧪 Test
-
-### Birim Testleri
-```bash
-dotnet test
+string hata = IbanHelper.ValidateIban("TR33 0001 0000 0100 0000 0000 0001");
+// hata == null ise IBAN geçerli
 ```
 
-### Entegrasyon Testleri
-```bash
-dotnet test --filter Category=Integration
+## Güvenlik Özellikleri
+
+### Şifre Politikası
+- En az 8 karakter
+- En az 1 büyük harf
+- En az 1 küçük harf
+- En az 1 rakam
+- En az 1 özel karakter
+- 90 günde bir şifre değişimi zorunlu
+- Son 5 şifre tekrar kullanılamaz
+
+### Şifreleme
+```csharp
+// Şifre Hash'leme
+string salt = SecurityHelper.GenerateSalt();
+string hashedPassword = SecurityHelper.HashPassword("Password123!", salt);
+
+// AES Şifreleme (CVV için)
+string cvvEncrypted = SecurityHelper.EncryptAES("123");
+string cvvDecrypted = SecurityHelper.DecryptAES(cvvEncrypted);
 ```
 
-### Yük Testleri
-```bash
-k6 run scripts/load-test.js
+## API Kullanımı
+
+### Base URL
+```
+http://localhost:5000/api
 ```
 
-## 📖 API Dokümantasyonu
+### Authentication
+```http
+POST /api/Auth/Login
+Content-Type: application/json
 
-API dokümantasyonu Swagger üzerinden erişilebilir:
-- Development: `http://localhost:5000/swagger`
-- Staging: `https://staging-api.metinbank.com/swagger`
+{
+  "kullaniciAdi": "merkez.calisan1",
+  "sifre": "Password123!"
+}
 
-## 🔄 Veri Akışı
+Response:
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "kullanici": { ... },
+  "expiresAt": "2024-01-01T12:00:00Z"
+}
+```
 
-### Örnek: Kurumsal Maaş Ödemesi
-1. Firma Hazırlayıcı → Maaş listesi yükler
-2. Sistem → PENDING_FIRM_APPROVAL (Firma onayı bekliyor)
-3. Firma Onaylayıcı → Listeyi onaylar
-4. Sistem → PENDING_BANK_APPROVAL (Banka onayı bekliyor)
-5. Risk Servisi → Python'da risk analizi
-6. Banka Personeli → Onay/Red
-7. Sistem → İşlemi gerçekleştirir (EFT/Havale)
-8. Bildirim Servisi → Taraflara bildirim gönderir
+### Hesap Bakiye Sorgulama
+```http
+GET /api/Hesap/Bakiye/{hesapID}
+Authorization: Bearer {token}
 
-## 📝 Lisans
+Response:
+{
+  "hesapID": 1,
+  "iban": "TR33 0001 0000 0100 0000 0000 0001",
+  "bakiye": 10000.50,
+  "kullanilabilirBakiye": 9500.50,
+  "blokeBakiye": 500.00
+}
+```
 
-Bu proje özel bir banka otomasyon sistemidir ve tüm hakları saklıdır.
+### Havale İşlemi
+```http
+POST /api/Islem/Havale
+Authorization: Bearer {token}
+Content-Type: application/json
 
-## 👥 İletişim
+{
+  "kaynakHesapID": 1,
+  "hedefIBAN": "TR44 0001 0000 0200 0000 0000 0002",
+  "tutar": 1000.00,
+  "aciklama": "Kira ödemesi",
+  "aliciAdi": "Ahmet Yılmaz"
+}
 
-**Proje Yöneticisi:** Metin Melikşah Dermencioğlu  
-**Tarih:** 28 Ekim 2025
+Response:
+{
+  "basarili": true,
+  "islemReferansNo": "TRX20240101120000001",
+  "onayGerekiyor": false,
+  "mesaj": "İşlem başarıyla tamamlandı."
+}
+```
+
+## Geliştirme Notları
+
+### Kodlama Standartları
+- ✅ Tüm class'lar ve metodlar `/// summary` açıklamalı
+- ✅ Class isimleri ile dosya isimleri aynı
+- ✅ Private değişkenler `_` ile başlıyor
+- ✅ PascalCase ve camelCase kuralları
+- ✅ Service class'ları `S` ile başlıyor
+- ✅ Business class'ları `B` ile başlıyor
+- ✅ Interface'ler `I` ile başlıyor
+- ✅ Try-catch blokları eksiksiz
+- ✅ Formlardan SQL çağrısı YOK
+
+### Form Standartları
+- Font: Tahoma 8.25pt
+- Form boyutu: Maksimum 770x700
+- AutoScroll: Aktif
+- Readonly alanlar: LightYellow arka plan
+- Zorunlu alanlar: `*` işareti ile belirtili
+- Kontrol isimlendirme: btn, txt, lbl, cmb prefix
+
+### Performans
+- Sorgu süreleri: < 2 saniye
+- İşlem kayıt: < 3 saniye
+- Index kullanımı (sık sorgulanan alanlarda)
+- Transaction yönetimi
+- Connection pooling
+
+## Test Kullanıcıları ve Senaryolar
+
+### Senaryo 1: Yeni Müşteri ve Hesap Açma
+1. `merkez.calisan1` ile giriş yap
+2. Yeni müşteri ekle (TCKN: 12345678901)
+3. Müşteriye TL Vadesiz Hesap aç
+4. IBAN otomatik oluşturulur
+5. Müdür onayı bekle
+
+### Senaryo 2: Para Yatırma ve Havale
+1. Müşteri hesabına 10.000 TL yatır
+2. 3.000 TL havale yap (direkt işlem)
+3. 7.000 TL havale yap (müdür onayı gerekir)
+4. Onay bekleyen işlemleri görüntüle
+
+### Senaryo 3: Banka Kartı Başvurusu
+1. Müşteri için kart başvurusu oluştur
+2. Kart bilgileri (CVV şifreli) saklanır
+3. 3-5 iş günü sonra kart aktif edilir
+4. Günlük/aylık limitler belirlenir
+
+## Lisans
+
+Bu proje eğitim amaçlı geliştirilmiştir.
+
+## İletişim
+
+Proje Sahibi: Metin Bank Development Team
+Email: dev@metinbank.com.tr
 
 ---
 
-## 🗺️ Roadmap
-
-### Faz 1 - Core Banking (Tamamlandı)
-- [x] Proje yapısı
-- [x] Authentication/Authorization
-- [x] Müşteri yönetimi
-- [x] Hesap işlemleri
-
-### Faz 2 - Payment & Cards (Devam Ediyor)
-- [ ] Kart yönetimi
-- [ ] Transfer sistemleri
-- [ ] Ödeme sistemleri
-
-### Faz 3 - Investment & Loans
-- [ ] Yatırım ürünleri
-- [ ] Kredi yönetimi
-
-### Faz 4 - Corporate Banking
-- [ ] Kurumsal modüller
-- [ ] Toplu ödemeler
-- [ ] Dış ticaret
-
-### Faz 5 - Advanced Features
-- [ ] Chatbot
-- [ ] Mobile app
-- [ ] ATM simülasyonu
-
-### Faz 6 - Production Ready
-- [ ] Performance optimization
-- [ ] Security hardening
-- [ ] Documentation
-- [ ] Deployment automation
-
+**NOT**: Bu proje kapsamlı bir bankacılık uygulaması örneğidir. Gerçek bir production ortamında 
+kullanmadan önce ek güvenlik testleri, penetrasyon testleri ve code review yapılmalıdır.
 
