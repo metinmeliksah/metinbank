@@ -5,6 +5,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using MetinBank.Models;
 using MetinBank.Service;
+using MetinBank.Util;
 
 namespace MetinBank.Desktop
 {
@@ -32,24 +33,77 @@ namespace MetinBank.Desktop
             
             if (hata != null)
             {
-                MessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             gridOnaylar.DataSource = dt;
+            gridViewOnaylar.BestFitColumns();
+            
+            // Clear detail panel
+            ClearDetailPanel();
+        }
+
+        private void ClearDetailPanel()
+        {
+            lblIslemTipi.Text = "İşlem Tipi: -";
+            lblTutar.Text = "Tutar: -";
+            lblTarih.Text = "Tarih: -";
+            lblOlusturan.Text = "Oluşturan: -";
+        }
+
+        private void GridViewOnaylar_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
+        {
+            try
+            {
+                if (e.FocusedRowHandle < 0)
+                {
+                    ClearDetailPanel();
+                    return;
+                }
+
+                // Get row data and update detail panel
+                object islemTipiObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "IslemTipi");
+                object tutarObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "Tutar");
+                object tarihObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "OlusturmaTarihi");
+                object olusturanObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "OlusturanKullanici");
+
+                string islemTipi = CommonFunctions.DbNullToString(islemTipiObj);
+                decimal tutar = CommonFunctions.DbNullToDecimal(tutarObj);
+                string tarih = tarihObj != DBNull.Value && tarihObj != null 
+                    ? Convert.ToDateTime(tarihObj).ToString("dd.MM.yyyy HH:mm") 
+                    : "-";
+                string olusturan = CommonFunctions.DbNullToString(olusturanObj);
+
+                lblIslemTipi.Text = $"İşlem Tipi: {islemTipi}";
+                lblTutar.Text = $"Tutar: {tutar:N2} TL";
+                lblTarih.Text = $"Tarih: {tarih}";
+                lblOlusturan.Text = $"Oluşturan: {olusturan}";
+            }
+            catch
+            {
+                ClearDetailPanel();
+            }
         }
 
         private void BtnOnayla_Click(object sender, EventArgs e)
         {
-            if (dgvOnaylar.SelectedRows.Count == 0)
+            if (gridViewOnaylar.FocusedRowHandle < 0)
             {
-                MessageBox.Show("Lütfen bir kayıt seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                XtraMessageBox.Show("Lütfen bir kayıt seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            int onayLogID = Convert.ToInt32(dgvOnaylar.SelectedRows[0].Cells["OnayLogID"].Value);
+            object onayLogIDObj = gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "OnayLogID");
+            int onayLogID = CommonFunctions.DbNullToInt(onayLogIDObj);
 
-            DialogResult result = MessageBox.Show("İşlemi onaylamak istediğinize emin misiniz?", 
+            if (onayLogID == 0)
+            {
+                XtraMessageBox.Show("Geçersiz kayıt.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult result = XtraMessageBox.Show("İşlemi onaylamak istediğinize emin misiniz?", 
                 "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result != DialogResult.Yes)
@@ -59,41 +113,54 @@ namespace MetinBank.Desktop
 
             if (hata != null)
             {
-                MessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            MessageBox.Show("İşlem başarıyla onaylandı!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            XtraMessageBox.Show("İşlem başarıyla onaylandı!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
             OnaylariYukle();
         }
 
         private void BtnReddet_Click(object sender, EventArgs e)
         {
-            if (dgvOnaylar.SelectedRows.Count == 0)
+            if (gridViewOnaylar.FocusedRowHandle < 0)
             {
-                MessageBox.Show("Lütfen bir kayıt seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                XtraMessageBox.Show("Lütfen bir kayıt seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            string redNedeni = Microsoft.VisualBasic.Interaction.InputBox("Red nedeni giriniz:", "İşlem Reddet");
+            // Use DevExpress input dialog
+            string redNedeni = XtraInputBox.Show("Red nedeni giriniz:", "İşlem Reddet", "");
 
             if (string.IsNullOrWhiteSpace(redNedeni))
             {
-                MessageBox.Show("Red nedeni girilmelidir.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                XtraMessageBox.Show("Red nedeni girilmelidir.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            int onayLogID = Convert.ToInt32(dgvOnaylar.SelectedRows[0].Cells["OnayLogID"].Value);
+            object onayLogIDObj = gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "OnayLogID");
+            int onayLogID = CommonFunctions.DbNullToInt(onayLogIDObj);
+
+            if (onayLogID == 0)
+            {
+                XtraMessageBox.Show("Geçersiz kayıt.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             string hata = _sOnay.IslemReddet(onayLogID, _kullanici.KullaniciID, redNedeni);
 
             if (hata != null)
             {
-                MessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            MessageBox.Show("İşlem reddedildi!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            XtraMessageBox.Show("İşlem reddedildi!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            OnaylariYukle();
+        }
+
+        private void BtnYenile_Click(object sender, EventArgs e)
+        {
             OnaylariYukle();
         }
 

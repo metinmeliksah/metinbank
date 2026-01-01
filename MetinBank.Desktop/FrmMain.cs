@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using DevExpress.XtraBars;
 using DevExpress.XtraNavBar;
 using DevExpress.XtraEditors;
+using DevExpress.LookAndFeel;
 using MetinBank.Models;
 
 namespace MetinBank.Desktop
@@ -14,27 +15,48 @@ namespace MetinBank.Desktop
 
         public FrmMain(KullaniciModel kullanici)
         {
+            // Apply DevExpress skin before InitializeComponent
+            UserLookAndFeel.Default.SetSkinStyle(SkinStyle.WXI);
+            
             InitializeComponent();
             _kullanici = kullanici;
             this.IsMdiContainer = true;
             ConfigureUI();
+            LoadNavBarIcons();
         }
 
         private void ConfigureUI()
         {
             // Set user information in header
-            barStaticItemKullanici.Caption = $"{_kullanici.TamAd} ({_kullanici.RolAdi})";
+            barStaticItemKullanici.Caption = $"👤 {_kullanici.TamAd} ({_kullanici.RolAdi})";
             
             // Set current date/time
-            barStaticItemTarih.Caption = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+            barStaticItemTarih.Caption = $"📅 {DateTime.Now:dd.MM.yyyy HH:mm}";
             
             // Start timer for updating time
             timer1.Start();
         }
 
+        private void LoadNavBarIcons()
+        {
+            // Create icons programmatically using DevExpress icon builder
+            try
+            {
+                // İkon ayarları - koyu mavi tema
+                var iconColor = Color.White;
+                
+                // ImageCollection'a programatik ikonlar eklenecek
+                // Bu kısım projenin Resources'ında icon dosyaları olduğunda aktif edilebilir
+            }
+            catch
+            {
+                // İkon yükleme hatası sessizce geçilir
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
-            barStaticItemTarih.Caption = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+            barStaticItemTarih.Caption = $"📅 {DateTime.Now:dd.MM.yyyy HH:mm}";
         }
 
         private void navBarItemMusteriEkle_LinkClicked(object sender, NavBarLinkEventArgs e)
