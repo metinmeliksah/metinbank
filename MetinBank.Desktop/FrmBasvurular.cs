@@ -13,7 +13,9 @@ namespace MetinBank.Desktop
         private KullaniciModel _kullanici;
         private SMusteri _sMusteri;
         private SHesap _sHesap;
+        private SKart _sKart;
         private int _seciliMusteriID;
+        private int _seciliHesapID;
         private System.Windows.Forms.Timer _aramaTimer;
 
         public FrmBasvurular(KullaniciModel kullanici)
@@ -22,6 +24,7 @@ namespace MetinBank.Desktop
             _kullanici = kullanici;
             _sMusteri = new SMusteri();
             _sHesap = new SHesap();
+            _sKart = new SKart();
             
             _aramaTimer = new System.Windows.Forms.Timer();
             _aramaTimer.Interval = 500;
@@ -33,9 +36,17 @@ namespace MetinBank.Desktop
 
         private void FrmBasvurular_Load(object sender, EventArgs e)
         {
-            this.Text = "Başvurular";
-            cmbBasvuruTipi.Properties.Items.AddRange(new string[] { "Kart Başvurusu", "Kart İptal Başvurusu" });
+            this.Text = "Kart Başvuruları";
+            
+            // Başvuru tipi: Troy ve Mastercard
+            cmbBasvuruTipi.Properties.Items.Clear();
+            cmbBasvuruTipi.Properties.Items.AddRange(new string[] { "Troy", "Mastercard" });
             cmbBasvuruTipi.SelectedIndex = 0;
+            
+            // Buton textlerini güncelle
+            btnYeniBasvuru.Text = "💳  Kart Başvurusu Yap";
+            btnYenile.Text = "🔄  Yenile";
+            btnKapat.Text = "❌  Kapat";
         }
 
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
@@ -89,7 +100,9 @@ namespace MetinBank.Desktop
                 object musteriIDObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "MusteriID");
                 _seciliMusteriID = CommonFunctions.DbNullToInt(musteriIDObj);
                 if (_seciliMusteriID == 0) return;
-                BasvurulariYukle();
+                
+                // Müşterinin hesaplarını yükle
+                HesaplariYukle();
             }
             catch (Exception ex)
             {
@@ -97,7 +110,7 @@ namespace MetinBank.Desktop
             }
         }
 
-        private void BasvurulariYukle()
+        private void HesaplariYukle()
         {
             try
             {
@@ -107,23 +120,8 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                DataAccess dataAccess = new DataAccess();
-                string query = @"SELECT k.KartID, k.KartNo, k.KartTipi, k.Durum, k.BasvuruTarihi,
-                                k.KartSahibiAdi, h.IBAN, m.MusteriNo, CONCAT(m.Ad, ' ', m.Soyad) as MusteriAdi
-                                FROM BankaKarti k
-                                INNER JOIN Hesap h ON k.HesapID = h.HesapID
-                                INNER JOIN Musteri m ON h.MusteriID = m.MusteriID
-                                WHERE m.MusteriID = @musteriID AND k.Durum IN ('Basvuru', 'Iptal')
-                                ORDER BY k.BasvuruTarihi DESC";
-
-                MySql.Data.MySqlClient.MySqlParameter[] parameters = new MySql.Data.MySqlClient.MySqlParameter[]
-                {
-                    new MySql.Data.MySqlClient.MySqlParameter("@musteriID", _seciliMusteriID)
-                };
-
-                DataTable dt;
-                string hata = dataAccess.ExecuteQuery(query, parameters, out dt);
-                dataAccess.CloseConnection();
+                DataTable hesaplar;
+                string hata = _sKart.GetMusteriHesaplari(_seciliMusteriID, out hesaplar);
 
                 if (hata != null)
                 {
@@ -131,7 +129,7 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                gridBasvurular.DataSource = dt;
+                gridBasvurular.DataSource = hesaplar;
                 gridViewBasvurular.BestFitColumns();
             }
             catch (Exception ex)
@@ -142,19 +140,113 @@ namespace MetinBank.Desktop
 
         private void BtnYeniBasvuru_Click(object sender, EventArgs e)
         {
-            if (_seciliMusteriID == 0)
+            try
             {
-                MessageBox.Show("Lütfen önce bir müşteri seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                if (_seciliMusteriID == 0)
+                {
+                    XtraMessageBox.Show("Lütfen önce bir müşteri seçiniz.", "Uyarı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-            MessageBox.Show("Yeni başvuru formu açılacak. (TODO: Hesap seçimi ile)", 
-                "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Seçili hesap al
+                if (gridViewBasvurular.RowCount == 0)
+                {
+                    XtraMessageBox.Show("Müşterinin aktif hesabı bulunmamaktadır.", "Uyarı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int selectedRow = gridViewBasvurular.FocusedRowHandle;
+                if (selectedRow < 0)
+                {
+                    XtraMessageBox.Show("Lütfen kart için bir hesap seçiniz.", "Uyarı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                object hesapIDObj = gridViewBasvurular.GetRowCellValue(selectedRow, "HesapID");
+                _seciliHesapID = CommonFunctions.DbNullToInt(hesapIDObj);
+
+                if (_seciliHesapID == 0)
+                {
+                    XtraMessageBox.Show("Geçersiz hesap seçimi.", "Uyarı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Kart markası al
+                string kartMarkasi = cmbBasvuruTipi.Text;
+                if (string.IsNullOrEmpty(kartMarkasi))
+                {
+                    XtraMessageBox.Show("Lütfen kart markası seçiniz (Troy veya Mastercard).", "Uyarı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Müşteri adını al
+                string musteriAdi = "";
+                MusteriModel musteri;
+                string hataMusteri = _sMusteri.MusteriGetir(_seciliMusteriID, out musteri);
+                if (hataMusteri == null && musteri != null)
+                {
+                    musteriAdi = $"{musteri.Ad} {musteri.Soyad}";
+                }
+
+                // Onay iste
+                DialogResult result = XtraMessageBox.Show(
+                    $"Kart Başvurusu Onayı\n\n" +
+                    $"Kart Markası: {kartMarkasi}\n" +
+                    $"Kart Sahibi: {musteriAdi}\n" +
+                    $"Son Kullanma: {DateTime.Now.AddYears(5):MM/yyyy}\n\n" +
+                    $"Başvuruyu onaylıyor musunuz?",
+                    "Kart Başvurusu",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (result != DialogResult.Yes)
+                    return;
+
+                // Kartı oluştur
+                int kartID;
+                string hata = _sKart.CreateCard(_seciliHesapID, kartMarkasi, musteriAdi, _kullanici.KullaniciID, out kartID);
+
+                if (hata != null)
+                {
+                    XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Başarılı mesajı
+                long kartNo = SKart.GenerateCardNumber(kartMarkasi);
+                string kartNoFormatli = $"{kartNo.ToString("D16").Substring(0, 4)} {kartNo.ToString("D16").Substring(4, 4)} " +
+                                       $"{kartNo.ToString("D16").Substring(8, 4)} {kartNo.ToString("D16").Substring(12, 4)}";
+
+                XtraMessageBox.Show(
+                    $"✅ Kart başvurusu başarıyla tamamlandı!\n\n" +
+                    $"Kart No: {kartNoFormatli}\n" +
+                    $"Kart Markası: {kartMarkasi}\n" +
+                    $"Son Kullanma: {DateTime.Now.AddYears(5):MM/yyyy}\n" +
+                    $"CVV: ***",
+                    "Başarılı",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+
+                // Hesapları yenile
+                HesaplariYukle();
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show($"Beklenmeyen hata: {ex.Message}", "Hata", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BtnYenile_Click(object sender, EventArgs e)
         {
-            BasvurulariYukle();
+            HesaplariYukle();
         }
 
         private void BtnKapat_Click(object sender, EventArgs e)

@@ -13,6 +13,7 @@ namespace MetinBank.Desktop
         private KullaniciModel _kullanici;
         private SMusteri _sMusteri;
         private SHesap _sHesap;
+        private SKart _sKart;
         private int _seciliMusteriID;
         private System.Windows.Forms.Timer _aramaTimer;
 
@@ -22,12 +23,13 @@ namespace MetinBank.Desktop
             _kullanici = kullanici;
             _sMusteri = new SMusteri();
             _sHesap = new SHesap();
+            _sKart = new SKart();
             
             _aramaTimer = new System.Windows.Forms.Timer();
             _aramaTimer.Interval = 500;
             _aramaTimer.Tick += (s, e) => {
                 _aramaTimer.Stop();
-                KartlariYukle();
+                MusteriAra();
             };
         }
 
@@ -146,6 +148,70 @@ namespace MetinBank.Desktop
         private void BtnKapat_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        /// Kart iptal işlemi
+        /// </summary>
+        public void KartIptalEt()
+        {
+            try
+            {
+                if (gridViewKartlar.RowCount == 0)
+                {
+                    MessageBox.Show("İptal edilecek kart bulunamadı.", "Uyarı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int selectedRow = gridViewKartlar.FocusedRowHandle;
+                if (selectedRow < 0)
+                {
+                    MessageBox.Show("Lütfen iptal edilecek kartı seçiniz.", "Uyarı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                object kartIDObj = gridViewKartlar.GetRowCellValue(selectedRow, "KartID");
+                int kartID = CommonFunctions.DbNullToInt(kartIDObj);
+
+                if (kartID == 0)
+                {
+                    MessageBox.Show("Geçersiz kart seçimi.", "Uyarı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Onay iste
+                DialogResult result = MessageBox.Show(
+                    "Seçili kartı iptal etmek istediğinize emin misiniz?\n\n" +
+                    "Bu işlem geri alınamaz!",
+                    "Kart İptal",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
+
+                if (result != DialogResult.Yes)
+                    return;
+
+                string hata = _sKart.CancelCard(kartID);
+
+                if (hata != null)
+                {
+                    MessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                MessageBox.Show("Kart başarıyla iptal edildi.", "Başarılı", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                KartlariYukle();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Beklenmeyen hata: {ex.Message}", "Hata", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

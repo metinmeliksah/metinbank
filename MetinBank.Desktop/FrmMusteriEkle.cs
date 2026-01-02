@@ -20,12 +20,23 @@ namespace MetinBank.Desktop
 
         private void FrmMusteriEkle_Load(object sender, EventArgs e)
         {
-            // Default values
-            cmbMusteriTipi.SelectedIndex = 0; // Bireysel
-            cmbMusteriSegmenti.SelectedIndex = 0; // Standart
-            cmbCinsiyet.SelectedIndex = 0; // Erkek
-            cmbMedeniDurum.SelectedIndex = 0; // Bekar
-            dtDogumTarihi.DateTime = DateTime.Now.AddYears(-25);
+            // Use BeginInvoke to ensure form is fully loaded before initializing controls
+            this.BeginInvoke(new Action(() =>
+            {
+                // Default values with null checks
+                if (cmbMusteriTipi.Properties.Items.Count > 0)
+                    cmbMusteriTipi.SelectedIndex = 0; // Bireysel
+                if (cmbMusteriSegmenti.Properties.Items.Count > 0)
+                    cmbMusteriSegmenti.SelectedIndex = 0; // Standart
+                if (cmbCinsiyet.Properties.Items.Count > 0)
+                    cmbCinsiyet.SelectedIndex = 0; // Erkek
+                if (cmbMedeniDurum.Properties.Items.Count > 0)
+                    cmbMedeniDurum.SelectedIndex = 0; // Bekar
+                dtDogumTarihi.DateTime = DateTime.Now.AddYears(-25);
+                
+                // Ensure layout is correct
+                this.layoutControl1.Refresh();
+            }));
         }
 
         private void BtnKaydet_Click(object sender, EventArgs e)

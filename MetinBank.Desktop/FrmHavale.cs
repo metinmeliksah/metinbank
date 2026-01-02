@@ -36,7 +36,57 @@ namespace MetinBank.Desktop
 
         private void FrmHavale_Load(object sender, EventArgs e)
         {
-            this.Text = "Havale";
+            this.Text = "Havale İşlemi";
+            
+            // Hedef IBAN değiştiğinde otomatik müşteri arama
+            txtHedefIBAN.Leave += TxtHedefIBAN_Leave;
+        }
+
+        /// <summary>
+        /// Hedef IBAN girildiğinde otomatik müşteri bilgisi getir
+        /// </summary>
+        private void TxtHedefIBAN_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                string iban = txtHedefIBAN.Text.Trim().Replace(" ", "");
+                if (string.IsNullOrEmpty(iban) || iban.Length < 26) return;
+
+                // IBAN'a göre müşteri ara
+                DataAccess dataAccess = new DataAccess();
+                string query = @"SELECT m.MusteriID, m.MusteriNo, m.Ad, m.Soyad, h.HesapID, h.IBAN, h.Bakiye
+                                FROM Hesap h
+                                INNER JOIN Musteri m ON h.MusteriID = m.MusteriID
+                                WHERE REPLACE(h.IBAN, ' ', '') = @iban
+                                LIMIT 1";
+
+                MySql.Data.MySqlClient.MySqlParameter[] parameters = new MySql.Data.MySqlClient.MySqlParameter[]
+                {
+                    new MySql.Data.MySqlClient.MySqlParameter("@iban", iban)
+                };
+
+                System.Data.DataTable dt;
+                string hata = dataAccess.ExecuteQuery(query, parameters, out dt);
+                dataAccess.CloseConnection();
+
+                if (hata == null && dt != null && dt.Rows.Count > 0)
+                {
+                    var row = dt.Rows[0];
+                    string musteriAdi = $"{row["Ad"]} {row["Soyad"]}";
+                    txtAliciAdi.Text = musteriAdi;
+                    
+                    // Bilgi mesajı göster
+                    DevExpress.XtraEditors.XtraMessageBox.Show(
+                        $"Alıcı bulundu: {musteriAdi}", 
+                        "Bilgi", 
+                        MessageBoxButtons.OK, 
+                        MessageBoxIcon.Information);
+                }
+            }
+            catch
+            {
+                // Sessizce geç
+            }
         }
 
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)

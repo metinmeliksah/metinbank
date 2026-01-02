@@ -49,16 +49,19 @@ namespace MetinBank.Desktop
             this.navBarItemParaYatir = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemParaCek = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarGroupTransferIslemleri = new DevExpress.XtraNavBar.NavBarGroup();
-            this.navBarItemHavaleEFT = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItemHavale = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItemEFT = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemVirman = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarGroupDigerIslemler = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItemKartlar = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemBasvurular = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemOnayBekleyenler = new DevExpress.XtraNavBar.NavBarItem();
+            this.svgImageCollection1 = new DevExpress.Utils.SvgImageCollection(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.navBarControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.svgImageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -96,8 +99,8 @@ namespace MetinBank.Desktop
             // 
             // barStaticItemLogo
             // 
-            this.barStaticItemLogo.Caption = "MetinBank";
             this.barStaticItemLogo.Id = 0;
+            this.barStaticItemLogo.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barStaticItemLogo.ImageOptions.Image")));
             this.barStaticItemLogo.ItemAppearance.Normal.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.barStaticItemLogo.ItemAppearance.Normal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(101)))), ((int)(((byte)(192)))));
             this.barStaticItemLogo.ItemAppearance.Normal.Options.UseFont = true;
@@ -141,7 +144,7 @@ namespace MetinBank.Desktop
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(1400, 36);
+            this.barDockControlTop.Size = new System.Drawing.Size(1400, 54);
             // 
             // barDockControlBottom
             // 
@@ -155,35 +158,37 @@ namespace MetinBank.Desktop
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 36);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 54);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 864);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 846);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1400, 36);
+            this.barDockControlRight.Location = new System.Drawing.Point(1400, 54);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 864);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 846);
             // 
             // navBarControl1
             // 
             this.navBarControl1.ActiveGroup = this.navBarGroupMusteriIslemleri;
-            this.navBarControl1.Appearance.Background.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(101)))), ((int)(((byte)(192)))));
+            this.navBarControl1.Appearance.Background.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(244)))), ((int)(((byte)(248)))));
             this.navBarControl1.Appearance.Background.Options.UseBackColor = true;
-            this.navBarControl1.Appearance.GroupHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(118)))), ((int)(((byte)(210)))));
+            this.navBarControl1.Appearance.GroupHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(101)))), ((int)(((byte)(192)))));
             this.navBarControl1.Appearance.GroupHeader.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.navBarControl1.Appearance.GroupHeader.ForeColor = System.Drawing.Color.White;
             this.navBarControl1.Appearance.GroupHeader.Options.UseBackColor = true;
             this.navBarControl1.Appearance.GroupHeader.Options.UseFont = true;
             this.navBarControl1.Appearance.GroupHeader.Options.UseForeColor = true;
-            this.navBarControl1.Appearance.Item.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.navBarControl1.Appearance.Item.ForeColor = System.Drawing.Color.White;
+            this.navBarControl1.Appearance.Item.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.navBarControl1.Appearance.Item.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(37)))), ((int)(((byte)(41)))));
             this.navBarControl1.Appearance.Item.Options.UseFont = true;
             this.navBarControl1.Appearance.Item.Options.UseForeColor = true;
             this.navBarControl1.Appearance.ItemActive.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(150)))), ((int)(((byte)(243)))));
+            this.navBarControl1.Appearance.ItemActive.ForeColor = System.Drawing.Color.White;
             this.navBarControl1.Appearance.ItemActive.Options.UseBackColor = true;
+            this.navBarControl1.Appearance.ItemActive.Options.UseForeColor = true;
             this.navBarControl1.Dock = System.Windows.Forms.DockStyle.Left;
             this.navBarControl1.Groups.AddRange(new DevExpress.XtraNavBar.NavBarGroup[] {
             this.navBarGroupMusteriIslemleri,
@@ -196,16 +201,17 @@ namespace MetinBank.Desktop
             this.navBarItemHesapIslem,
             this.navBarItemParaYatir,
             this.navBarItemParaCek,
-            this.navBarItemHavaleEFT,
+            this.navBarItemHavale,
+            this.navBarItemEFT,
             this.navBarItemVirman,
             this.navBarItemKartlar,
             this.navBarItemBasvurular,
             this.navBarItemOnayBekleyenler});
-            this.navBarControl1.Location = new System.Drawing.Point(0, 36);
+            this.navBarControl1.Location = new System.Drawing.Point(0, 54);
             this.navBarControl1.Name = "navBarControl1";
             this.navBarControl1.OptionsNavPane.ExpandedWidth = 220;
-            this.navBarControl1.Size = new System.Drawing.Size(220, 864);
-            this.navBarControl1.SmallImages = this.imageCollection1;
+            this.navBarControl1.Size = new System.Drawing.Size(220, 846);
+            this.navBarControl1.SmallImages = this.svgImageCollection1;
             this.navBarControl1.TabIndex = 4;
             this.navBarControl1.Text = "navBarControl1";
             // 
@@ -214,24 +220,28 @@ namespace MetinBank.Desktop
             this.navBarGroupMusteriIslemleri.Caption = "  Müşteri İşlemleri";
             this.navBarGroupMusteriIslemleri.Expanded = true;
             this.navBarGroupMusteriIslemleri.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.LargeIconsText;
+            this.navBarGroupMusteriIslemleri.ImageOptions.SmallImageIndex = 0;
             this.navBarGroupMusteriIslemleri.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemMusteriEkle),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemMusteriIslem)});
             this.navBarGroupMusteriIslemleri.Name = "navBarGroupMusteriIslemleri";
-            this.navBarGroupMusteriIslemleri.SmallImageIndex = 0;
             // 
             // navBarItemMusteriEkle
             // 
             this.navBarItemMusteriEkle.Caption = "  Müşteri Ekle";
+            this.navBarItemMusteriEkle.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("navBarItemMusteriEkle.ImageOptions.LargeImage")));
+            this.navBarItemMusteriEkle.ImageOptions.SmallImage = ((System.Drawing.Image)(resources.GetObject("navBarItemMusteriEkle.ImageOptions.SmallImage")));
+            this.navBarItemMusteriEkle.ImageOptions.SmallImageIndex = 1;
             this.navBarItemMusteriEkle.Name = "navBarItemMusteriEkle";
-            this.navBarItemMusteriEkle.SmallImageIndex = 1;
             this.navBarItemMusteriEkle.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemMusteriEkle_LinkClicked);
             // 
             // navBarItemMusteriIslem
             // 
             this.navBarItemMusteriIslem.Caption = "  Müşteri Listesi";
+            this.navBarItemMusteriIslem.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("navBarItemMusteriIslem.ImageOptions.LargeImage")));
+            this.navBarItemMusteriIslem.ImageOptions.SmallImage = ((System.Drawing.Image)(resources.GetObject("navBarItemMusteriIslem.ImageOptions.SmallImage")));
+            this.navBarItemMusteriIslem.ImageOptions.SmallImageIndex = 2;
             this.navBarItemMusteriIslem.Name = "navBarItemMusteriIslem";
-            this.navBarItemMusteriIslem.SmallImageIndex = 2;
             this.navBarItemMusteriIslem.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemMusteriIslem_LinkClicked);
             // 
             // navBarGroupHesapIslemleri
@@ -239,32 +249,32 @@ namespace MetinBank.Desktop
             this.navBarGroupHesapIslemleri.Caption = "  Hesap İşlemleri";
             this.navBarGroupHesapIslemleri.Expanded = true;
             this.navBarGroupHesapIslemleri.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.LargeIconsText;
+            this.navBarGroupHesapIslemleri.ImageOptions.SmallImageIndex = 3;
             this.navBarGroupHesapIslemleri.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemHesapIslem),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemParaYatir),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemParaCek)});
             this.navBarGroupHesapIslemleri.Name = "navBarGroupHesapIslemleri";
-            this.navBarGroupHesapIslemleri.SmallImageIndex = 3;
             // 
             // navBarItemHesapIslem
             // 
             this.navBarItemHesapIslem.Caption = "  Hesap Aç";
+            this.navBarItemHesapIslem.ImageOptions.SmallImageIndex = 4;
             this.navBarItemHesapIslem.Name = "navBarItemHesapIslem";
-            this.navBarItemHesapIslem.SmallImageIndex = 4;
             this.navBarItemHesapIslem.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemHesapIslem_LinkClicked);
             // 
             // navBarItemParaYatir
             // 
             this.navBarItemParaYatir.Caption = "  Para Yatır";
+            this.navBarItemParaYatir.ImageOptions.SmallImageIndex = 5;
             this.navBarItemParaYatir.Name = "navBarItemParaYatir";
-            this.navBarItemParaYatir.SmallImageIndex = 5;
             this.navBarItemParaYatir.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemParaYatir_LinkClicked);
             // 
             // navBarItemParaCek
             // 
             this.navBarItemParaCek.Caption = "  Para Çek";
+            this.navBarItemParaCek.ImageOptions.SmallImageIndex = 6;
             this.navBarItemParaCek.Name = "navBarItemParaCek";
-            this.navBarItemParaCek.SmallImageIndex = 6;
             this.navBarItemParaCek.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemParaCek_LinkClicked);
             // 
             // navBarGroupTransferIslemleri
@@ -272,24 +282,32 @@ namespace MetinBank.Desktop
             this.navBarGroupTransferIslemleri.Caption = "  Transfer İşlemleri";
             this.navBarGroupTransferIslemleri.Expanded = true;
             this.navBarGroupTransferIslemleri.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.LargeIconsText;
+            this.navBarGroupTransferIslemleri.ImageOptions.SmallImageIndex = 7;
             this.navBarGroupTransferIslemleri.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemHavaleEFT),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemHavale),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemEFT),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemVirman)});
             this.navBarGroupTransferIslemleri.Name = "navBarGroupTransferIslemleri";
-            this.navBarGroupTransferIslemleri.SmallImageIndex = 7;
             // 
-            // navBarItemHavaleEFT
+            // navBarItemHavale
             // 
-            this.navBarItemHavaleEFT.Caption = "  Havale / EFT";
-            this.navBarItemHavaleEFT.Name = "navBarItemHavaleEFT";
-            this.navBarItemHavaleEFT.SmallImageIndex = 8;
-            this.navBarItemHavaleEFT.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemHavaleEFT_LinkClicked);
+            this.navBarItemHavale.Caption = "  Havale";
+            this.navBarItemHavale.ImageOptions.SmallImageIndex = 8;
+            this.navBarItemHavale.Name = "navBarItemHavale";
+            this.navBarItemHavale.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemHavale_LinkClicked);
+            // 
+            // navBarItemEFT
+            // 
+            this.navBarItemEFT.Caption = "  EFT";
+            this.navBarItemEFT.ImageOptions.SmallImageIndex = 9;
+            this.navBarItemEFT.Name = "navBarItemEFT";
+            this.navBarItemEFT.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemEFT_LinkClicked);
             // 
             // navBarItemVirman
             // 
             this.navBarItemVirman.Caption = "  Virman";
+            this.navBarItemVirman.ImageOptions.SmallImageIndex = 10;
             this.navBarItemVirman.Name = "navBarItemVirman";
-            this.navBarItemVirman.SmallImageIndex = 9;
             this.navBarItemVirman.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemVirman_LinkClicked);
             // 
             // navBarGroupDigerIslemler
@@ -297,32 +315,32 @@ namespace MetinBank.Desktop
             this.navBarGroupDigerIslemler.Caption = "  Diğer İşlemler";
             this.navBarGroupDigerIslemler.Expanded = true;
             this.navBarGroupDigerIslemler.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.LargeIconsText;
+            this.navBarGroupDigerIslemler.ImageOptions.SmallImageIndex = 10;
             this.navBarGroupDigerIslemler.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemKartlar),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemBasvurular),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemOnayBekleyenler)});
             this.navBarGroupDigerIslemler.Name = "navBarGroupDigerIslemler";
-            this.navBarGroupDigerIslemler.SmallImageIndex = 10;
             // 
             // navBarItemKartlar
             // 
             this.navBarItemKartlar.Caption = "  Kartlar";
+            this.navBarItemKartlar.ImageOptions.SmallImageIndex = 11;
             this.navBarItemKartlar.Name = "navBarItemKartlar";
-            this.navBarItemKartlar.SmallImageIndex = 11;
             this.navBarItemKartlar.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemKartlar_LinkClicked);
             // 
             // navBarItemBasvurular
             // 
             this.navBarItemBasvurular.Caption = "  Başvurular";
+            this.navBarItemBasvurular.ImageOptions.SmallImageIndex = 12;
             this.navBarItemBasvurular.Name = "navBarItemBasvurular";
-            this.navBarItemBasvurular.SmallImageIndex = 12;
             this.navBarItemBasvurular.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemBasvurular_LinkClicked);
             // 
             // navBarItemOnayBekleyenler
             // 
             this.navBarItemOnayBekleyenler.Caption = "  Onay Bekleyenler";
+            this.navBarItemOnayBekleyenler.ImageOptions.SmallImageIndex = 13;
             this.navBarItemOnayBekleyenler.Name = "navBarItemOnayBekleyenler";
-            this.navBarItemOnayBekleyenler.SmallImageIndex = 13;
             this.navBarItemOnayBekleyenler.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemOnayBekleyenler_LinkClicked);
             // 
             // timer1
@@ -352,6 +370,7 @@ namespace MetinBank.Desktop
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.navBarControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.svgImageCollection1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -379,7 +398,8 @@ namespace MetinBank.Desktop
         private DevExpress.XtraNavBar.NavBarItem navBarItemParaYatir;
         private DevExpress.XtraNavBar.NavBarItem navBarItemParaCek;
         private DevExpress.XtraNavBar.NavBarGroup navBarGroupTransferIslemleri;
-        private DevExpress.XtraNavBar.NavBarItem navBarItemHavaleEFT;
+        private DevExpress.XtraNavBar.NavBarItem navBarItemHavale;
+        private DevExpress.XtraNavBar.NavBarItem navBarItemEFT;
         private DevExpress.XtraNavBar.NavBarItem navBarItemVirman;
         private DevExpress.XtraNavBar.NavBarGroup navBarGroupDigerIslemler;
         private DevExpress.XtraNavBar.NavBarItem navBarItemKartlar;
@@ -387,5 +407,6 @@ namespace MetinBank.Desktop
         private DevExpress.XtraNavBar.NavBarItem navBarItemOnayBekleyenler;
         private System.Windows.Forms.Timer timer1;
         private DevExpress.Utils.ImageCollection imageCollection1;
+        private DevExpress.Utils.SvgImageCollection svgImageCollection1;
     }
 }
