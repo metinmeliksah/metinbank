@@ -4,32 +4,43 @@ namespace MetinBank.Desktop
     {
         private System.ComponentModel.IContainer components = null;
         private DevExpress.XtraLayout.LayoutControl layoutControl1;
+        private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
+        
+        // Gönderen (Sol Panel)
         private DevExpress.XtraEditors.TextEdit txtMusteriArama;
         private DevExpress.XtraGrid.GridControl gridMusteriler;
         private DevExpress.XtraGrid.Views.Grid.GridView gridViewMusteriler;
         private DevExpress.XtraGrid.GridControl gridHesaplar;
         private DevExpress.XtraGrid.Views.Grid.GridView gridViewHesaplar;
-        private DevExpress.XtraEditors.TextEdit txtKaynakHesapID;
-        private DevExpress.XtraEditors.TextEdit txtKaynakIBAN;
-        private DevExpress.XtraEditors.TextEdit txtKaynakBakiye;
+        private DevExpress.XtraEditors.LabelControl lblGonderenInfo;
+        
+        // Alıcı (Sağ Panel)
         private DevExpress.XtraEditors.TextEdit txtHedefIBAN;
-        private System.Windows.Forms.NumericUpDown numTutar;
-        private DevExpress.XtraEditors.MemoEdit txtAciklama;
         private DevExpress.XtraEditors.TextEdit txtAliciAdi;
+        private DevExpress.XtraEditors.LabelControl lblAliciInfo;
+        
+        // Transfer Bilgileri
+        private DevExpress.XtraEditors.SpinEdit numTutar;
+        private DevExpress.XtraEditors.MemoEdit txtAciklama;
         private DevExpress.XtraEditors.SimpleButton btnGonder;
         private DevExpress.XtraEditors.SimpleButton btnKapat;
-        private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem4;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem5;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem6;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem7;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem8;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem9;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem10;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem11;
+        
+        // Layout Items
+        private DevExpress.XtraLayout.LayoutControlGroup grpGonderen;
+        private DevExpress.XtraLayout.LayoutControlGroup grpAlici;
+        private DevExpress.XtraLayout.LayoutControlGroup grpTransfer;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemMusteriArama;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemMusteriler;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemHesaplar;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemGonderenInfo;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemHedefIBAN;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemAliciAdi;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemAliciInfo;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemTutar;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemAciklama;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemGonder;
+        private DevExpress.XtraLayout.LayoutControlItem layoutItemKapat;
+        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
 
         protected override void Dispose(bool disposing)
         {
@@ -48,27 +59,31 @@ namespace MetinBank.Desktop
             this.gridViewMusteriler = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridHesaplar = new DevExpress.XtraGrid.GridControl();
             this.gridViewHesaplar = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.txtKaynakHesapID = new DevExpress.XtraEditors.TextEdit();
-            this.txtKaynakIBAN = new DevExpress.XtraEditors.TextEdit();
-            this.txtKaynakBakiye = new DevExpress.XtraEditors.TextEdit();
+            this.lblGonderenInfo = new DevExpress.XtraEditors.LabelControl();
             this.txtHedefIBAN = new DevExpress.XtraEditors.TextEdit();
-            this.numTutar = new System.Windows.Forms.NumericUpDown();
-            this.txtAciklama = new DevExpress.XtraEditors.MemoEdit();
             this.txtAliciAdi = new DevExpress.XtraEditors.TextEdit();
+            this.lblAliciInfo = new DevExpress.XtraEditors.LabelControl();
+            this.numTutar = new DevExpress.XtraEditors.SpinEdit();
+            this.txtAciklama = new DevExpress.XtraEditors.MemoEdit();
             this.btnGonder = new DevExpress.XtraEditors.SimpleButton();
             this.btnKapat = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem7 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem8 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem10 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem11 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.grpGonderen = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.grpAlici = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.grpTransfer = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.layoutItemMusteriArama = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemMusteriler = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemHesaplar = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemGonderenInfo = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemHedefIBAN = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemAliciAdi = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemAliciInfo = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemTutar = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemAciklama = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemGonder = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutItemKapat = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
+            
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtMusteriArama.Properties)).BeginInit();
@@ -76,65 +91,65 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.gridViewMusteriler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridHesaplar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewHesaplar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtKaynakHesapID.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtKaynakIBAN.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtKaynakBakiye.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtHedefIBAN.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTutar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtAciklama.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtAliciAdi.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTutar.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtAciklama.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem10)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem11)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grpGonderen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grpAlici)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grpTransfer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemMusteriArama)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemMusteriler)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemHesaplar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemGonderenInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemHedefIBAN)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemAliciAdi)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemAliciInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemTutar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemAciklama)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemGonder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemKapat)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             this.SuspendLayout();
             
             // layoutControl1
             this.layoutControl1.Controls.Add(this.txtMusteriArama);
             this.layoutControl1.Controls.Add(this.gridMusteriler);
             this.layoutControl1.Controls.Add(this.gridHesaplar);
-            this.layoutControl1.Controls.Add(this.txtKaynakHesapID);
-            this.layoutControl1.Controls.Add(this.txtKaynakIBAN);
-            this.layoutControl1.Controls.Add(this.txtKaynakBakiye);
+            this.layoutControl1.Controls.Add(this.lblGonderenInfo);
             this.layoutControl1.Controls.Add(this.txtHedefIBAN);
+            this.layoutControl1.Controls.Add(this.txtAliciAdi);
+            this.layoutControl1.Controls.Add(this.lblAliciInfo);
             this.layoutControl1.Controls.Add(this.numTutar);
             this.layoutControl1.Controls.Add(this.txtAciklama);
-            this.layoutControl1.Controls.Add(this.txtAliciAdi);
             this.layoutControl1.Controls.Add(this.btnGonder);
             this.layoutControl1.Controls.Add(this.btnKapat);
             this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl1.Location = new System.Drawing.Point(0, 0);
             this.layoutControl1.Name = "layoutControl1";
             this.layoutControl1.Root = this.layoutControlGroup1;
-            this.layoutControl1.Size = new System.Drawing.Size(1200, 700);
+            this.layoutControl1.Size = new System.Drawing.Size(1400, 750);
             this.layoutControl1.TabIndex = 0;
             
+            // ========== GÖNDEREN (SOL PANEL) ==========
             // txtMusteriArama
-            this.txtMusteriArama.Location = new System.Drawing.Point(100, 12);
+            this.txtMusteriArama.Location = new System.Drawing.Point(100, 45);
             this.txtMusteriArama.Name = "txtMusteriArama";
-            this.txtMusteriArama.Properties.NullValuePrompt = "Müşteri No, TCKN veya Ad Soyad ile ara...";
+            this.txtMusteriArama.Properties.NullValuePrompt = "Gönderen müşteri ara (Ad, TCKN, Müşteri No)...";
             this.txtMusteriArama.Properties.NullValuePromptShowForEmptyValue = true;
-            this.txtMusteriArama.Size = new System.Drawing.Size(1088, 20);
+            this.txtMusteriArama.Size = new System.Drawing.Size(560, 20);
             this.txtMusteriArama.StyleController = this.layoutControl1;
             this.txtMusteriArama.TabIndex = 0;
             this.txtMusteriArama.TextChanged += new System.EventHandler(this.TxtMusteriArama_TextChanged);
             
             // gridMusteriler
-            this.gridMusteriler.Location = new System.Drawing.Point(12, 38);
+            this.gridMusteriler.Location = new System.Drawing.Point(24, 69);
             this.gridMusteriler.MainView = this.gridViewMusteriler;
             this.gridMusteriler.Name = "gridMusteriler";
-            this.gridMusteriler.Size = new System.Drawing.Size(1176, 250);
+            this.gridMusteriler.Size = new System.Drawing.Size(660, 130);
             this.gridMusteriler.TabIndex = 1;
-            this.gridMusteriler.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-                this.gridViewMusteriler});
+            this.gridMusteriler.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridViewMusteriler });
             
             // gridViewMusteriler
             this.gridViewMusteriler.GridControl = this.gridMusteriler;
@@ -143,13 +158,12 @@ namespace MetinBank.Desktop
             this.gridViewMusteriler.RowClick += new DevExpress.XtraGrid.Views.Grid.RowClickEventHandler(this.GridViewMusteriler_RowClick);
             
             // gridHesaplar
-            this.gridHesaplar.Location = new System.Drawing.Point(12, 292);
+            this.gridHesaplar.Location = new System.Drawing.Point(24, 203);
             this.gridHesaplar.MainView = this.gridViewHesaplar;
             this.gridHesaplar.Name = "gridHesaplar";
-            this.gridHesaplar.Size = new System.Drawing.Size(1176, 250);
+            this.gridHesaplar.Size = new System.Drawing.Size(660, 120);
             this.gridHesaplar.TabIndex = 2;
-            this.gridHesaplar.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-                this.gridViewHesaplar});
+            this.gridHesaplar.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridViewHesaplar });
             
             // gridViewHesaplar
             this.gridViewHesaplar.GridControl = this.gridHesaplar;
@@ -157,194 +171,246 @@ namespace MetinBank.Desktop
             this.gridViewHesaplar.OptionsView.ShowGroupPanel = false;
             this.gridViewHesaplar.RowClick += new DevExpress.XtraGrid.Views.Grid.RowClickEventHandler(this.GridViewHesaplar_RowClick);
             
-            // txtKaynakHesapID
-            this.txtKaynakHesapID.Location = new System.Drawing.Point(100, 546);
-            this.txtKaynakHesapID.Name = "txtKaynakHesapID";
-            this.txtKaynakHesapID.Properties.ReadOnly = true;
-            this.txtKaynakHesapID.Size = new System.Drawing.Size(200, 20);
-            this.txtKaynakHesapID.StyleController = this.layoutControl1;
-            this.txtKaynakHesapID.TabIndex = 3;
+            // lblGonderenInfo
+            this.lblGonderenInfo.Appearance.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblGonderenInfo.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(101)))), ((int)(((byte)(192)))));
+            this.lblGonderenInfo.Location = new System.Drawing.Point(24, 327);
+            this.lblGonderenInfo.Name = "lblGonderenInfo";
+            this.lblGonderenInfo.Size = new System.Drawing.Size(660, 25);
+            this.lblGonderenInfo.StyleController = this.layoutControl1;
+            this.lblGonderenInfo.TabIndex = 3;
+            this.lblGonderenInfo.Text = "📤 Gönderen: Seçilmedi";
             
-            // txtKaynakIBAN
-            this.txtKaynakIBAN.Location = new System.Drawing.Point(400, 546);
-            this.txtKaynakIBAN.Name = "txtKaynakIBAN";
-            this.txtKaynakIBAN.Properties.ReadOnly = true;
-            this.txtKaynakIBAN.Size = new System.Drawing.Size(400, 20);
-            this.txtKaynakIBAN.StyleController = this.layoutControl1;
-            this.txtKaynakIBAN.TabIndex = 4;
-            
-            // txtKaynakBakiye
-            this.txtKaynakBakiye.Location = new System.Drawing.Point(900, 546);
-            this.txtKaynakBakiye.Name = "txtKaynakBakiye";
-            this.txtKaynakBakiye.Properties.ReadOnly = true;
-            this.txtKaynakBakiye.Size = new System.Drawing.Size(288, 20);
-            this.txtKaynakBakiye.StyleController = this.layoutControl1;
-            this.txtKaynakBakiye.TabIndex = 5;
-            
+            // ========== ALICI (SAĞ PANEL) ==========
             // txtHedefIBAN
-            this.txtHedefIBAN.Location = new System.Drawing.Point(100, 570);
+            this.txtHedefIBAN.Location = new System.Drawing.Point(760, 45);
             this.txtHedefIBAN.Name = "txtHedefIBAN";
-            this.txtHedefIBAN.Size = new System.Drawing.Size(500, 20);
+            this.txtHedefIBAN.Properties.NullValuePrompt = "Harici banka IBAN girin (TR ile başlar)";
+            this.txtHedefIBAN.Properties.NullValuePromptShowForEmptyValue = true;
+            this.txtHedefIBAN.Properties.Mask.EditMask = "TR00 0000 0000 0000 0000 0000 00";
+            this.txtHedefIBAN.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Simple;
+            this.txtHedefIBAN.Properties.Mask.UseMaskAsDisplayFormat = true;
+            this.txtHedefIBAN.Size = new System.Drawing.Size(560, 20);
             this.txtHedefIBAN.StyleController = this.layoutControl1;
-            this.txtHedefIBAN.TabIndex = 6;
+            this.txtHedefIBAN.TabIndex = 4;
+            this.txtHedefIBAN.Leave += new System.EventHandler(this.TxtHedefIBAN_Leave);
             
+            // txtAliciAdi
+            this.txtAliciAdi.Location = new System.Drawing.Point(760, 93);
+            this.txtAliciAdi.Name = "txtAliciAdi";
+            this.txtAliciAdi.Properties.NullValuePrompt = "Alıcı ad soyad girin";
+            this.txtAliciAdi.Properties.NullValuePromptShowForEmptyValue = true;
+            this.txtAliciAdi.Size = new System.Drawing.Size(560, 20);
+            this.txtAliciAdi.StyleController = this.layoutControl1;
+            this.txtAliciAdi.TabIndex = 5;
+            
+            // lblAliciInfo
+            this.lblAliciInfo.Appearance.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.lblAliciInfo.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(156)))), ((int)(((byte)(39)))), ((int)(((byte)(176)))));
+            this.lblAliciInfo.Location = new System.Drawing.Point(700, 327);
+            this.lblAliciInfo.Name = "lblAliciInfo";
+            this.lblAliciInfo.Size = new System.Drawing.Size(660, 25);
+            this.lblAliciInfo.StyleController = this.layoutControl1;
+            this.lblAliciInfo.TabIndex = 6;
+            this.lblAliciInfo.Text = "📥 Alıcı: Harici banka hesabına EFT";
+            
+            // ========== TRANSFER BİLGİLERİ ==========
             // numTutar
-            this.numTutar.DecimalPlaces = 2;
-            this.numTutar.Location = new System.Drawing.Point(700, 570);
-            this.numTutar.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            this.numTutar.EditValue = new decimal(new int[] { 0, 0, 0, 0 });
+            this.numTutar.Location = new System.Drawing.Point(100, 400);
             this.numTutar.Name = "numTutar";
-            this.numTutar.Size = new System.Drawing.Size(200, 20);
+            this.numTutar.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+                new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.numTutar.Properties.DisplayFormat.FormatString = "N2";
+            this.numTutar.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.numTutar.Properties.EditFormat.FormatString = "N2";
+            this.numTutar.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.numTutar.Properties.MaxValue = new decimal(new int[] { 1000000000, 0, 0, 0 });
+            this.numTutar.Size = new System.Drawing.Size(300, 20);
+            this.numTutar.StyleController = this.layoutControl1;
             this.numTutar.TabIndex = 7;
             
             // txtAciklama
-            this.txtAciklama.Location = new System.Drawing.Point(100, 594);
+            this.txtAciklama.Location = new System.Drawing.Point(500, 400);
             this.txtAciklama.Name = "txtAciklama";
-            this.txtAciklama.Size = new System.Drawing.Size(500, 20);
+            this.txtAciklama.Properties.NullText = "Transfer açıklaması...";
+            this.txtAciklama.Size = new System.Drawing.Size(850, 40);
             this.txtAciklama.StyleController = this.layoutControl1;
             this.txtAciklama.TabIndex = 8;
             
-            // txtAliciAdi
-            this.txtAliciAdi.Location = new System.Drawing.Point(700, 594);
-            this.txtAliciAdi.Name = "txtAliciAdi";
-            this.txtAliciAdi.Size = new System.Drawing.Size(488, 20);
-            this.txtAliciAdi.StyleController = this.layoutControl1;
-            this.txtAliciAdi.TabIndex = 9;
-            
             // btnGonder
-            this.btnGonder.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.btnGonder.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(156)))), ((int)(((byte)(39)))), ((int)(((byte)(176)))));
+            this.btnGonder.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.btnGonder.Appearance.ForeColor = System.Drawing.Color.White;
+            this.btnGonder.Appearance.Options.UseBackColor = true;
             this.btnGonder.Appearance.Options.UseFont = true;
-            this.btnGonder.Location = new System.Drawing.Point(12, 618);
+            this.btnGonder.Appearance.Options.UseForeColor = true;
+            this.btnGonder.Location = new System.Drawing.Point(24, 480);
             this.btnGonder.Name = "btnGonder";
-            this.btnGonder.Size = new System.Drawing.Size(588, 40);
+            this.btnGonder.Size = new System.Drawing.Size(660, 50);
             this.btnGonder.StyleController = this.layoutControl1;
-            this.btnGonder.TabIndex = 10;
-            this.btnGonder.Text = "EFT GÖNDER";
+            this.btnGonder.TabIndex = 9;
+            this.btnGonder.Text = "🏦 EFT GÖNDER";
             this.btnGonder.Click += new System.EventHandler(this.BtnGonder_Click);
             
             // btnKapat
-            this.btnKapat.Location = new System.Drawing.Point(604, 618);
+            this.btnKapat.Location = new System.Drawing.Point(688, 480);
             this.btnKapat.Name = "btnKapat";
-            this.btnKapat.Size = new System.Drawing.Size(584, 40);
+            this.btnKapat.Size = new System.Drawing.Size(660, 50);
             this.btnKapat.StyleController = this.layoutControl1;
-            this.btnKapat.TabIndex = 11;
+            this.btnKapat.TabIndex = 10;
             this.btnKapat.Text = "Kapat";
             this.btnKapat.Click += new System.EventHandler(this.BtnKapat_Click);
             
+            // ========== LAYOUT GROUPS & ITEMS ==========
             // layoutControlGroup1
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup1.GroupBordersVisible = false;
             this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-                this.layoutControlItem1,
-                this.layoutControlItem2,
-                this.layoutControlItem3,
-                this.layoutControlItem4,
-                this.layoutControlItem5,
-                this.layoutControlItem6,
-                this.layoutControlItem7,
-                this.layoutControlItem8,
-                this.layoutControlItem9,
-                this.layoutControlItem10,
-                this.layoutControlItem11});
+                this.grpGonderen,
+                this.grpAlici,
+                this.grpTransfer,
+                this.layoutItemGonder,
+                this.layoutItemKapat});
             this.layoutControlGroup1.Name = "Root";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(1200, 700);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(1400, 750);
             this.layoutControlGroup1.TextVisible = false;
             
-            // layoutControlItem1
-            this.layoutControlItem1.Control = this.txtMusteriArama;
-            this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(1180, 26);
-            this.layoutControlItem1.Text = "Müşteri Ara:";
-            this.layoutControlItem1.TextSize = new System.Drawing.Size(76, 13);
+            // grpGonderen
+            this.grpGonderen.AppearanceGroup.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.grpGonderen.AppearanceGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(101)))), ((int)(((byte)(192)))));
+            this.grpGonderen.AppearanceGroup.Options.UseFont = true;
+            this.grpGonderen.AppearanceGroup.Options.UseForeColor = true;
+            this.grpGonderen.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+                this.layoutItemMusteriArama,
+                this.layoutItemMusteriler,
+                this.layoutItemHesaplar,
+                this.layoutItemGonderenInfo});
+            this.grpGonderen.Location = new System.Drawing.Point(0, 0);
+            this.grpGonderen.Name = "grpGonderen";
+            this.grpGonderen.Size = new System.Drawing.Size(690, 350);
+            this.grpGonderen.Text = "📤 GÖNDEREN (MetinBank Müşterisi)";
             
-            // layoutControlItem2
-            this.layoutControlItem2.Control = this.gridMusteriler;
-            this.layoutControlItem2.Location = new System.Drawing.Point(0, 26);
-            this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(1180, 254);
-            this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem2.TextVisible = false;
+            // grpAlici
+            this.grpAlici.AppearanceGroup.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            this.grpAlici.AppearanceGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(156)))), ((int)(((byte)(39)))), ((int)(((byte)(176)))));
+            this.grpAlici.AppearanceGroup.Options.UseFont = true;
+            this.grpAlici.AppearanceGroup.Options.UseForeColor = true;
+            this.grpAlici.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+                this.layoutItemHedefIBAN,
+                this.layoutItemAliciAdi,
+                this.emptySpaceItem1,
+                this.layoutItemAliciInfo});
+            this.grpAlici.Location = new System.Drawing.Point(690, 0);
+            this.grpAlici.Name = "grpAlici";
+            this.grpAlici.Size = new System.Drawing.Size(690, 350);
+            this.grpAlici.Text = "📥 ALICI (Harici Banka Hesabı)";
             
-            // layoutControlItem3
-            this.layoutControlItem3.Control = this.gridHesaplar;
-            this.layoutControlItem3.Location = new System.Drawing.Point(0, 280);
-            this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(1180, 254);
-            this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem3.TextVisible = false;
+            // grpTransfer
+            this.grpTransfer.AppearanceGroup.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.grpTransfer.AppearanceGroup.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(152)))), ((int)(((byte)(0)))));
+            this.grpTransfer.AppearanceGroup.Options.UseFont = true;
+            this.grpTransfer.AppearanceGroup.Options.UseForeColor = true;
+            this.grpTransfer.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+                this.layoutItemTutar,
+                this.layoutItemAciklama});
+            this.grpTransfer.Location = new System.Drawing.Point(0, 350);
+            this.grpTransfer.Name = "grpTransfer";
+            this.grpTransfer.Size = new System.Drawing.Size(1380, 80);
+            this.grpTransfer.Text = "💰 TRANSFER BİLGİLERİ";
             
-            // layoutControlItem4
-            this.layoutControlItem4.Control = this.txtKaynakHesapID;
-            this.layoutControlItem4.Location = new System.Drawing.Point(0, 534);
-            this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(288, 24);
-            this.layoutControlItem4.Text = "Kaynak Hesap ID:";
-            this.layoutControlItem4.TextSize = new System.Drawing.Size(76, 13);
+            // Layout Items
+            this.layoutItemMusteriArama.Control = this.txtMusteriArama;
+            this.layoutItemMusteriArama.Location = new System.Drawing.Point(0, 0);
+            this.layoutItemMusteriArama.Name = "layoutItemMusteriArama";
+            this.layoutItemMusteriArama.Size = new System.Drawing.Size(666, 24);
+            this.layoutItemMusteriArama.Text = "Ara:";
+            this.layoutItemMusteriArama.TextSize = new System.Drawing.Size(75, 13);
             
-            // layoutControlItem5
-            this.layoutControlItem5.Control = this.txtKaynakIBAN;
-            this.layoutControlItem5.Location = new System.Drawing.Point(288, 534);
-            this.layoutControlItem5.Name = "layoutControlItem5";
-            this.layoutControlItem5.Size = new System.Drawing.Size(488, 24);
-            this.layoutControlItem5.Text = "Kaynak IBAN:";
-            this.layoutControlItem5.TextSize = new System.Drawing.Size(76, 13);
+            this.layoutItemMusteriler.Control = this.gridMusteriler;
+            this.layoutItemMusteriler.Location = new System.Drawing.Point(0, 24);
+            this.layoutItemMusteriler.Name = "layoutItemMusteriler";
+            this.layoutItemMusteriler.Size = new System.Drawing.Size(666, 134);
+            this.layoutItemMusteriler.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutItemMusteriler.TextVisible = false;
             
-            // layoutControlItem6
-            this.layoutControlItem6.Control = this.txtKaynakBakiye;
-            this.layoutControlItem6.Location = new System.Drawing.Point(776, 534);
-            this.layoutControlItem6.Name = "layoutControlItem6";
-            this.layoutControlItem6.Size = new System.Drawing.Size(404, 24);
-            this.layoutControlItem6.Text = "Bakiye:";
-            this.layoutControlItem6.TextSize = new System.Drawing.Size(76, 13);
+            this.layoutItemHesaplar.Control = this.gridHesaplar;
+            this.layoutItemHesaplar.Location = new System.Drawing.Point(0, 158);
+            this.layoutItemHesaplar.Name = "layoutItemHesaplar";
+            this.layoutItemHesaplar.Size = new System.Drawing.Size(666, 124);
+            this.layoutItemHesaplar.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutItemHesaplar.TextVisible = false;
             
-            // layoutControlItem7
-            this.layoutControlItem7.Control = this.txtHedefIBAN;
-            this.layoutControlItem7.Location = new System.Drawing.Point(0, 558);
-            this.layoutControlItem7.Name = "layoutControlItem7";
-            this.layoutControlItem7.Size = new System.Drawing.Size(588, 24);
-            this.layoutControlItem7.Text = "Hedef IBAN:";
-            this.layoutControlItem7.TextSize = new System.Drawing.Size(76, 13);
+            this.layoutItemGonderenInfo.Control = this.lblGonderenInfo;
+            this.layoutItemGonderenInfo.Location = new System.Drawing.Point(0, 282);
+            this.layoutItemGonderenInfo.Name = "layoutItemGonderenInfo";
+            this.layoutItemGonderenInfo.Size = new System.Drawing.Size(666, 25);
+            this.layoutItemGonderenInfo.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutItemGonderenInfo.TextVisible = false;
             
-            // layoutControlItem8
-            this.layoutControlItem8.Control = this.numTutar;
-            this.layoutControlItem8.Location = new System.Drawing.Point(588, 558);
-            this.layoutControlItem8.Name = "layoutControlItem8";
-            this.layoutControlItem8.Size = new System.Drawing.Size(592, 24);
-            this.layoutControlItem8.Text = "Tutar:";
-            this.layoutControlItem8.TextSize = new System.Drawing.Size(76, 13);
+            this.layoutItemHedefIBAN.Control = this.txtHedefIBAN;
+            this.layoutItemHedefIBAN.Location = new System.Drawing.Point(0, 0);
+            this.layoutItemHedefIBAN.Name = "layoutItemHedefIBAN";
+            this.layoutItemHedefIBAN.Size = new System.Drawing.Size(666, 24);
+            this.layoutItemHedefIBAN.Text = "IBAN:";
+            this.layoutItemHedefIBAN.TextSize = new System.Drawing.Size(75, 13);
             
-            // layoutControlItem9
-            this.layoutControlItem9.Control = this.txtAciklama;
-            this.layoutControlItem9.Location = new System.Drawing.Point(0, 582);
-            this.layoutControlItem9.Name = "layoutControlItem9";
-            this.layoutControlItem9.Size = new System.Drawing.Size(588, 24);
-            this.layoutControlItem9.Text = "Açıklama:";
-            this.layoutControlItem9.TextSize = new System.Drawing.Size(76, 13);
+            this.layoutItemAliciAdi.Control = this.txtAliciAdi;
+            this.layoutItemAliciAdi.Location = new System.Drawing.Point(0, 24);
+            this.layoutItemAliciAdi.Name = "layoutItemAliciAdi";
+            this.layoutItemAliciAdi.Size = new System.Drawing.Size(666, 24);
+            this.layoutItemAliciAdi.Text = "Alıcı Adı:";
+            this.layoutItemAliciAdi.TextSize = new System.Drawing.Size(75, 13);
             
-            // layoutControlItem10
-            this.layoutControlItem10.Control = this.txtAliciAdi;
-            this.layoutControlItem10.Location = new System.Drawing.Point(588, 582);
-            this.layoutControlItem10.Name = "layoutControlItem10";
-            this.layoutControlItem10.Size = new System.Drawing.Size(592, 24);
-            this.layoutControlItem10.Text = "Alıcı Adı:";
-            this.layoutControlItem10.TextSize = new System.Drawing.Size(76, 13);
+            this.emptySpaceItem1.AllowHotTrack = false;
+            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 48);
+            this.emptySpaceItem1.Name = "emptySpaceItem1";
+            this.emptySpaceItem1.Size = new System.Drawing.Size(666, 234);
+            this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             
-            // layoutControlItem11
-            this.layoutControlItem11.Control = this.btnGonder;
-            this.layoutControlItem11.Location = new System.Drawing.Point(0, 606);
-            this.layoutControlItem11.Name = "layoutControlItem11";
-            this.layoutControlItem11.Size = new System.Drawing.Size(592, 44);
-            this.layoutControlItem11.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem11.TextVisible = false;
+            this.layoutItemAliciInfo.Control = this.lblAliciInfo;
+            this.layoutItemAliciInfo.Location = new System.Drawing.Point(0, 282);
+            this.layoutItemAliciInfo.Name = "layoutItemAliciInfo";
+            this.layoutItemAliciInfo.Size = new System.Drawing.Size(666, 25);
+            this.layoutItemAliciInfo.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutItemAliciInfo.TextVisible = false;
+            
+            this.layoutItemTutar.Control = this.numTutar;
+            this.layoutItemTutar.Location = new System.Drawing.Point(0, 0);
+            this.layoutItemTutar.Name = "layoutItemTutar";
+            this.layoutItemTutar.Size = new System.Drawing.Size(400, 34);
+            this.layoutItemTutar.Text = "Tutar (TL):";
+            this.layoutItemTutar.TextSize = new System.Drawing.Size(75, 13);
+            
+            this.layoutItemAciklama.Control = this.txtAciklama;
+            this.layoutItemAciklama.Location = new System.Drawing.Point(400, 0);
+            this.layoutItemAciklama.Name = "layoutItemAciklama";
+            this.layoutItemAciklama.Size = new System.Drawing.Size(956, 34);
+            this.layoutItemAciklama.Text = "Açıklama:";
+            this.layoutItemAciklama.TextSize = new System.Drawing.Size(75, 13);
+            
+            this.layoutItemGonder.Control = this.btnGonder;
+            this.layoutItemGonder.Location = new System.Drawing.Point(0, 430);
+            this.layoutItemGonder.Name = "layoutItemGonder";
+            this.layoutItemGonder.Size = new System.Drawing.Size(690, 54);
+            this.layoutItemGonder.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutItemGonder.TextVisible = false;
+            
+            this.layoutItemKapat.Control = this.btnKapat;
+            this.layoutItemKapat.Location = new System.Drawing.Point(690, 430);
+            this.layoutItemKapat.Name = "layoutItemKapat";
+            this.layoutItemKapat.Size = new System.Drawing.Size(690, 54);
+            this.layoutItemKapat.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutItemKapat.TextVisible = false;
             
             // FrmEFT
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1200, 700);
+            this.ClientSize = new System.Drawing.Size(1400, 750);
             this.Controls.Add(this.layoutControl1);
             this.Name = "FrmEFT";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "EFT";
+            this.Text = "EFT İşlemi (Elektronik Fon Transferi)";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmEFT_Load);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
@@ -354,27 +420,27 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.gridViewMusteriler)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridHesaplar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewHesaplar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtKaynakHesapID.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtKaynakIBAN.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtKaynakBakiye.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtHedefIBAN.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTutar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtAciklama.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtAliciAdi.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTutar.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtAciklama.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem10)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem11)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grpGonderen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grpAlici)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grpTransfer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemMusteriArama)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemMusteriler)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemHesaplar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemGonderenInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemHedefIBAN)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemAliciAdi)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemAliciInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemTutar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemAciklama)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemGonder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemKapat)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             this.ResumeLayout(false);
         }
     }
 }
-

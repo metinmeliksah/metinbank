@@ -14,9 +14,20 @@ namespace MetinBank.Desktop
         private SIslem _sIslem;
         private SMusteri _sMusteri;
         private SHesap _sHesap;
+        
         private int _seciliMusteriID;
+        private string _seciliMusteriAd;
+        
+        // Kaynak Hesap
         private int _kaynakHesapID;
+        private string _kaynakIBAN;
+        private decimal _kaynakBakiye;
+        
+        // Hedef Hesap
         private int _hedefHesapID;
+        private string _hedefIBAN;
+        private decimal _hedefBakiye;
+        
         private System.Windows.Forms.Timer _aramaTimer;
 
         public FrmVirman(KullaniciModel kullanici)
@@ -37,15 +48,34 @@ namespace MetinBank.Desktop
 
         private void FrmVirman_Load(object sender, EventArgs e)
         {
-            this.Text = "Virman";
+            this.Text = "Virman (Hesaplar Arası Transfer)";
+            
+            // Grid ayarları
+            gridViewMusteriler.OptionsView.ShowGroupPanel = false;
+            gridViewKaynakHesaplar.OptionsView.ShowGroupPanel = false;
+            gridViewHedefHesaplar.OptionsView.ShowGroupPanel = false;
+        }
+        
+        /// <summary>
+        /// ID sütunlarını gizler
+        /// </summary>
+        private void GizliSutunlariAyarla(DevExpress.XtraGrid.Views.Grid.GridView gridView, params string[] sutunlar)
+        {
+            foreach (string sutun in sutunlar)
+            {
+                if (gridView.Columns[sutun] != null)
+                    gridView.Columns[sutun].Visible = false;
+            }
         }
 
+        // ========== MÜŞTERİ ARAMA ==========
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMusteriArama.Text))
             {
                 gridMusteriler.DataSource = null;
-                gridHesaplar.DataSource = null;
+                gridKaynakHesaplar.DataSource = null;
+                gridHedefHesaplar.DataSource = null;
                 return;
             }
 
@@ -75,6 +105,9 @@ namespace MetinBank.Desktop
 
                 gridMusteriler.DataSource = sonuclar;
                 gridViewMusteriler.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
             }
             catch
             {
@@ -89,8 +122,15 @@ namespace MetinBank.Desktop
                 if (e.RowHandle < 0) return;
 
                 object musteriIDObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "MusteriID");
+                object adObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "Ad");
+                object soyadObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "Soyad");
+                
                 _seciliMusteriID = CommonFunctions.DbNullToInt(musteriIDObj);
+                _seciliMusteriAd = CommonFunctions.DbNullToString(adObj) + " " + CommonFunctions.DbNullToString(soyadObj);
+                
                 if (_seciliMusteriID == 0) return;
+                
+                // Her iki panele de aynı müşterinin hesaplarını yükle
                 HesaplariYukle();
             }
             catch (Exception ex)
@@ -110,51 +150,51 @@ namespace MetinBank.Desktop
                 
                 if (hata != null)
                 {
-                    gridHesaplar.DataSource = null;
+                    gridKaynakHesaplar.DataSource = null;
+                    gridHedefHesaplar.DataSource = null;
                     return;
                 }
 
-                gridHesaplar.DataSource = hesaplar;
-                gridViewHesaplar.BestFitColumns();
+                // Her iki panele de aynı hesapları yükle
+                gridKaynakHesaplar.DataSource = hesaplar;
+                gridViewKaynakHesaplar.BestFitColumns();
+                GizliSutunlariAyarla(gridViewKaynakHesaplar, "HesapID", "MusteriID");
+                
+                // DataTable'ın bir kopyasını oluştur (aynı referansı kullanmamak için)
+                DataTable hesaplarKopyasi = hesaplar.Copy();
+                gridHedefHesaplar.DataSource = hesaplarKopyasi;
+                gridViewHedefHesaplar.BestFitColumns();
+                GizliSutunlariAyarla(gridViewHedefHesaplar, "HesapID", "MusteriID");
+                
+                // Seçimleri temizle
+                _kaynakHesapID = 0;
+                _hedefHesapID = 0;
+                lblKaynakInfo.Text = "📤 Kaynak Hesap: Seçilmedi";
+                lblHedefInfo.Text = "📥 Hedef Hesap: Seçilmedi";
             }
             catch
             {
-                gridHesaplar.DataSource = null;
+                gridKaynakHesaplar.DataSource = null;
+                gridHedefHesaplar.DataSource = null;
             }
         }
 
-        private void GridViewHesaplar_RowClick(object sender, DevExpress.XtraGrid.Views.Grid.RowClickEventArgs e)
+        // ========== KAYNAK HESAP SEÇİMİ ==========
+        private void GridViewKaynakHesaplar_RowClick(object sender, DevExpress.XtraGrid.Views.Grid.RowClickEventArgs e)
         {
             try
             {
                 if (e.RowHandle < 0) return;
 
-                object hesapIDObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "HesapID");
-                int hesapID = CommonFunctions.DbNullToInt(hesapIDObj);
-                if (hesapID == 0) return;
+                object hesapIDObj = gridViewKaynakHesaplar.GetRowCellValue(e.RowHandle, "HesapID");
+                object ibanObj = gridViewKaynakHesaplar.GetRowCellValue(e.RowHandle, "IBAN");
+                object bakiyeObj = gridViewKaynakHesaplar.GetRowCellValue(e.RowHandle, "Bakiye");
+
+                _kaynakHesapID = CommonFunctions.DbNullToInt(hesapIDObj);
+                _kaynakIBAN = CommonFunctions.DbNullToString(ibanObj);
+                _kaynakBakiye = CommonFunctions.DbNullToDecimal(bakiyeObj);
                 
-                object ibanObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "IBAN");
-                object bakiyeObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "Bakiye");
-
-                string iban = CommonFunctions.DbNullToString(ibanObj);
-                decimal bakiye = CommonFunctions.DbNullToDecimal(bakiyeObj);
-
-                // Kaynak hesap seçimi
-                if (cmbKaynakHesap.SelectedIndex == 0)
-                {
-                    _kaynakHesapID = hesapID;
-                    txtKaynakHesapID.Text = hesapID.ToString();
-                    txtKaynakIBAN.Text = iban;
-                    txtKaynakBakiye.Text = bakiye.ToString("N2") + " TL";
-                }
-                // Hedef hesap seçimi
-                else if (cmbKaynakHesap.SelectedIndex == 1)
-                {
-                    _hedefHesapID = hesapID;
-                    txtHedefHesapID.Text = hesapID.ToString();
-                    txtHedefIBAN.Text = iban;
-                    txtHedefBakiye.Text = bakiye.ToString("N2") + " TL";
-                }
+                lblKaynakInfo.Text = $"📤 Kaynak: {_seciliMusteriAd} | IBAN: {IbanHelper.FormatIban(_kaynakIBAN)} | Bakiye: {_kaynakBakiye:N2} TL";
             }
             catch (Exception ex)
             {
@@ -162,6 +202,30 @@ namespace MetinBank.Desktop
             }
         }
 
+        // ========== HEDEF HESAP SEÇİMİ ==========
+        private void GridViewHedefHesaplar_RowClick(object sender, DevExpress.XtraGrid.Views.Grid.RowClickEventArgs e)
+        {
+            try
+            {
+                if (e.RowHandle < 0) return;
+
+                object hesapIDObj = gridViewHedefHesaplar.GetRowCellValue(e.RowHandle, "HesapID");
+                object ibanObj = gridViewHedefHesaplar.GetRowCellValue(e.RowHandle, "IBAN");
+                object bakiyeObj = gridViewHedefHesaplar.GetRowCellValue(e.RowHandle, "Bakiye");
+
+                _hedefHesapID = CommonFunctions.DbNullToInt(hesapIDObj);
+                _hedefIBAN = CommonFunctions.DbNullToString(ibanObj);
+                _hedefBakiye = CommonFunctions.DbNullToDecimal(bakiyeObj);
+                
+                lblHedefInfo.Text = $"📥 Hedef: {_seciliMusteriAd} | IBAN: {IbanHelper.FormatIban(_hedefIBAN)} | Bakiye: {_hedefBakiye:N2} TL";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // ========== VİRMAN GÖNDER ==========
         private void BtnGonder_Click(object sender, EventArgs e)
         {
             try
@@ -190,12 +254,24 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                if (!_kullanici.SubeID.HasValue)
+                if (_kaynakBakiye < numTutar.Value)
                 {
-                    MessageBox.Show("Kullanıcının şube bilgisi bulunamadı.", "Hata", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Yetersiz bakiye! Mevcut: {_kaynakBakiye:N2} TL, İstenen: {numTutar.Value:N2} TL", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+
+                // Onay mesajı
+                DialogResult dr = MessageBox.Show(
+                    $"Virman işlemini onaylıyor musunuz?\n\n" +
+                    $"Kaynak Hesap: {IbanHelper.FormatIban(_kaynakIBAN)}\n" +
+                    $"Hedef Hesap: {IbanHelper.FormatIban(_hedefIBAN)}\n\n" +
+                    $"Tutar: {numTutar.Value:N2} TL",
+                    "Virman Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (dr != DialogResult.Yes) return;
+
+                // SubeID null ise varsayılan değer kullan
+                int subeID = _kullanici.SubeID ?? 1;
 
                 long islemID;
                 string hata = _sIslem.Virman(
@@ -204,7 +280,7 @@ namespace MetinBank.Desktop
                     numTutar.Value,
                     txtAciklama.Text,
                     _kullanici.KullaniciID,
-                    _kullanici.SubeID.Value,
+                    subeID,
                     out islemID
                 );
 
@@ -214,25 +290,43 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                MessageBox.Show($"Virman işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
+                MessageBox.Show($"✅ Virman işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
                     "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                HesaplariYukle();
-                numTutar.Value = 0;
-                txtAciklama.Text = "";
-                _kaynakHesapID = 0;
-                _hedefHesapID = 0;
-                txtKaynakHesapID.Text = "";
-                txtKaynakIBAN.Text = "";
-                txtKaynakBakiye.Text = "";
-                txtHedefHesapID.Text = "";
-                txtHedefIBAN.Text = "";
-                txtHedefBakiye.Text = "";
+                // Formu temizle
+                TemizleForm();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Beklenmeyen hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void TemizleForm()
+        {
+            // Müşteri temizle
+            _seciliMusteriID = 0;
+            _seciliMusteriAd = "";
+            txtMusteriArama.Text = "";
+            gridMusteriler.DataSource = null;
+            
+            // Kaynak temizle
+            _kaynakHesapID = 0;
+            _kaynakIBAN = "";
+            _kaynakBakiye = 0;
+            gridKaynakHesaplar.DataSource = null;
+            lblKaynakInfo.Text = "📤 Kaynak Hesap: Seçilmedi";
+            
+            // Hedef temizle
+            _hedefHesapID = 0;
+            _hedefIBAN = "";
+            _hedefBakiye = 0;
+            gridHedefHesaplar.DataSource = null;
+            lblHedefInfo.Text = "📥 Hedef Hesap: Seçilmedi";
+            
+            // Transfer temizle
+            numTutar.Value = 0;
+            txtAciklama.Text = "";
         }
 
         private void BtnKapat_Click(object sender, EventArgs e)
@@ -241,4 +335,3 @@ namespace MetinBank.Desktop
         }
     }
 }
-

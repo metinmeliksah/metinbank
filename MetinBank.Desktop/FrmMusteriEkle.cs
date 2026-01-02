@@ -20,12 +20,23 @@ namespace MetinBank.Desktop
 
         private void FrmMusteriEkle_Load(object sender, EventArgs e)
         {
-            // Default values
-            cmbMusteriTipi.SelectedIndex = 0; // Bireysel
-            cmbMusteriSegmenti.SelectedIndex = 0; // Standart
-            cmbCinsiyet.SelectedIndex = 0; // Erkek
-            cmbMedeniDurum.SelectedIndex = 0; // Bekar
-            dtDogumTarihi.DateTime = DateTime.Now.AddYears(-25);
+            // Use BeginInvoke to ensure form is fully loaded before initializing controls
+            this.BeginInvoke(new Action(() =>
+            {
+                // Default values with null checks
+                if (cmbMusteriTipi.Properties.Items.Count > 0)
+                    cmbMusteriTipi.SelectedIndex = 0; // Bireysel
+                if (cmbMusteriSegmenti.Properties.Items.Count > 0)
+                    cmbMusteriSegmenti.SelectedIndex = 0; // Standart
+                if (cmbCinsiyet.Properties.Items.Count > 0)
+                    cmbCinsiyet.SelectedIndex = 0; // Erkek
+                if (cmbMedeniDurum.Properties.Items.Count > 0)
+                    cmbMedeniDurum.SelectedIndex = 0; // Bekar
+                dtDogumTarihi.DateTime = DateTime.Now.AddYears(-25);
+                
+                // Ensure layout is correct
+                this.layoutControl1.Refresh();
+            }));
         }
 
         private void BtnKaydet_Click(object sender, EventArgs e)
@@ -61,9 +72,13 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(txtCepTelefon.Text))
+                // Cep telefon validasyonu - mask karakterlerini temizle
+                string cepTelefonRaw = txtCepTelefon.Text
+                    .Replace("+90", "").Replace("(", "").Replace(")", "")
+                    .Replace("-", "").Replace(" ", "").Trim();
+                if (string.IsNullOrWhiteSpace(cepTelefonRaw) || cepTelefonRaw.Length < 10)
                 {
-                    XtraMessageBox.Show("Cep telefon alanı zorunludur.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    XtraMessageBox.Show("Cep telefon alanı zorunludur ve en az 10 rakam içermelidir.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtCepTelefon.Focus();
                     return;
                 }
@@ -80,8 +95,8 @@ namespace MetinBank.Desktop
                     MedeniDurum = cmbMedeniDurum.Text,
                     AnneAdi = txtAnneAdi.Text.Trim(),
                     BabaAdi = txtBabaAdi.Text.Trim(),
-                    Telefon = txtTelefon.Text.Trim(),
-                    CepTelefon = txtCepTelefon.Text.Trim(),
+                    Telefon = txtTelefon.Text.Replace("+90", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "").Trim(),
+                    CepTelefon = cepTelefonRaw,
                     Email = txtEmail.Text.Trim(),
                     Adres = txtAdres.Text.Trim(),
                     Il = txtIl.Text.Trim(),

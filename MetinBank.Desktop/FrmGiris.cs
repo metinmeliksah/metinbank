@@ -32,6 +32,9 @@ namespace MetinBank.Desktop
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
+            // Modern görünüm ayarları
+            ApplyModernStyling();
+
             // Varsayılan değerler (test için)
             if (System.Diagnostics.Debugger.IsAttached)
             {
@@ -44,6 +47,49 @@ namespace MetinBank.Desktop
             txtSifre.KeyPress += TxtKeyPress;
 
             txtKullaniciAdi.Focus();
+        }
+
+        /// <summary>
+        /// Modern stil ayarları
+        /// </summary>
+        private void ApplyModernStyling()
+        {
+            // Gradient arka plan efekti için form boyama
+            this.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
+            
+            // Layout control görünümü
+            layoutControl1.Appearance.Control.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
+            layoutControl1.Appearance.Control.Options.UseBackColor = true;
+
+            // Giriş butonu - Modern mavi stili
+            btnGiris.Appearance.BackColor = System.Drawing.Color.FromArgb(21, 101, 192);
+            btnGiris.Appearance.BackColor2 = System.Drawing.Color.FromArgb(25, 118, 210);
+            btnGiris.Appearance.ForeColor = System.Drawing.Color.White;
+            btnGiris.Appearance.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            btnGiris.Appearance.Options.UseBackColor = true;
+            btnGiris.Appearance.Options.UseForeColor = true;
+            btnGiris.Appearance.Options.UseFont = true;
+            btnGiris.Text = "🔐  GİRİŞ YAP";
+
+            // Çıkış butonu
+            btnCikis.Appearance.BackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            btnCikis.Appearance.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
+            btnCikis.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F);
+            btnCikis.Appearance.Options.UseBackColor = true;
+            btnCikis.Appearance.Options.UseForeColor = true;
+            btnCikis.Appearance.Options.UseFont = true;
+            btnCikis.Text = "✖  ÇIKIŞ";
+
+            // Text kutuları için modern görünüm
+            txtKullaniciAdi.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 11F);
+            txtKullaniciAdi.Properties.Appearance.Options.UseFont = true;
+            txtKullaniciAdi.Properties.NullValuePrompt = "👤  Kullanıcı adınızı giriniz";
+            txtKullaniciAdi.Properties.NullValuePromptShowForEmptyValue = true;
+
+            txtSifre.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 11F);
+            txtSifre.Properties.Appearance.Options.UseFont = true;
+            txtSifre.Properties.NullValuePrompt = "🔒  Şifrenizi giriniz";
+            txtSifre.Properties.NullValuePromptShowForEmptyValue = true;
         }
 
         /// <summary>
