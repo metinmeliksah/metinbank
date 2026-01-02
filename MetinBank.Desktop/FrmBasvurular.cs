@@ -47,6 +47,10 @@ namespace MetinBank.Desktop
             btnYeniBasvuru.Text = "💳  Kart Başvurusu Yap";
             btnYenile.Text = "🔄  Yenile";
             btnKapat.Text = "❌  Kapat";
+            
+            // ID sütunlarını gizle
+            gridViewMusteriler.OptionsView.ShowGroupPanel = false;
+            gridViewBasvurular.OptionsView.ShowGroupPanel = false;
         }
 
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
@@ -84,6 +88,10 @@ namespace MetinBank.Desktop
 
                 gridMusteriler.DataSource = sonuclar;
                 gridViewMusteriler.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                if (gridViewMusteriler.Columns["MusteriID"] != null)
+                    gridViewMusteriler.Columns["MusteriID"].Visible = false;
             }
             catch
             {
@@ -131,6 +139,12 @@ namespace MetinBank.Desktop
 
                 gridBasvurular.DataSource = hesaplar;
                 gridViewBasvurular.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                if (gridViewBasvurular.Columns["HesapID"] != null)
+                    gridViewBasvurular.Columns["HesapID"].Visible = false;
+                if (gridViewBasvurular.Columns["MusteriID"] != null)
+                    gridViewBasvurular.Columns["MusteriID"].Visible = false;
             }
             catch (Exception ex)
             {

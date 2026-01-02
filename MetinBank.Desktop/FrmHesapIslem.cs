@@ -38,6 +38,22 @@ namespace MetinBank.Desktop
             cmbHesapTipi.SelectedIndex = 0; // TL
             cmbHesapCinsi.SelectedIndex = 0; // Vadesiz
             numFaizOrani.Value = 0;
+            
+            // Grid ayarları
+            gridViewMusteriler.OptionsView.ShowGroupPanel = false;
+            gridViewHesaplar.OptionsView.ShowGroupPanel = false;
+        }
+        
+        /// <summary>
+        /// ID sütunlarını gizler
+        /// </summary>
+        private void GizliSutunlariAyarla(DevExpress.XtraGrid.Views.Grid.GridView gridView, params string[] sutunlar)
+        {
+            foreach (string sutun in sutunlar)
+            {
+                if (gridView.Columns[sutun] != null)
+                    gridView.Columns[sutun].Visible = false;
+            }
         }
 
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
@@ -74,6 +90,9 @@ namespace MetinBank.Desktop
 
                 gridMusteriler.DataSource = sonuclar;
                 gridViewMusteriler.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
             }
             catch
             {
@@ -129,6 +148,9 @@ namespace MetinBank.Desktop
 
                 gridHesaplar.DataSource = hesaplar;
                 gridViewHesaplar.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                GizliSutunlariAyarla(gridViewHesaplar, "HesapID", "MusteriID");
             }
             catch
             {

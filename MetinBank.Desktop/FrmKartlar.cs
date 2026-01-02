@@ -36,6 +36,22 @@ namespace MetinBank.Desktop
         private void FrmKartlar_Load(object sender, EventArgs e)
         {
             this.Text = "Kartlar";
+            
+            // Grid ayarları
+            gridViewMusteriler.OptionsView.ShowGroupPanel = false;
+            gridViewKartlar.OptionsView.ShowGroupPanel = false;
+        }
+        
+        /// <summary>
+        /// ID sütunlarını gizler
+        /// </summary>
+        private void GizliSutunlariAyarla(DevExpress.XtraGrid.Views.Grid.GridView gridView, params string[] sutunlar)
+        {
+            foreach (string sutun in sutunlar)
+            {
+                if (gridView.Columns[sutun] != null)
+                    gridView.Columns[sutun].Visible = false;
+            }
         }
 
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
@@ -104,6 +120,30 @@ namespace MetinBank.Desktop
 
                 gridKartlar.DataSource = dt;
                 gridViewKartlar.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                if (gridViewKartlar.Columns["KartID"] != null)
+                    gridViewKartlar.Columns["KartID"].Visible = false;
+                if (gridViewKartlar.Columns["HesapID"] != null)
+                    gridViewKartlar.Columns["HesapID"].Visible = false;
+                if (gridViewKartlar.Columns["MusteriID"] != null)
+                    gridViewKartlar.Columns["MusteriID"].Visible = false;
+                    
+                // Kart numarasını maskele (ilk 6 + son 4)
+                if (gridViewKartlar.Columns["KartNo"] != null)
+                {
+                    gridViewKartlar.Columns["KartNo"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Custom;
+                    gridViewKartlar.CustomColumnDisplayText += (s, args) => {
+                        if (args.Column.FieldName == "KartNo" && args.Value != null)
+                        {
+                            string kartNo = args.Value.ToString();
+                            if (kartNo.Length >= 16)
+                            {
+                                args.DisplayText = kartNo.Substring(0, 6) + " **** **** " + kartNo.Substring(12, 4);
+                            }
+                        }
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -133,6 +173,9 @@ namespace MetinBank.Desktop
 
                 gridMusteriler.DataSource = sonuclar;
                 gridViewMusteriler.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
             }
             catch
             {

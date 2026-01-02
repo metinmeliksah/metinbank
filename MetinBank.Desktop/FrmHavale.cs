@@ -40,6 +40,22 @@ namespace MetinBank.Desktop
             
             // Hedef IBAN değiştiğinde otomatik müşteri arama
             txtHedefIBAN.Leave += TxtHedefIBAN_Leave;
+            
+            // Grid ayarları
+            gridViewMusteriler.OptionsView.ShowGroupPanel = false;
+            gridViewHesaplar.OptionsView.ShowGroupPanel = false;
+        }
+        
+        /// <summary>
+        /// ID sütunlarını gizler
+        /// </summary>
+        private void GizliSutunlariAyarla(DevExpress.XtraGrid.Views.Grid.GridView gridView, params string[] sutunlar)
+        {
+            foreach (string sutun in sutunlar)
+            {
+                if (gridView.Columns[sutun] != null)
+                    gridView.Columns[sutun].Visible = false;
+            }
         }
 
         /// <summary>
@@ -124,6 +140,9 @@ namespace MetinBank.Desktop
 
                 gridMusteriler.DataSource = sonuclar;
                 gridViewMusteriler.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
             }
             catch
             {
@@ -165,6 +184,9 @@ namespace MetinBank.Desktop
 
                 gridHesaplar.DataSource = hesaplar;
                 gridViewHesaplar.BestFitColumns();
+                
+                // ID sütunlarını gizle
+                GizliSutunlariAyarla(gridViewHesaplar, "HesapID", "MusteriID");
             }
             catch
             {
@@ -227,12 +249,8 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                if (!_kullanici.SubeID.HasValue)
-                {
-                    MessageBox.Show("Kullanıcının şube bilgisi bulunamadı.", "Hata", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                // SubeID null ise varsayılan değer kullan
+                int subeID = _kullanici.SubeID ?? 1;
 
                 long islemID;
                 string hata = _sIslem.Havale(
@@ -242,7 +260,7 @@ namespace MetinBank.Desktop
                     txtAciklama.Text,
                     txtAliciAdi.Text,
                     _kullanici.KullaniciID,
-                    _kullanici.SubeID.Value,
+                    subeID,
                     out islemID
                 );
 
