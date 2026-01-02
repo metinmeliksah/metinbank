@@ -14,8 +14,14 @@ namespace MetinBank.Desktop
         private SIslem _sIslem;
         private SMusteri _sMusteri;
         private SHesap _sHesap;
-        private int _seciliMusteriID;
-        private int _seciliHesapID;
+        
+        // Gönderen
+        private int _gonderenMusteriID;
+        private int _gonderenHesapID;
+        private string _gonderenMusteriAd;
+        private string _gonderenIBAN;
+        private decimal _gonderenBakiye;
+        
         private System.Windows.Forms.Timer _aramaTimer;
 
         public FrmEFT(KullaniciModel kullanici)
@@ -55,6 +61,7 @@ namespace MetinBank.Desktop
             }
         }
 
+        // ========== MÜŞTERİ ARAMA ==========
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMusteriArama.Text))
@@ -107,8 +114,13 @@ namespace MetinBank.Desktop
                 if (e.RowHandle < 0) return;
 
                 object musteriIDObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "MusteriID");
-                _seciliMusteriID = CommonFunctions.DbNullToInt(musteriIDObj);
-                if (_seciliMusteriID == 0) return;
+                object adObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "Ad");
+                object soyadObj = gridViewMusteriler.GetRowCellValue(e.RowHandle, "Soyad");
+                
+                _gonderenMusteriID = CommonFunctions.DbNullToInt(musteriIDObj);
+                _gonderenMusteriAd = CommonFunctions.DbNullToString(adObj) + " " + CommonFunctions.DbNullToString(soyadObj);
+                
+                if (_gonderenMusteriID == 0) return;
                 HesaplariYukle();
             }
             catch (Exception ex)
@@ -121,10 +133,10 @@ namespace MetinBank.Desktop
         {
             try
             {
-                if (_seciliMusteriID == 0) return;
+                if (_gonderenMusteriID == 0) return;
 
                 DataTable hesaplar;
-                string hata = _sHesap.MusterininHesaplari(_seciliMusteriID, out hesaplar);
+                string hata = _sHesap.MusterininHesaplari(_gonderenMusteriID, out hesaplar);
                 
                 if (hata != null)
                 {
@@ -151,18 +163,15 @@ namespace MetinBank.Desktop
                 if (e.RowHandle < 0) return;
 
                 object hesapIDObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "HesapID");
-                _seciliHesapID = CommonFunctions.DbNullToInt(hesapIDObj);
-                if (_seciliHesapID == 0) return;
-                
                 object ibanObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "IBAN");
                 object bakiyeObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "Bakiye");
 
-                string iban = CommonFunctions.DbNullToString(ibanObj);
-                decimal bakiye = CommonFunctions.DbNullToDecimal(bakiyeObj);
-
-                txtKaynakHesapID.Text = _seciliHesapID.ToString();
-                txtKaynakIBAN.Text = iban;
-                txtKaynakBakiye.Text = bakiye.ToString("N2") + " TL";
+                _gonderenHesapID = CommonFunctions.DbNullToInt(hesapIDObj);
+                _gonderenIBAN = CommonFunctions.DbNullToString(ibanObj);
+                _gonderenBakiye = CommonFunctions.DbNullToDecimal(bakiyeObj);
+                
+                // Info label güncelle
+                lblGonderenInfo.Text = $"📤 Gönderen: {_gonderenMusteriAd} | IBAN: {IbanHelper.FormatIban(_gonderenIBAN)} | Bakiye: {_gonderenBakiye:N2} TL";
             }
             catch (Exception ex)
             {
@@ -170,19 +179,73 @@ namespace MetinBank.Desktop
             }
         }
 
+        // ========== HEDEF IBAN GİRİŞİ ==========
+        private void TxtHedefIBAN_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                string iban = txtHedefIBAN.Text.Trim().Replace(" ", "");
+                if (string.IsNullOrEmpty(iban) || iban.Length < 26) 
+                {
+                    lblAliciInfo.Text = "📥 Alıcı: Harici banka IBAN giriniz";
+                    return;
+                }
+
+                // IBAN'ı doğrula
+                string hataMesaji = IbanHelper.ValidateIban(iban);
+                if (hataMesaji != null)
+                {
+                    lblAliciInfo.Text = $"📥 Alıcı: ⚠️ {hataMesaji}";
+                    return;
+                }
+
+                // MetinBank IBAN kontrolü - EFT banka dışı olmalı
+                if (iban.StartsWith("TR") && iban.Length >= 8 && iban.Substring(4, 4) == "0127")
+                {
+                    lblAliciInfo.Text = "📥 Alıcı: ⚠️ MetinBank IBAN'ı! Lütfen Havale kullanın.";
+                    return;
+                }
+
+                // Harici banka - EFT için uygun
+                lblAliciInfo.Text = $"📥 Alıcı: ✅ Harici banka IBAN'ı geçerli | {IbanHelper.FormatIban(iban)}";
+            }
+            catch (Exception ex)
+            {
+                lblAliciInfo.Text = $"📥 Alıcı: Hata - {ex.Message}";
+            }
+        }
+
+        // ========== EFT GÖNDER ==========
         private void BtnGonder_Click(object sender, EventArgs e)
         {
             try
             {
-                if (_seciliHesapID == 0)
+                // Validasyonlar
+                if (_gonderenHesapID == 0)
                 {
-                    MessageBox.Show("Lütfen kaynak hesap seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Lütfen önce gönderen müşteri ve hesabı seçiniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(txtHedefIBAN.Text))
+                string hedefIBAN = txtHedefIBAN.Text.Trim().Replace(" ", "");
+                if (string.IsNullOrWhiteSpace(hedefIBAN))
                 {
                     MessageBox.Show("Hedef IBAN giriniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // IBAN validasyonu
+                string ibanHata = IbanHelper.ValidateIban(hedefIBAN);
+                if (ibanHata != null)
+                {
+                    MessageBox.Show(ibanHata, "Geçersiz IBAN", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // MetinBank IBAN kontrolü
+                if (hedefIBAN.StartsWith("TR") && hedefIBAN.Length >= 8 && hedefIBAN.Substring(4, 4) == "0127")
+                {
+                    MessageBox.Show("MetinBank IBAN'ına EFT yapılamaz. Lütfen Havale kullanın.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -192,23 +255,42 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                string ibanHata = IbanHelper.ValidateIban(txtHedefIBAN.Text);
-                if (ibanHata != null)
+                if (_gonderenBakiye < numTutar.Value)
                 {
-                    MessageBox.Show(ibanHata, "Geçersiz IBAN", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Yetersiz bakiye! Mevcut: {_gonderenBakiye:N2} TL, İstenen: {numTutar.Value:N2} TL", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
+
+                string aliciAdi = txtAliciAdi.Text.Trim();
+                if (string.IsNullOrWhiteSpace(aliciAdi))
+                {
+                    MessageBox.Show("Alıcı adı giriniz.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtAliciAdi.Focus();
+                    return;
+                }
+
+                // Onay mesajı
+                DialogResult dr = MessageBox.Show(
+                    $"EFT işlemini onaylıyor musunuz?\n\n" +
+                    $"Gönderen: {_gonderenMusteriAd}\n" +
+                    $"Kaynak IBAN: {IbanHelper.FormatIban(_gonderenIBAN)}\n\n" +
+                    $"Alıcı: {aliciAdi}\n" +
+                    $"Hedef IBAN: {IbanHelper.FormatIban(hedefIBAN)}\n\n" +
+                    $"Tutar: {numTutar.Value:N2} TL",
+                    "EFT Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (dr != DialogResult.Yes) return;
 
                 // SubeID null ise varsayılan değer kullan
                 int subeID = _kullanici.SubeID ?? 1;
 
                 long islemID;
                 string hata = _sIslem.EFT(
-                    _seciliHesapID,
-                    txtHedefIBAN.Text,
+                    _gonderenHesapID,
+                    hedefIBAN,
                     numTutar.Value,
                     txtAciklama.Text,
-                    txtAliciAdi.Text,
+                    aliciAdi,
                     _kullanici.KullaniciID,
                     subeID,
                     out islemID
@@ -221,19 +303,39 @@ namespace MetinBank.Desktop
                 }
 
                 string onayMesaji = numTutar.Value > 5000 ? "\n\nNOT: İşlem onay bekliyor." : "";
-                MessageBox.Show($"EFT işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL{onayMesaji}", 
+                MessageBox.Show($"✅ EFT işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL{onayMesaji}", 
                     "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                HesaplariYukle();
-                numTutar.Value = 0;
-                txtAciklama.Text = "";
-                txtAliciAdi.Text = "";
-                txtHedefIBAN.Text = "";
+                // Formu temizle
+                TemizleForm();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Beklenmeyen hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void TemizleForm()
+        {
+            // Gönderen temizle
+            _gonderenMusteriID = 0;
+            _gonderenHesapID = 0;
+            _gonderenMusteriAd = "";
+            _gonderenIBAN = "";
+            _gonderenBakiye = 0;
+            txtMusteriArama.Text = "";
+            gridMusteriler.DataSource = null;
+            gridHesaplar.DataSource = null;
+            lblGonderenInfo.Text = "📤 Gönderen: Seçilmedi";
+            
+            // Alıcı temizle
+            txtHedefIBAN.Text = "";
+            txtAliciAdi.Text = "";
+            lblAliciInfo.Text = "📥 Alıcı: Harici banka hesabına EFT";
+            
+            // Transfer temizle
+            numTutar.Value = 0;
+            txtAciklama.Text = "";
         }
 
         private void BtnKapat_Click(object sender, EventArgs e)
@@ -242,4 +344,3 @@ namespace MetinBank.Desktop
         }
     }
 }
-

@@ -243,11 +243,11 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
             this.layoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.txtMusteriArama.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridMusteriler)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridViewMusteriler)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridMusteriler)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewMusteriler)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbBasvuruTipi.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridBasvurular)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridViewBasvurular)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridBasvurular)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewBasvurular)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();

@@ -72,9 +72,13 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(txtCepTelefon.Text))
+                // Cep telefon validasyonu - mask karakterlerini temizle
+                string cepTelefonRaw = txtCepTelefon.Text
+                    .Replace("+90", "").Replace("(", "").Replace(")", "")
+                    .Replace("-", "").Replace(" ", "").Trim();
+                if (string.IsNullOrWhiteSpace(cepTelefonRaw) || cepTelefonRaw.Length < 10)
                 {
-                    XtraMessageBox.Show("Cep telefon alanı zorunludur.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    XtraMessageBox.Show("Cep telefon alanı zorunludur ve en az 10 rakam içermelidir.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtCepTelefon.Focus();
                     return;
                 }
@@ -91,8 +95,8 @@ namespace MetinBank.Desktop
                     MedeniDurum = cmbMedeniDurum.Text,
                     AnneAdi = txtAnneAdi.Text.Trim(),
                     BabaAdi = txtBabaAdi.Text.Trim(),
-                    Telefon = txtTelefon.Text.Trim(),
-                    CepTelefon = txtCepTelefon.Text.Trim(),
+                    Telefon = txtTelefon.Text.Replace("+90", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "").Trim(),
+                    CepTelefon = cepTelefonRaw,
                     Email = txtEmail.Text.Trim(),
                     Adres = txtAdres.Text.Trim(),
                     Il = txtIl.Text.Trim(),
