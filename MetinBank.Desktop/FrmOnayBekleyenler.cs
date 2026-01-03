@@ -12,13 +12,13 @@ namespace MetinBank.Desktop
     public partial class FrmOnayBekleyenler : XtraForm
     {
         private KullaniciModel _kullanici;
-        private SOnay _sOnay;
+        private SIslem _sIslem;
 
         public FrmOnayBekleyenler(KullaniciModel kullanici)
         {
             InitializeComponent();
             _kullanici = kullanici;
-            _sOnay = new SOnay();
+            _sIslem = new SIslem();
         }
 
         private void FrmOnayBekleyenler_Load(object sender, EventArgs e)
@@ -29,7 +29,7 @@ namespace MetinBank.Desktop
         private void OnaylariYukle()
         {
             DataTable dt;
-            string hata = _sOnay.OnayBekleyenler(_kullanici.RolAdi, out dt);
+            string hata = _sIslem.OnayBekleyenIslemleriGetir(_kullanici.RolAdi, out dt);
             
             if (hata != null)
             {
@@ -40,6 +40,14 @@ namespace MetinBank.Desktop
             gridOnaylar.DataSource = dt;
             gridViewOnaylar.BestFitColumns();
             
+            // Gizlenmesi gereken kolonlar
+            string[] hiddenCols = { "IslemID", "KaynakHesapID", "HedefHesapID", "KullaniciID", "SubeID", "IPAdresi", "IslemCikisTarihi", "BasariliMi" };
+            foreach (string col in hiddenCols)
+            {
+                if (gridViewOnaylar.Columns[col] != null)
+                    gridViewOnaylar.Columns[col].Visible = false;
+            }
+
             // Clear detail panel
             ClearDetailPanel();
         }
@@ -65,8 +73,8 @@ namespace MetinBank.Desktop
                 // Get row data and update detail panel
                 object islemTipiObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "IslemTipi");
                 object tutarObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "Tutar");
-                object tarihObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "OlusturmaTarihi");
-                object olusturanObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "OlusturanKullanici");
+                object tarihObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "IslemTarihi");
+                object olusturanObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "MusteriAdSoyad"); // Updated query returns this
 
                 string islemTipi = CommonFunctions.DbNullToString(islemTipiObj);
                 decimal tutar = CommonFunctions.DbNullToDecimal(tutarObj);
@@ -78,7 +86,7 @@ namespace MetinBank.Desktop
                 lblIslemTipi.Text = $"İşlem Tipi: {islemTipi}";
                 lblTutar.Text = $"Tutar: {tutar:N2} TL";
                 lblTarih.Text = $"Tarih: {tarih}";
-                lblOlusturan.Text = $"Oluşturan: {olusturan}";
+                lblOlusturan.Text = $"Müşteri: {olusturan}";
             }
             catch
             {
@@ -94,10 +102,10 @@ namespace MetinBank.Desktop
                 return;
             }
 
-            object onayLogIDObj = gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "OnayLogID");
-            int onayLogID = CommonFunctions.DbNullToInt(onayLogIDObj);
+            object islemIDObj = gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "IslemID");
+            long islemID = islemIDObj != DBNull.Value ? Convert.ToInt64(islemIDObj) : 0;
 
-            if (onayLogID == 0)
+            if (islemID == 0)
             {
                 XtraMessageBox.Show("Geçersiz kayıt.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -109,7 +117,7 @@ namespace MetinBank.Desktop
             if (result != DialogResult.Yes)
                 return;
 
-            string hata = _sOnay.IslemOnayla(onayLogID, _kullanici.KullaniciID);
+            string hata = _sIslem.IslemOnayla(islemID, _kullanici.KullaniciID, _kullanici.RolAdi);
 
             if (hata != null)
             {
@@ -117,7 +125,7 @@ namespace MetinBank.Desktop
                 return;
             }
 
-            XtraMessageBox.Show("İşlem başarıyla onaylandı!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            XtraMessageBox.Show("İşlem başarıyla onaylandı (veya bir sonraki onaya gönderildi)!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
             OnaylariYukle();
         }
 
@@ -138,16 +146,16 @@ namespace MetinBank.Desktop
                 return;
             }
 
-            object onayLogIDObj = gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "OnayLogID");
-            int onayLogID = CommonFunctions.DbNullToInt(onayLogIDObj);
+            object islemIDObj = gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "IslemID");
+            long islemID = islemIDObj != DBNull.Value ? Convert.ToInt64(islemIDObj) : 0;
 
-            if (onayLogID == 0)
+            if (islemID == 0)
             {
                 XtraMessageBox.Show("Geçersiz kayıt.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            string hata = _sOnay.IslemReddet(onayLogID, _kullanici.KullaniciID, redNedeni);
+            string hata = _sIslem.IslemReddet(islemID, _kullanici.KullaniciID, redNedeni);
 
             if (hata != null)
             {

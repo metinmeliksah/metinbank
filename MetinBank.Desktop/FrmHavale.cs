@@ -480,7 +480,7 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                string onayMesaji = numTutar.Value > 5000 ? "\n\nNOT: İşlem onay bekliyor." : "";
+                string onayMesaji = numTutar.Value > 50000 ? "\n\nNOT: İşlem onay bekliyor." : "";
                 MessageBox.Show($"✅ Havale işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL{onayMesaji}", 
                     "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
