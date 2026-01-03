@@ -308,29 +308,92 @@ namespace MetinBank.Business
         }
 
         /// <summary>
-        /// Müşteri arama
+        /// Müşteri arama (eski uyumluluk için - tüm aktif müşteriler)
         /// </summary>
         public string MusteriAra(string aramaKelimesi, out DataTable sonuclar)
+        {
+            return MusteriAra(aramaKelimesi, null, true, out sonuclar);
+        }
+
+        /// <summary>
+        /// Müşteri arama - Şube bazlı erişim kontrolü ile
+        /// </summary>
+        /// <param name="aramaKelimesi">Arama kelimesi</param>
+        /// <param name="subeID">Şube ID (null = tüm şubeler - Genel Merkez için)</param>
+        /// <param name="isGenelMerkez">Genel Merkez kullanıcısı mı?</param>
+        /// <param name="sonuclar">Sonuç tablosu</param>
+        public string MusteriAra(string aramaKelimesi, int? subeID, bool isGenelMerkez, out DataTable sonuclar)
         {
             sonuclar = null;
 
             try
             {
-                string query = @"SELECT m.MusteriID, m.MusteriNo, m.TCKN, 
-                                CONCAT(m.Ad, ' ', m.Soyad) as AdSoyad,
-                                m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, 
-                                m.AktifMi, s.SubeAdi
-                                FROM Musteri m
-                                LEFT JOIN Sube s ON m.KayitSubeID = s.SubeID
-                                WHERE m.Ad LIKE @arama OR m.Soyad LIKE @arama 
-                                OR m.MusteriNo LIKE @arama OR CAST(m.TCKN AS CHAR) LIKE @arama
-                                ORDER BY m.MusteriID DESC
-                                LIMIT 100";
+                // TCKN ile tam arama mı kontrol et (11 haneli sayı)
+                bool isTCKNSearch = !string.IsNullOrEmpty(aramaKelimesi) && 
+                                    aramaKelimesi.Length == 11 && 
+                                    long.TryParse(aramaKelimesi, out _);
 
-                MySqlParameter[] parameters = new MySqlParameter[]
+                string query;
+                MySqlParameter[] parameters;
+
+                if (isGenelMerkez)
                 {
-                    new MySqlParameter("@arama", "%" + aramaKelimesi + "%")
-                };
+                    // Genel Merkez - Tüm aktif müşterilerde arama
+                    query = @"SELECT m.MusteriID, m.MusteriNo, m.TCKN, 
+                            CONCAT(m.Ad, ' ', m.Soyad) as AdSoyad,
+                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, 
+                            m.AktifMi, s.SubeAdi, m.KayitSubeID
+                            FROM Musteri m
+                            LEFT JOIN Sube s ON m.KayitSubeID = s.SubeID
+                            WHERE m.AktifMi = 1 AND (m.Ad LIKE @arama OR m.Soyad LIKE @arama 
+                            OR m.MusteriNo LIKE @arama OR CAST(m.TCKN AS CHAR) LIKE @arama)
+                            ORDER BY m.MusteriID DESC
+                            LIMIT 100";
+
+                    parameters = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@arama", "%" + aramaKelimesi + "%")
+                    };
+                }
+                else if (isTCKNSearch)
+                {
+                    // TCKN ile tam arama - Cross-branch erişim
+                    query = @"SELECT m.MusteriID, m.MusteriNo, m.TCKN, 
+                            CONCAT(m.Ad, ' ', m.Soyad) as AdSoyad,
+                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, 
+                            m.AktifMi, s.SubeAdi, m.KayitSubeID
+                            FROM Musteri m
+                            LEFT JOIN Sube s ON m.KayitSubeID = s.SubeID
+                            WHERE m.AktifMi = 1 AND m.TCKN = @tckn
+                            ORDER BY m.MusteriID DESC
+                            LIMIT 10";
+
+                    parameters = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tckn", long.Parse(aramaKelimesi))
+                    };
+                }
+                else
+                {
+                    // Normal arama - Sadece kendi şube müşterileri
+                    query = @"SELECT m.MusteriID, m.MusteriNo, m.TCKN, 
+                            CONCAT(m.Ad, ' ', m.Soyad) as AdSoyad,
+                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, 
+                            m.AktifMi, s.SubeAdi, m.KayitSubeID
+                            FROM Musteri m
+                            LEFT JOIN Sube s ON m.KayitSubeID = s.SubeID
+                            WHERE m.AktifMi = 1 AND m.KayitSubeID = @subeID 
+                            AND (m.Ad LIKE @arama OR m.Soyad LIKE @arama 
+                            OR m.MusteriNo LIKE @arama OR CAST(m.TCKN AS CHAR) LIKE @arama)
+                            ORDER BY m.MusteriID DESC
+                            LIMIT 100";
+
+                    parameters = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@subeID", subeID ?? 0),
+                        new MySqlParameter("@arama", "%" + aramaKelimesi + "%")
+                    };
+                }
 
                 string hata = _dataAccess.ExecuteQuery(query, parameters, out sonuclar);
                 if (hata != null) return hata;
@@ -340,6 +403,42 @@ namespace MetinBank.Business
             catch (Exception ex)
             {
                 return $"Müşteri arama hatası: {ex.Message}";
+            }
+            finally
+            {
+                _dataAccess.CloseConnection();
+            }
+        }
+
+        /// <summary>
+        /// Şubenin müşteri listesini getirir (Müdür için)
+        /// </summary>
+        public string SubeninMusterileri(int subeID, out DataTable sonuclar)
+        {
+            sonuclar = null;
+
+            try
+            {
+                string query = @"SELECT m.MusteriID, m.MusteriNo, m.TCKN, 
+                        m.Ad, m.Soyad, CONCAT(m.Ad, ' ', m.Soyad) as AdSoyad,
+                        m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, 
+                        m.AktifMi, m.KayitTarihi
+                        FROM Musteri m
+                        WHERE m.KayitSubeID = @subeID
+                        ORDER BY m.KayitTarihi DESC
+                        LIMIT 500";
+
+                MySqlParameter[] parameters = new MySqlParameter[]
+                {
+                    new MySqlParameter("@subeID", subeID)
+                };
+
+                string hata = _dataAccess.ExecuteQuery(query, parameters, out sonuclar);
+                return hata;
+            }
+            catch (Exception ex)
+            {
+                return $"Müşteri listesi hatası: {ex.Message}";
             }
             finally
             {

@@ -16,6 +16,7 @@ namespace MetinBank.Desktop
         private SKart _sKart;
         private int _seciliMusteriID;
         private System.Windows.Forms.Timer _aramaTimer;
+        private bool _isGenelMerkez;
 
         public FrmKartlar(KullaniciModel kullanici)
         {
@@ -24,6 +25,10 @@ namespace MetinBank.Desktop
             _sMusteri = new SMusteri();
             _sHesap = new SHesap();
             _sKart = new SKart();
+            
+            // Genel Merkez kontrolü
+            _isGenelMerkez = _kullanici.RolAdi != null && 
+                            (_kullanici.RolAdi.Contains("Genel") || _kullanici.RolAdi.Contains("Merkez"));
             
             _aramaTimer = new System.Windows.Forms.Timer();
             _aramaTimer.Interval = 500;
@@ -93,24 +98,8 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                DataAccess dataAccess = new DataAccess();
-                string query = @"SELECT k.KartID, k.KartNo, k.KartTipi, k.Durum, k.SonKullanmaTarihi,
-                                k.GunlukHarcamaLimiti, k.AylikHarcamaLimiti, k.KartSahibiAdi,
-                                h.IBAN, h.Bakiye, m.MusteriNo, CONCAT(m.Ad, ' ', m.Soyad) as MusteriAdi
-                                FROM BankaKarti k
-                                INNER JOIN Hesap h ON k.HesapID = h.HesapID
-                                INNER JOIN Musteri m ON h.MusteriID = m.MusteriID
-                                WHERE m.MusteriID = @musteriID
-                                ORDER BY k.BasvuruTarihi DESC";
-
-                MySql.Data.MySqlClient.MySqlParameter[] parameters = new MySql.Data.MySqlClient.MySqlParameter[]
-                {
-                    new MySql.Data.MySqlClient.MySqlParameter("@musteriID", _seciliMusteriID)
-                };
-
                 DataTable dt;
-                string hata = dataAccess.ExecuteQuery(query, parameters, out dt);
-                dataAccess.CloseConnection();
+                string hata = _sKart.GetMusteriKartlari(_seciliMusteriID, out dt);
 
                 if (hata != null)
                 {
@@ -122,12 +111,7 @@ namespace MetinBank.Desktop
                 gridViewKartlar.BestFitColumns();
                 
                 // ID sütunlarını gizle
-                if (gridViewKartlar.Columns["KartID"] != null)
-                    gridViewKartlar.Columns["KartID"].Visible = false;
-                if (gridViewKartlar.Columns["HesapID"] != null)
-                    gridViewKartlar.Columns["HesapID"].Visible = false;
-                if (gridViewKartlar.Columns["MusteriID"] != null)
-                    gridViewKartlar.Columns["MusteriID"].Visible = false;
+                GizliSutunlariAyarla(gridViewKartlar, "KartID", "HesapID", "MusteriID");
                     
                 // Kart numarasını maskele (ilk 6 + son 4)
                 if (gridViewKartlar.Columns["KartNo"] != null)
@@ -163,7 +147,8 @@ namespace MetinBank.Desktop
                 }
 
                 DataTable sonuclar;
-                string hata = _sMusteri.MusteriAra(arama, out sonuclar);
+                // Şube bazlı arama
+                string hata = _sMusteri.MusteriAra(arama, _kullanici.SubeID, _isGenelMerkez, out sonuclar);
                 
                 if (hata != null)
                 {
@@ -175,7 +160,7 @@ namespace MetinBank.Desktop
                 gridViewMusteriler.BestFitColumns();
                 
                 // ID sütunlarını gizle
-                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID", "KayitSubeID");
             }
             catch
             {
@@ -237,7 +222,7 @@ namespace MetinBank.Desktop
                 if (result != DialogResult.Yes)
                     return;
 
-                string hata = _sKart.CancelCard(kartID);
+                string hata = _sKart.CancelCard(kartID, _kullanici.KullaniciID);
 
                 if (hata != null)
                 {

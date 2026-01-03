@@ -67,51 +67,20 @@ namespace MetinBank.Desktop
 
         private void LoadNavBarIcons()
         {
-            // DevExpress built-in SVG images for banking icons
+            // Disable code-behind icon loading to allow Designer-set images to show
             try
             {
-                // Use DevExpress Office icons directly on navbar items
-                svgImageCollection1.Add("customers", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.People.user.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("adduser", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.People.adduser.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("userlist", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.People.team.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("account", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Business Objects.bobusinessobject.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("accountopen", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Actions.add.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("deposit", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.XAF.action_loadsummariessettings.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("withdraw", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.XAF.action_savesummariessettings.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("transfer", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.XAF.action_object_refresh.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("havale", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Actions.apply.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("eft", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.XAF.action_export.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("virman", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Arrows.repeat.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("card", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Scheduling.today.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("apps", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Actions.new.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("pending", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Scheduling.wait.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-                svgImageCollection1.Add("other", DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Setup.options.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly));
-
-                // Set icon indices for navbar groups and items
-                navBarGroupMusteriIslemleri.SmallImageIndex = 0;  // customers
-                navBarItemMusteriEkle.SmallImageIndex = 1;        // adduser
-                navBarItemMusteriIslem.SmallImageIndex = 2;       // userlist
-                navBarItemIslemGecmisi.SmallImageIndex = 5;       // history
+                // Detach the global collection so individual Item.Image / Item.SmallImage properties work
+                navBarControl1.SmallImages = null;
+                navBarControl1.LargeImages = null;
                 
-                navBarGroupHesapIslemleri.SmallImageIndex = 3;    // account
-                navBarItemHesapIslem.SmallImageIndex = 4;         // accountopen
-                navBarItemParaYatir.SmallImageIndex = 5;          // deposit
-                navBarItemParaCek.SmallImageIndex = 6;            // withdraw
-                
-                navBarGroupTransferIslemleri.SmallImageIndex = 7; // transfer
-                navBarItemHavale.SmallImageIndex = 8;             // havale
-                navBarItemEFT.SmallImageIndex = 9;                // eft
-                navBarItemVirman.SmallImageIndex = 10;            // virman
-                
-                navBarGroupDigerIslemler.SmallImageIndex = 14;    // other
-                navBarItemKartlar.SmallImageIndex = 11;           // card
-                navBarItemBasvurular.SmallImageIndex = 12;        // apps
-                navBarItemBasvurular.SmallImageIndex = 12;        // apps
-                navBarItemOnayBekleyenler.SmallImageIndex = 13;   // pending
+                // Optional: Clear any programmatically set indices if they exist, 
+                // though setting the collection to null usually suffices.
+                // We leave the rest to the Designer configuration.
             }
             catch
             {
-                // Icon loading failed silently
+                // generic error handling
             }
 
             // Yetki kontrolü - Onay Bekleyenler menüsünü sadece yetkili kişilere göster
@@ -192,6 +161,11 @@ namespace MetinBank.Desktop
         private void navBarItemOnayBekleyenler_LinkClicked(object sender, NavBarLinkEventArgs e)
         {
             OpenMdiChild(new FrmOnayBekleyenler(_kullanici));
+        }
+
+        private void navBarItemDovizAlSat_LinkClicked(object sender, NavBarLinkEventArgs e)
+        {
+            OpenMdiChild(new FrmDovizAlSat(_kullanici));
         }
 
         private void OpenMdiChild(Form childForm)

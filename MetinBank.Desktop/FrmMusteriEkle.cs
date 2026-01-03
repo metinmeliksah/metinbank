@@ -75,15 +75,26 @@ namespace MetinBank.Desktop
                 // Cep telefon validasyonu - mask karakterlerini temizle
                 string cepTelefonRaw = txtCepTelefon.Text
                     .Replace("(", "").Replace(")", "")
-                    .Replace(" ", "").Trim();
+                    .Replace(" ", "").Replace("-", "").Trim();
                 
-                // Başındaki 0'ı kaldır (maskeden geliyorsa)
-                if (cepTelefonRaw.StartsWith("0"))
-                    cepTelefonRaw = cepTelefonRaw.Substring(1);
-
-                if (string.IsNullOrWhiteSpace(cepTelefonRaw) || cepTelefonRaw.Length != 10)
+                // Sadece rakamları al
+                string cepTelefonDigits = "";
+                foreach (char c in cepTelefonRaw)
                 {
-                    XtraMessageBox.Show("Cep telefon numarası 10 haneli olmalıdır (05XX...)", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    if (char.IsDigit(c)) cepTelefonDigits += c;
+                }
+
+                // 0 ile başlayıp 11 hane kontrolü
+                if (cepTelefonDigits.Length == 10 && !cepTelefonDigits.StartsWith("0"))
+                {
+                    // 10 hane ama 0 ile başlamıyor - başına 0 ekle
+                    cepTelefonDigits = "0" + cepTelefonDigits;
+                }
+
+                if (cepTelefonDigits.Length != 11 || !cepTelefonDigits.StartsWith("0"))
+                {
+                    XtraMessageBox.Show("Cep telefon numarası 0 ile başlayan 11 haneli olmalıdır.\nÖrnek: 0532 123 45 67", 
+                        "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtCepTelefon.Focus();
                     return;
                 }
@@ -91,12 +102,21 @@ namespace MetinBank.Desktop
                 // Ev telefonu temizle (opsiyonel)
                 string telefonRaw = txtTelefon.Text
                     .Replace("(", "").Replace(")", "")
-                    .Replace(" ", "").Trim();
+                    .Replace(" ", "").Replace("-", "").Trim();
                 
-                if (telefonRaw.StartsWith("0"))
-                    telefonRaw = telefonRaw.Substring(1);
+                string telefonDigits = "";
+                foreach (char c in telefonRaw)
+                {
+                    if (char.IsDigit(c)) telefonDigits += c;
+                }
+                
+                // Eğer 10 hane ise başına 0 ekle
+                if (telefonDigits.Length == 10 && !telefonDigits.StartsWith("0"))
+                {
+                    telefonDigits = "0" + telefonDigits;
+                }
 
-                // Create customer model
+                // Create customer model - telefonu 0 ile başlayan 11 hane olarak sakla
                 MusteriModel musteri = new MusteriModel
                 {
                     TCKN = long.Parse(txtTCKN.Text.Replace(" ", "")),
@@ -108,8 +128,8 @@ namespace MetinBank.Desktop
                     MedeniDurum = cmbMedeniDurum.Text,
                     AnneAdi = txtAnneAdi.Text.Trim(),
                     BabaAdi = txtBabaAdi.Text.Trim(),
-                    Telefon = string.IsNullOrEmpty(telefonRaw) ? "" : "90" + telefonRaw,
-                    CepTelefon = "90" + cepTelefonRaw,
+                    Telefon = string.IsNullOrEmpty(telefonDigits) || telefonDigits.Length < 10 ? "" : telefonDigits,
+                    CepTelefon = cepTelefonDigits,
                     Email = txtEmail.Text.Trim(),
                     Adres = txtAdres.Text.Trim(),
                     Il = txtIl.Text.Trim(),

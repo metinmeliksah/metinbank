@@ -17,6 +17,7 @@ namespace MetinBank.Desktop
         private int _seciliMusteriID;
         private int _seciliHesapID;
         private System.Windows.Forms.Timer _aramaTimer;
+        private bool _isGenelMerkez;
 
         public FrmParaYatir(KullaniciModel kullanici)
         {
@@ -25,6 +26,10 @@ namespace MetinBank.Desktop
             _sIslem = new SIslem();
             _sMusteri = new SMusteri();
             _sHesap = new SHesap();
+            
+            // Genel Merkez kontrolü
+            _isGenelMerkez = _kullanici.RolAdi != null && 
+                            (_kullanici.RolAdi.Contains("Genel") || _kullanici.RolAdi.Contains("Merkez"));
             
             // Canlı arama timer'ı
             _aramaTimer = new System.Windows.Forms.Timer();
@@ -81,7 +86,8 @@ namespace MetinBank.Desktop
                 }
 
                 DataTable sonuclar;
-                string hata = _sMusteri.MusteriAra(arama, out sonuclar);
+                // Şube bazlı arama - Genel Merkez değilse sadece kendi şube + TCKN ile diğer şubeler
+                string hata = _sMusteri.MusteriAra(arama, _kullanici.SubeID, _isGenelMerkez, out sonuclar);
                 
                 if (hata != null)
                 {
@@ -93,7 +99,7 @@ namespace MetinBank.Desktop
                 gridViewMusteriler.BestFitColumns();
                 
                 // ID sütunlarını gizle
-                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID", "KayitSubeID");
             }
             catch
             {
