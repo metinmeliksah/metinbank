@@ -65,6 +65,69 @@ namespace MetinBank.Desktop
             gridViewGonderenHesaplar.OptionsView.ShowGroupPanel = false;
             gridViewAliciMusteriler.OptionsView.ShowGroupPanel = false;
             gridViewAliciHesaplar.OptionsView.ShowGroupPanel = false;
+            
+            // Layout düzenlemesi
+            AyarlaPanelBoyutlari();
+        }
+        
+        private void AyarlaPanelBoyutlari()
+        {
+            layoutControl1.BeginUpdate();
+            try
+            {
+                // Tablo düzeni (Table Layout) oluşturarak %50-%50 bölüşüm sağlama
+                // Mevcut yapıda grpGonderen ve grpAlici Root grubunda.
+                // Bunları yan yana eşit tutmak için bir TableLayout grubuna alacağız veya
+                // mevcut Root grubunu ayarlayacağız. En sağlıklısı bunları kapsayan bir grup oluşturmak.
+
+                DevExpress.XtraLayout.LayoutControlGroup splitGroup = layoutControlGroup1.Items.FindByName("splitGroup") as DevExpress.XtraLayout.LayoutControlGroup;
+                if (splitGroup == null)
+                {
+                    // Yeni bir grup oluştur ve en başa ekle
+                    splitGroup = layoutControlGroup1.AddGroup();
+                    splitGroup.Name = "splitGroup";
+                    splitGroup.GroupBordersVisible = false;
+                    splitGroup.TextVisible = false;
+                    
+                    // Mevcut grupları bu yeni gruba taşı
+                    splitGroup.AddItem(grpGonderen);
+                    splitGroup.AddItem(grpAlici);
+                    
+                    // Tablo düzeni ayarları
+                    splitGroup.LayoutMode = DevExpress.XtraLayout.Utils.LayoutMode.Table;
+                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Clear();
+                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Add(new DevExpress.XtraLayout.ColumnDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Width = 50 });
+                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Add(new DevExpress.XtraLayout.ColumnDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Width = 50 });
+                    
+                    splitGroup.OptionsTableLayoutGroup.RowDefinitions.Clear();
+                    splitGroup.OptionsTableLayoutGroup.RowDefinitions.Add(new DevExpress.XtraLayout.RowDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Height = 100 });
+                    
+                    // Elemanları hücrelere yerleştir
+                    grpGonderen.OptionsTableLayoutItem.ColumnIndex = 0;
+                    grpGonderen.OptionsTableLayoutItem.RowIndex = 0;
+                    
+                    grpAlici.OptionsTableLayoutItem.ColumnIndex = 1;
+                    grpAlici.OptionsTableLayoutItem.RowIndex = 0;
+                    
+                    // Kısıtlamaları kaldır
+                    grpGonderen.MaxSize = new System.Drawing.Size(0, 0);
+                    grpGonderen.MinSize = new System.Drawing.Size(100, 100);
+                    grpAlici.MaxSize = new System.Drawing.Size(0, 0);
+                    grpAlici.MinSize = new System.Drawing.Size(100, 100);
+
+                    // Grubu en üste taşı
+                    layoutControlGroup1.Move(splitGroup, DevExpress.XtraLayout.Utils.InsertType.Top);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Olası layout hatalarını yutmamak için loglanabilir veya sessiz geçilebilir
+                System.Diagnostics.Debug.WriteLine("Layout hatası: " + ex.Message);
+            }
+            finally
+            {
+                layoutControl1.EndUpdate();
+            }
         }
         
         /// <summary>
@@ -484,11 +547,6 @@ namespace MetinBank.Desktop
             // Transfer temizle
             numTutar.Value = 0;
             txtAciklama.Text = "";
-        }
-
-        private void BtnKapat_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace MetinBank.Util
     /// </summary>
     public static class IbanHelper
     {
-        private const string METIN_BANK_CODE = "00001";
+        private const string METIN_BANK_CODE = "00127";
         private const string COUNTRY_CODE = "TR";
         private const string RESERVE_DIGIT = "0";
 

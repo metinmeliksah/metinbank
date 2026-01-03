@@ -173,6 +173,16 @@ namespace MetinBank.Service
                 return $"Servis hatası: {ex.Message}";
             }
         }
+
+        public string MusterininIslemleri(int musteriID, out DataTable islemler)
+        {
+            return _bIslem.MusterininIslemleri(musteriID, out islemler);
+        }
+
+        public string HesabinIslemleri(int hesapID, out DataTable islemler)
+        {
+            return _bIslem.HesabinIslemleri(hesapID, out islemler);
+        }
     }
 }
 

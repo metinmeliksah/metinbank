@@ -43,6 +43,13 @@ namespace MetinBank.Business
 
                 long sonHesapNo = resultSonHesap != null && resultSonHesap != DBNull.Value ? Convert.ToInt64(resultSonHesap) : 0;
                 long yeniHesapNo = sonHesapNo + 1;
+                
+                if (yeniHesapNo <= 0)
+                {
+                    _dataAccess.RollbackTransaction();
+                    return "Hesap numarası üretilemedi (Geçersiz Sayaç).";
+                }
+
                 string hesapNoStr = yeniHesapNo.ToString("D16");
 
                 // IBAN oluştur

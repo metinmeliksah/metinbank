@@ -224,7 +224,8 @@ namespace MetinBank.Desktop
 
                 // Kartı oluştur
                 int kartID;
-                string hata = _sKart.CreateCard(_seciliHesapID, kartMarkasi, musteriAdi, _kullanici.KullaniciID, out kartID);
+                long olusanKartNo;
+                string hata = _sKart.CreateCard(_seciliHesapID, kartMarkasi, musteriAdi, _kullanici.KullaniciID, out kartID, out olusanKartNo);
 
                 if (hata != null)
                 {
@@ -233,7 +234,7 @@ namespace MetinBank.Desktop
                 }
 
                 // Başarılı mesajı
-                long kartNo = SKart.GenerateCardNumber(kartMarkasi);
+                long kartNo = olusanKartNo;
                 string kartNoFormatli = $"{kartNo.ToString("D16").Substring(0, 4)} {kartNo.ToString("D16").Substring(4, 4)} " +
                                        $"{kartNo.ToString("D16").Substring(8, 4)} {kartNo.ToString("D16").Substring(12, 4)}";
 

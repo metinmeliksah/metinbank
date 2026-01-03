@@ -63,6 +63,7 @@ namespace MetinBank.Desktop
                 navBarGroupMusteriIslemleri.SmallImageIndex = 0;  // customers
                 navBarItemMusteriEkle.SmallImageIndex = 1;        // adduser
                 navBarItemMusteriIslem.SmallImageIndex = 2;       // userlist
+                navBarItemIslemGecmisi.SmallImageIndex = 5;       // history
                 
                 navBarGroupHesapIslemleri.SmallImageIndex = 3;    // account
                 navBarItemHesapIslem.SmallImageIndex = 4;         // accountopen
@@ -98,6 +99,11 @@ namespace MetinBank.Desktop
         private void navBarItemMusteriIslem_LinkClicked(object sender, NavBarLinkEventArgs e)
         {
             OpenMdiChild(new FrmMusteriIslem(_kullanici));
+        }
+
+        private void navBarItemIslemGecmisi_LinkClicked(object sender, NavBarLinkEventArgs e)
+        {
+            OpenMdiChild(new FrmIslemGecmisi(_kullanici));
         }
 
         private void navBarItemHesapIslem_LinkClicked(object sender, NavBarLinkEventArgs e)
@@ -158,9 +164,14 @@ namespace MetinBank.Desktop
                 }
             }
 
-            // Open new form as MDI child
+            // Open new form as MDI child - prevent visible animation
+            this.SuspendLayout();
             childForm.MdiParent = this;
+            childForm.WindowState = FormWindowState.Maximized;
+            childForm.Opacity = 0;
             childForm.Show();
+            childForm.Opacity = 1;
+            this.ResumeLayout(true);
         }
 
         private void barButtonItemCikis_ItemClick(object sender, ItemClickEventArgs e)

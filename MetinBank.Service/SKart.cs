@@ -99,12 +99,17 @@ namespace MetinBank.Service
         /// <summary>
         /// Yeni kart oluşturur
         /// </summary>
-        public string CreateCard(int hesapID, string kartMarkasi, string kartSahibiAdi, int kullaniciID, out int kartID)
+        /// <summary>
+        /// Yeni kart oluşturur
+        /// </summary>
+        public string CreateCard(int hesapID, string kartMarkasi, string kartSahibiAdi, int kullaniciID, out int kartID, out long createdCardNo)
         {
             kartID = 0;
+            createdCardNo = 0;
             try
             {
                 long kartNo = GenerateCardNumber(kartMarkasi);
+                createdCardNo = kartNo;
                 string cvv = GenerateCVV();
                 DateTime sonKullanmaTarihi = GenerateExpiryDate();
                 string kartTipi = kartMarkasi; // Troy veya Mastercard

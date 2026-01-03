@@ -74,14 +74,27 @@ namespace MetinBank.Desktop
 
                 // Cep telefon validasyonu - mask karakterlerini temizle
                 string cepTelefonRaw = txtCepTelefon.Text
-                    .Replace("+90", "").Replace("(", "").Replace(")", "")
-                    .Replace("-", "").Replace(" ", "").Trim();
-                if (string.IsNullOrWhiteSpace(cepTelefonRaw) || cepTelefonRaw.Length < 10)
+                    .Replace("(", "").Replace(")", "")
+                    .Replace(" ", "").Trim();
+                
+                // Başındaki 0'ı kaldır (maskeden geliyorsa)
+                if (cepTelefonRaw.StartsWith("0"))
+                    cepTelefonRaw = cepTelefonRaw.Substring(1);
+
+                if (string.IsNullOrWhiteSpace(cepTelefonRaw) || cepTelefonRaw.Length != 10)
                 {
-                    XtraMessageBox.Show("Cep telefon alanı zorunludur ve en az 10 rakam içermelidir.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    XtraMessageBox.Show("Cep telefon numarası 10 haneli olmalıdır (05XX...)", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtCepTelefon.Focus();
                     return;
                 }
+
+                // Ev telefonu temizle (opsiyonel)
+                string telefonRaw = txtTelefon.Text
+                    .Replace("(", "").Replace(")", "")
+                    .Replace(" ", "").Trim();
+                
+                if (telefonRaw.StartsWith("0"))
+                    telefonRaw = telefonRaw.Substring(1);
 
                 // Create customer model
                 MusteriModel musteri = new MusteriModel
@@ -95,8 +108,8 @@ namespace MetinBank.Desktop
                     MedeniDurum = cmbMedeniDurum.Text,
                     AnneAdi = txtAnneAdi.Text.Trim(),
                     BabaAdi = txtBabaAdi.Text.Trim(),
-                    Telefon = txtTelefon.Text.Replace("+90", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "").Trim(),
-                    CepTelefon = cepTelefonRaw,
+                    Telefon = string.IsNullOrEmpty(telefonRaw) ? "" : "90" + telefonRaw,
+                    CepTelefon = "90" + cepTelefonRaw,
                     Email = txtEmail.Text.Trim(),
                     Adres = txtAdres.Text.Trim(),
                     Il = txtIl.Text.Trim(),
