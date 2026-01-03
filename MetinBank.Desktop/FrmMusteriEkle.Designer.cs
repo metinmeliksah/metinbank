@@ -296,9 +296,11 @@ namespace MetinBank.Desktop
             // txtTelefon
             this.txtTelefon.Location = new System.Drawing.Point(110, 210);
             this.txtTelefon.Name = "txtTelefon";
-            this.txtTelefon.Properties.Mask.EditMask = "+90 (000) 000-0000";
+            this.txtTelefon.Properties.Mask.EditMask = "0 (999) 000 00 00";
             this.txtTelefon.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Simple;
             this.txtTelefon.Properties.Mask.UseMaskAsDisplayFormat = true;
+            this.txtTelefon.Properties.NullValuePrompt = "0 (5XX) XXX XX XX";
+            this.txtTelefon.Properties.NullValuePromptShowForEmptyValue = true;
             this.txtTelefon.Size = new System.Drawing.Size(200, 20);
             this.txtTelefon.StyleController = this.layoutControl1;
             this.txtTelefon.TabIndex = 10;
@@ -306,9 +308,11 @@ namespace MetinBank.Desktop
             // txtCepTelefon
             this.txtCepTelefon.Location = new System.Drawing.Point(410, 210);
             this.txtCepTelefon.Name = "txtCepTelefon";
-            this.txtCepTelefon.Properties.Mask.EditMask = "+90 (000) 000-0000";
+            this.txtCepTelefon.Properties.Mask.EditMask = "0 (999) 000 00 00";
             this.txtCepTelefon.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Simple;
             this.txtCepTelefon.Properties.Mask.UseMaskAsDisplayFormat = true;
+            this.txtCepTelefon.Properties.NullValuePrompt = "0 (5XX) XXX XX XX";
+            this.txtCepTelefon.Properties.NullValuePromptShowForEmptyValue = true;
             this.txtCepTelefon.Size = new System.Drawing.Size(200, 20);
             this.txtCepTelefon.StyleController = this.layoutControl1;
             this.txtCepTelefon.TabIndex = 11;

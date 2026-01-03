@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
@@ -65,6 +66,41 @@ namespace MetinBank.Desktop
             gridViewGonderenHesaplar.OptionsView.ShowGroupPanel = false;
             gridViewAliciMusteriler.OptionsView.ShowGroupPanel = false;
             gridViewAliciHesaplar.OptionsView.ShowGroupPanel = false;
+            
+            // Layout düzenlemesi
+            AyarlaPanelBoyutlari();
+        }
+        
+        private void AyarlaPanelBoyutlari()
+        {
+            layoutControl1.BeginUpdate();
+            try
+            {
+                // Kısıtlamaları kaldır (esnek boyutlandırma için)
+                grpGonderen.MaxSize = new System.Drawing.Size(0, 0);
+                grpGonderen.MinSize = new System.Drawing.Size(100, 100);
+                grpAlici.MaxSize = new System.Drawing.Size(0, 0);
+                grpAlici.MinSize = new System.Drawing.Size(100, 100);
+                
+                // Root grubundaki boşlukları temizle
+                List<DevExpress.XtraLayout.BaseLayoutItem> itemsToRemove = new List<DevExpress.XtraLayout.BaseLayoutItem>();
+                foreach (DevExpress.XtraLayout.BaseLayoutItem item in layoutControlGroup1.Items)
+                {
+                    if (item is DevExpress.XtraLayout.EmptySpaceItem)
+                    {
+                        itemsToRemove.Add(item);
+                    }
+                }
+                foreach (var item in itemsToRemove) layoutControlGroup1.Remove(item);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Layout hatası: " + ex.Message);
+            }
+            finally
+            {
+                layoutControl1.EndUpdate();
+            }
         }
         
         /// <summary>
@@ -484,11 +520,6 @@ namespace MetinBank.Desktop
             // Transfer temizle
             numTutar.Value = 0;
             txtAciklama.Text = "";
-        }
-
-        private void BtnKapat_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }

@@ -25,7 +25,6 @@ namespace MetinBank.Desktop
         private DevExpress.XtraEditors.SpinEdit numTutar;
         private DevExpress.XtraEditors.MemoEdit txtAciklama;
         private DevExpress.XtraEditors.SimpleButton btnGonder;
-        private DevExpress.XtraEditors.SimpleButton btnKapat;
         
         // Layout Items
         private DevExpress.XtraLayout.LayoutControlGroup grpMusteriArama;
@@ -41,7 +40,6 @@ namespace MetinBank.Desktop
         private DevExpress.XtraLayout.LayoutControlItem layoutItemTutar;
         private DevExpress.XtraLayout.LayoutControlItem layoutItemAciklama;
         private DevExpress.XtraLayout.LayoutControlItem layoutItemGonder;
-        private DevExpress.XtraLayout.LayoutControlItem layoutItemKapat;
 
         protected override void Dispose(bool disposing)
         {
@@ -67,7 +65,6 @@ namespace MetinBank.Desktop
             this.numTutar = new DevExpress.XtraEditors.SpinEdit();
             this.txtAciklama = new DevExpress.XtraEditors.MemoEdit();
             this.btnGonder = new DevExpress.XtraEditors.SimpleButton();
-            this.btnKapat = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.grpMusteriArama = new DevExpress.XtraLayout.LayoutControlGroup();
             this.grpKaynak = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -82,7 +79,6 @@ namespace MetinBank.Desktop
             this.layoutItemTutar = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutItemAciklama = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutItemGonder = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutItemKapat = new DevExpress.XtraLayout.LayoutControlItem();
             
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
@@ -109,7 +105,6 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.layoutItemTutar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutItemAciklama)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutItemGonder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutItemKapat)).BeginInit();
             this.SuspendLayout();
             
             // layoutControl1
@@ -122,7 +117,6 @@ namespace MetinBank.Desktop
             this.layoutControl1.Controls.Add(this.numTutar);
             this.layoutControl1.Controls.Add(this.txtAciklama);
             this.layoutControl1.Controls.Add(this.btnGonder);
-            this.layoutControl1.Controls.Add(this.btnKapat);
             this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl1.Location = new System.Drawing.Point(0, 0);
             this.layoutControl1.Name = "layoutControl1";
@@ -159,7 +153,7 @@ namespace MetinBank.Desktop
             this.gridKaynakHesaplar.Location = new System.Drawing.Point(24, 220);
             this.gridKaynakHesaplar.MainView = this.gridViewKaynakHesaplar;
             this.gridKaynakHesaplar.Name = "gridKaynakHesaplar";
-            this.gridKaynakHesaplar.Size = new System.Drawing.Size(650, 150);
+            this.gridKaynakHesaplar.Size = new System.Drawing.Size(654, 150);
             this.gridKaynakHesaplar.TabIndex = 2;
             this.gridKaynakHesaplar.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridViewKaynakHesaplar });
             
@@ -174,7 +168,7 @@ namespace MetinBank.Desktop
             this.lblKaynakInfo.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(101)))), ((int)(((byte)(192)))));
             this.lblKaynakInfo.Location = new System.Drawing.Point(24, 374);
             this.lblKaynakInfo.Name = "lblKaynakInfo";
-            this.lblKaynakInfo.Size = new System.Drawing.Size(650, 25);
+            this.lblKaynakInfo.Size = new System.Drawing.Size(654, 25);
             this.lblKaynakInfo.StyleController = this.layoutControl1;
             this.lblKaynakInfo.TabIndex = 3;
             this.lblKaynakInfo.Text = "📤 Kaynak Hesap: Seçilmedi";
@@ -184,7 +178,7 @@ namespace MetinBank.Desktop
             this.gridHedefHesaplar.Location = new System.Drawing.Point(700, 220);
             this.gridHedefHesaplar.MainView = this.gridViewHedefHesaplar;
             this.gridHedefHesaplar.Name = "gridHedefHesaplar";
-            this.gridHedefHesaplar.Size = new System.Drawing.Size(650, 150);
+            this.gridHedefHesaplar.Size = new System.Drawing.Size(654, 150);
             this.gridHedefHesaplar.TabIndex = 4;
             this.gridHedefHesaplar.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridViewHedefHesaplar });
             
@@ -199,7 +193,7 @@ namespace MetinBank.Desktop
             this.lblHedefInfo.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(125)))), ((int)(((byte)(50)))));
             this.lblHedefInfo.Location = new System.Drawing.Point(700, 374);
             this.lblHedefInfo.Name = "lblHedefInfo";
-            this.lblHedefInfo.Size = new System.Drawing.Size(650, 25);
+            this.lblHedefInfo.Size = new System.Drawing.Size(654, 25);
             this.lblHedefInfo.StyleController = this.layoutControl1;
             this.lblHedefInfo.TabIndex = 5;
             this.lblHedefInfo.Text = "📥 Hedef Hesap: Seçilmedi";
@@ -243,17 +237,7 @@ namespace MetinBank.Desktop
             this.btnGonder.Text = "🔄 VİRMAN YAP";
             this.btnGonder.Click += new System.EventHandler(this.BtnGonder_Click);
             
-            // btnKapat
-            this.btnKapat.Location = new System.Drawing.Point(688, 500);
-            this.btnKapat.Name = "btnKapat";
-            this.btnKapat.Size = new System.Drawing.Size(660, 50);
-            this.btnKapat.StyleController = this.layoutControl1;
-            this.btnKapat.TabIndex = 9;
-            this.btnKapat.Text = "Kapat";
-            this.btnKapat.Click += new System.EventHandler(this.BtnKapat_Click);
-            
-            // ========== LAYOUT GROUPS & ITEMS ==========
-            // layoutControlGroup1
+
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup1.GroupBordersVisible = false;
             this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
@@ -261,10 +245,11 @@ namespace MetinBank.Desktop
                 this.grpKaynak,
                 this.grpHedef,
                 this.grpTransfer,
-                this.layoutItemGonder,
-                this.layoutItemKapat});
+                this.layoutItemGonder});
             this.layoutControlGroup1.Name = "Root";
+            this.layoutControlGroup1.Padding = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
             this.layoutControlGroup1.Size = new System.Drawing.Size(1400, 750);
+            this.layoutControlGroup1.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
             this.layoutControlGroup1.TextVisible = false;
             
             // grpMusteriArama
@@ -290,7 +275,10 @@ namespace MetinBank.Desktop
                 this.layoutItemKaynakInfo});
             this.grpKaynak.Location = new System.Drawing.Point(0, 190);
             this.grpKaynak.Name = "grpKaynak";
+            this.grpKaynak.OptionsItemText.TextToControlDistance = 5;
+            this.grpKaynak.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 2, 2);
             this.grpKaynak.Size = new System.Drawing.Size(690, 210);
+            this.grpKaynak.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
             this.grpKaynak.Text = "📤 KAYNAK HESAP (Gönderen)";
             
             // grpHedef
@@ -303,7 +291,10 @@ namespace MetinBank.Desktop
                 this.layoutItemHedefInfo});
             this.grpHedef.Location = new System.Drawing.Point(690, 190);
             this.grpHedef.Name = "grpHedef";
+            this.grpHedef.OptionsItemText.TextToControlDistance = 5;
+            this.grpHedef.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 2, 2);
             this.grpHedef.Size = new System.Drawing.Size(690, 210);
+            this.grpHedef.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
             this.grpHedef.Text = "📥 HEDEF HESAP (Alıcı)";
             
             // grpTransfer
@@ -337,28 +328,28 @@ namespace MetinBank.Desktop
             this.layoutItemKaynakHesaplar.Control = this.gridKaynakHesaplar;
             this.layoutItemKaynakHesaplar.Location = new System.Drawing.Point(0, 0);
             this.layoutItemKaynakHesaplar.Name = "layoutItemKaynakHesaplar";
-            this.layoutItemKaynakHesaplar.Size = new System.Drawing.Size(666, 140);
+            this.layoutItemKaynakHesaplar.Size = new System.Drawing.Size(656, 140);
             this.layoutItemKaynakHesaplar.TextSize = new System.Drawing.Size(0, 0);
             this.layoutItemKaynakHesaplar.TextVisible = false;
             
             this.layoutItemKaynakInfo.Control = this.lblKaynakInfo;
             this.layoutItemKaynakInfo.Location = new System.Drawing.Point(0, 140);
             this.layoutItemKaynakInfo.Name = "layoutItemKaynakInfo";
-            this.layoutItemKaynakInfo.Size = new System.Drawing.Size(666, 27);
+            this.layoutItemKaynakInfo.Size = new System.Drawing.Size(656, 27);
             this.layoutItemKaynakInfo.TextSize = new System.Drawing.Size(0, 0);
             this.layoutItemKaynakInfo.TextVisible = false;
             
             this.layoutItemHedefHesaplar.Control = this.gridHedefHesaplar;
             this.layoutItemHedefHesaplar.Location = new System.Drawing.Point(0, 0);
             this.layoutItemHedefHesaplar.Name = "layoutItemHedefHesaplar";
-            this.layoutItemHedefHesaplar.Size = new System.Drawing.Size(666, 140);
+            this.layoutItemHedefHesaplar.Size = new System.Drawing.Size(656, 140);
             this.layoutItemHedefHesaplar.TextSize = new System.Drawing.Size(0, 0);
             this.layoutItemHedefHesaplar.TextVisible = false;
             
             this.layoutItemHedefInfo.Control = this.lblHedefInfo;
             this.layoutItemHedefInfo.Location = new System.Drawing.Point(0, 140);
             this.layoutItemHedefInfo.Name = "layoutItemHedefInfo";
-            this.layoutItemHedefInfo.Size = new System.Drawing.Size(666, 27);
+            this.layoutItemHedefInfo.Size = new System.Drawing.Size(656, 27);
             this.layoutItemHedefInfo.TextSize = new System.Drawing.Size(0, 0);
             this.layoutItemHedefInfo.TextVisible = false;
             
@@ -379,18 +370,9 @@ namespace MetinBank.Desktop
             this.layoutItemGonder.Control = this.btnGonder;
             this.layoutItemGonder.Location = new System.Drawing.Point(0, 480);
             this.layoutItemGonder.Name = "layoutItemGonder";
-            this.layoutItemGonder.Size = new System.Drawing.Size(690, 54);
+            this.layoutItemGonder.Size = new System.Drawing.Size(1400, 54);
             this.layoutItemGonder.TextSize = new System.Drawing.Size(0, 0);
             this.layoutItemGonder.TextVisible = false;
-            
-            this.layoutItemKapat.Control = this.btnKapat;
-            this.layoutItemKapat.Location = new System.Drawing.Point(690, 480);
-            this.layoutItemKapat.Name = "layoutItemKapat";
-            this.layoutItemKapat.Size = new System.Drawing.Size(690, 54);
-            this.layoutItemKapat.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutItemKapat.TextVisible = false;
-            
-            // FrmVirman
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1400, 750);
@@ -425,7 +407,6 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.layoutItemTutar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutItemAciklama)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutItemGonder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutItemKapat)).EndInit();
             this.ResumeLayout(false);
         }
     }

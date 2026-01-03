@@ -207,6 +207,11 @@ namespace MetinBank.Desktop
                     // Refresh accounts list
                     HesaplariYukle();
                 }
+                else
+                {
+                     XtraMessageBox.Show($"Hesap açıldı ancak bilgileri getirilemedi: {hata}", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                     HesaplariYukle();
+                }
             }
             catch (Exception ex)
             {

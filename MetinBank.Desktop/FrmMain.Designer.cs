@@ -44,6 +44,7 @@ namespace MetinBank.Desktop
             this.navBarGroupMusteriIslemleri = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItemMusteriEkle = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemMusteriIslem = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItemIslemGecmisi = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarGroupHesapIslemleri = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItemHesapIslem = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemParaYatir = new DevExpress.XtraNavBar.NavBarItem();
@@ -198,6 +199,7 @@ namespace MetinBank.Desktop
             this.navBarControl1.Items.AddRange(new DevExpress.XtraNavBar.NavBarItem[] {
             this.navBarItemMusteriEkle,
             this.navBarItemMusteriIslem,
+            this.navBarItemIslemGecmisi,
             this.navBarItemHesapIslem,
             this.navBarItemParaYatir,
             this.navBarItemParaCek,
@@ -223,7 +225,8 @@ namespace MetinBank.Desktop
             this.navBarGroupMusteriIslemleri.ImageOptions.SmallImageIndex = 0;
             this.navBarGroupMusteriIslemleri.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemMusteriEkle),
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemMusteriIslem)});
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemMusteriIslem),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemIslemGecmisi)});
             this.navBarGroupMusteriIslemleri.Name = "navBarGroupMusteriIslemleri";
             // 
             // navBarItemMusteriEkle
@@ -243,6 +246,15 @@ namespace MetinBank.Desktop
             this.navBarItemMusteriIslem.ImageOptions.SmallImageIndex = 2;
             this.navBarItemMusteriIslem.Name = "navBarItemMusteriIslem";
             this.navBarItemMusteriIslem.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemMusteriIslem_LinkClicked);
+            // 
+            // navBarItemIslemGecmisi
+            // 
+            this.navBarItemIslemGecmisi.Caption = "  İşlem Geçmişi";
+            this.navBarItemIslemGecmisi.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("navBarItemMusteriIslem.ImageOptions.LargeImage")));
+            this.navBarItemIslemGecmisi.ImageOptions.SmallImage = ((System.Drawing.Image)(resources.GetObject("navBarItemMusteriIslem.ImageOptions.SmallImage")));
+            this.navBarItemIslemGecmisi.ImageOptions.SmallImageIndex = 8;
+            this.navBarItemIslemGecmisi.Name = "navBarItemIslemGecmisi";
+            this.navBarItemIslemGecmisi.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemIslemGecmisi_LinkClicked);
             // 
             // navBarGroupHesapIslemleri
             // 
@@ -393,6 +405,7 @@ namespace MetinBank.Desktop
         private DevExpress.XtraNavBar.NavBarGroup navBarGroupMusteriIslemleri;
         private DevExpress.XtraNavBar.NavBarItem navBarItemMusteriEkle;
         private DevExpress.XtraNavBar.NavBarItem navBarItemMusteriIslem;
+        private DevExpress.XtraNavBar.NavBarItem navBarItemIslemGecmisi;
         private DevExpress.XtraNavBar.NavBarGroup navBarGroupHesapIslemleri;
         private DevExpress.XtraNavBar.NavBarItem navBarItemHesapIslem;
         private DevExpress.XtraNavBar.NavBarItem navBarItemParaYatir;

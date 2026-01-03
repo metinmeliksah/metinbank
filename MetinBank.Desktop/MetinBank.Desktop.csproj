@@ -145,6 +145,12 @@
     <Compile Include="FrmBasvurular.Designer.cs">
       <DependentUpon>FrmBasvurular.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmIslemGecmisi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmIslemGecmisi.Designer.cs">
+      <DependentUpon>FrmIslemGecmisi.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -153,11 +159,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmEFT.resx">
+      <DependentUpon>FrmEFT.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmGiris.resx">
       <DependentUpon>FrmGiris.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmAnaSayfa.resx">
       <DependentUpon>FrmAnaSayfa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmHavale.resx">
+      <DependentUpon>FrmHavale.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMusteriIslem.resx">
       <DependentUpon>FrmMusteriIslem.cs</DependentUpon>
@@ -229,7 +241,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-
   <ItemGroup>
     <Analyzer Include="C:\Program Files\DevExpress 25.1\Components\Offline Packages\devexpress.data\25.1.5\analyzers\dotnet\DevExpress.Generator.dll" Visible="false" Condition="Exists('C:\Program Files\DevExpress 25.1\Components\Offline Packages\devexpress.data\25.1.5\analyzers\dotnet\DevExpress.Generator.dll')" />
   </ItemGroup>

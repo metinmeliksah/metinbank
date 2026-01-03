@@ -54,6 +54,58 @@ namespace MetinBank.Desktop
             gridViewMusteriler.OptionsView.ShowGroupPanel = false;
             gridViewKaynakHesaplar.OptionsView.ShowGroupPanel = false;
             gridViewHedefHesaplar.OptionsView.ShowGroupPanel = false;
+            
+            // Layout düzenlemesi
+            AyarlaPanelBoyutlari();
+        }
+        
+        private void AyarlaPanelBoyutlari()
+        {
+            layoutControl1.BeginUpdate();
+            try
+            {
+                DevExpress.XtraLayout.LayoutControlGroup splitGroup = layoutControlGroup1.Items.FindByName("splitGroup") as DevExpress.XtraLayout.LayoutControlGroup;
+                if (splitGroup == null)
+                {
+                    splitGroup = layoutControlGroup1.AddGroup();
+                    splitGroup.Name = "splitGroup";
+                    splitGroup.GroupBordersVisible = false;
+                    splitGroup.TextVisible = false;
+                    
+                    splitGroup.AddItem(grpKaynak);
+                    splitGroup.AddItem(grpHedef);
+                    
+                    splitGroup.LayoutMode = DevExpress.XtraLayout.Utils.LayoutMode.Table;
+                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Clear();
+                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Add(new DevExpress.XtraLayout.ColumnDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Width = 50 });
+                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Add(new DevExpress.XtraLayout.ColumnDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Width = 50 });
+                    
+                    splitGroup.OptionsTableLayoutGroup.RowDefinitions.Clear();
+                    splitGroup.OptionsTableLayoutGroup.RowDefinitions.Add(new DevExpress.XtraLayout.RowDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Height = 100 });
+                    
+                    grpKaynak.OptionsTableLayoutItem.ColumnIndex = 0;
+                    grpKaynak.OptionsTableLayoutItem.RowIndex = 0;
+                    
+                    grpHedef.OptionsTableLayoutItem.ColumnIndex = 1;
+                    grpHedef.OptionsTableLayoutItem.RowIndex = 0;
+                    
+                    grpKaynak.MaxSize = new System.Drawing.Size(0, 0);
+                    grpKaynak.MinSize = new System.Drawing.Size(100, 100);
+                    grpHedef.MaxSize = new System.Drawing.Size(0, 0);
+                    grpHedef.MinSize = new System.Drawing.Size(100, 100);
+
+                    // Müşteri Arama grubunun altına taşı
+                    splitGroup.Move(grpMusteriArama, DevExpress.XtraLayout.Utils.InsertType.Bottom);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Layout hatası: " + ex.Message);
+            }
+            finally
+            {
+                layoutControl1.EndUpdate();
+            }
         }
         
         /// <summary>
