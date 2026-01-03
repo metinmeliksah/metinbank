@@ -201,10 +201,10 @@ namespace MetinBank.Service
             hesaplar = null;
             try
             {
-                string query = @"SELECT h.HesapID, h.IBAN, h.HesapTuru, h.Bakiye, h.DovizCinsi
+                string query = @"SELECT h.HesapID, h.IBAN, h.HesapTipi as HesapTuru, h.Bakiye, h.HesapCinsi as DovizCinsi
                                 FROM Hesap h
                                 WHERE h.MusteriID = @musteriID AND h.Durum = 'Aktif'
-                                ORDER BY h.HesapTuru";
+                                ORDER BY h.HesapTipi";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {

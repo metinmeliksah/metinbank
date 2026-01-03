@@ -92,10 +92,42 @@ namespace MetinBank.Desktop
                 // ID sütunlarını gizle
                 if (gridViewMusteriler.Columns["MusteriID"] != null)
                     gridViewMusteriler.Columns["MusteriID"].Visible = false;
+
+                // İlk satırı otomatik seç ve yükle
+                if (gridViewMusteriler.RowCount > 0)
+                {
+                    gridViewMusteriler.FocusedRowHandle = 0;
+                    object musteriIDObj = gridViewMusteriler.GetRowCellValue(0, "MusteriID");
+                    _seciliMusteriID = CommonFunctions.DbNullToInt(musteriIDObj);
+                    if (_seciliMusteriID > 0)
+                    {
+                        HesaplariYukle();
+                    }
+                }
             }
             catch
             {
                 gridMusteriler.DataSource = null;
+            }
+        }
+
+        private void GridViewMusteriler_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
+        {
+            try
+            {
+                if (e.FocusedRowHandle < 0) return;
+
+                object musteriIDObj = gridViewMusteriler.GetRowCellValue(e.FocusedRowHandle, "MusteriID");
+                _seciliMusteriID = CommonFunctions.DbNullToInt(musteriIDObj);
+                if (_seciliMusteriID == 0) return;
+                
+                // Müşterinin hesaplarını yükle
+                HesaplariYukle();
+            }
+            catch (Exception ex)
+            {
+                // Sessiz hata yönetimi
+                Console.WriteLine($"Hata: {ex.Message}");
             }
         }
 
@@ -114,7 +146,7 @@ namespace MetinBank.Desktop
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine($"Hata: {ex.Message}");
             }
         }
 
@@ -124,6 +156,8 @@ namespace MetinBank.Desktop
             {
                 if (_seciliMusteriID == 0)
                 {
+                    // Debug
+                    // XtraMessageBox.Show("Müşteri ID 0 geldi!");
                     gridBasvurular.DataSource = null;
                     return;
                 }
@@ -133,8 +167,14 @@ namespace MetinBank.Desktop
 
                 if (hata != null)
                 {
+                    XtraMessageBox.Show($"Hesap yükleme hatası: {hata}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     gridBasvurular.DataSource = null;
                     return;
+                }
+
+                if (hesaplar != null && hesaplar.Rows.Count == 0)
+                {
+                   // XtraMessageBox.Show($"Müşterinin ({_seciliMusteriID}) aktif hesabı bulunamadı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 gridBasvurular.DataSource = hesaplar;
@@ -163,20 +203,21 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                // Seçili hesap al
+                // Hesap kontrolü
                 if (gridViewBasvurular.RowCount == 0)
                 {
-                    XtraMessageBox.Show("Müşterinin aktif hesabı bulunmamaktadır.", "Uyarı", 
+                    XtraMessageBox.Show("Müşterinin aktif hesabı bulunmamaktadır.\n\nKart başvurusu yapabilmek için müşterinin en az bir aktif hesabı olması gerekmektedir.", "Uyarı", 
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
+                // Hesap seçimi - eğer seçilmemişse ilk satırı seç
                 int selectedRow = gridViewBasvurular.FocusedRowHandle;
-                if (selectedRow < 0)
+                if (selectedRow < 0 || selectedRow >= gridViewBasvurular.RowCount)
                 {
-                    XtraMessageBox.Show("Lütfen kart için bir hesap seçiniz.", "Uyarı", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    // İlk satırı otomatik seç
+                    gridViewBasvurular.FocusedRowHandle = 0;
+                    selectedRow = 0;
                 }
 
                 object hesapIDObj = gridViewBasvurular.GetRowCellValue(selectedRow, "HesapID");

@@ -8,6 +8,7 @@ namespace MetinBank.Desktop
         private DevExpress.XtraGrid.GridControl gridMusteriler;
         private DevExpress.XtraGrid.Views.Grid.GridView gridViewMusteriler;
         private DevExpress.XtraEditors.ComboBoxEdit cmbBasvuruTipi;
+        private DevExpress.XtraEditors.GroupControl groupHesaplar;
         private DevExpress.XtraGrid.GridControl gridBasvurular;
         private DevExpress.XtraGrid.Views.Grid.GridView gridViewBasvurular;
         private DevExpress.XtraEditors.SimpleButton btnYeniBasvuru;
@@ -38,6 +39,7 @@ namespace MetinBank.Desktop
             this.gridMusteriler = new DevExpress.XtraGrid.GridControl();
             this.gridViewMusteriler = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.cmbBasvuruTipi = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.groupHesaplar = new DevExpress.XtraEditors.GroupControl();
             this.gridBasvurular = new DevExpress.XtraGrid.GridControl();
             this.gridViewBasvurular = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.btnYeniBasvuru = new DevExpress.XtraEditors.SimpleButton();
@@ -57,6 +59,8 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.gridMusteriler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewMusteriler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbBasvuruTipi.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.groupHesaplar)).BeginInit();
+            this.groupHesaplar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridBasvurular)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewBasvurular)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
@@ -72,8 +76,8 @@ namespace MetinBank.Desktop
             // layoutControl1
             this.layoutControl1.Controls.Add(this.txtMusteriArama);
             this.layoutControl1.Controls.Add(this.gridMusteriler);
+            this.layoutControl1.Controls.Add(this.groupHesaplar);
             this.layoutControl1.Controls.Add(this.cmbBasvuruTipi);
-            this.layoutControl1.Controls.Add(this.gridBasvurular);
             this.layoutControl1.Controls.Add(this.btnYeniBasvuru);
             this.layoutControl1.Controls.Add(this.btnYenile);
             this.layoutControl1.Controls.Add(this.btnKapat);
@@ -89,16 +93,16 @@ namespace MetinBank.Desktop
             this.txtMusteriArama.Name = "txtMusteriArama";
             this.txtMusteriArama.Properties.NullValuePrompt = "Müşteri No, TCKN veya Ad Soyad ile ara...";
             this.txtMusteriArama.Properties.NullValuePromptShowForEmptyValue = true;
-            this.txtMusteriArama.Size = new System.Drawing.Size(988, 20);
+            this.txtMusteriArama.Size = new System.Drawing.Size(1088, 20);
             this.txtMusteriArama.StyleController = this.layoutControl1;
             this.txtMusteriArama.TabIndex = 0;
             this.txtMusteriArama.TextChanged += new System.EventHandler(this.TxtMusteriArama_TextChanged);
             
             // gridMusteriler
-            this.gridMusteriler.Location = new System.Drawing.Point(12, 38);
+            this.gridMusteriler.Location = new System.Drawing.Point(12, 36);
             this.gridMusteriler.MainView = this.gridViewMusteriler;
             this.gridMusteriler.Name = "gridMusteriler";
-            this.gridMusteriler.Size = new System.Drawing.Size(1176, 200);
+            this.gridMusteriler.Size = new System.Drawing.Size(1176, 180);
             this.gridMusteriler.TabIndex = 1;
             this.gridMusteriler.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
                 this.gridViewMusteriler});
@@ -107,23 +111,24 @@ namespace MetinBank.Desktop
             this.gridViewMusteriler.GridControl = this.gridMusteriler;
             this.gridViewMusteriler.Name = "gridViewMusteriler";
             this.gridViewMusteriler.OptionsView.ShowGroupPanel = false;
+            this.gridViewMusteriler.FocusedRowChanged += new DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventHandler(this.GridViewMusteriler_FocusedRowChanged);
             this.gridViewMusteriler.RowClick += new DevExpress.XtraGrid.Views.Grid.RowClickEventHandler(this.GridViewMusteriler_RowClick);
             
-            // cmbBasvuruTipi
-            this.cmbBasvuruTipi.Location = new System.Drawing.Point(100, 242);
-            this.cmbBasvuruTipi.Name = "cmbBasvuruTipi";
-            this.cmbBasvuruTipi.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cmbBasvuruTipi.Size = new System.Drawing.Size(200, 20);
-            this.cmbBasvuruTipi.StyleController = this.layoutControl1;
-            this.cmbBasvuruTipi.TabIndex = 2;
+            // groupHesaplar
+            this.groupHesaplar.Controls.Add(this.gridBasvurular);
+            this.groupHesaplar.Location = new System.Drawing.Point(12, 220);
+            this.groupHesaplar.Name = "groupHesaplar";
+            this.groupHesaplar.Size = new System.Drawing.Size(1176, 280);
+            this.groupHesaplar.TabIndex = 2;
+            this.groupHesaplar.Text = "📋  Müşteri Hesapları - Kart için hesap seçiniz";
             
             // gridBasvurular
-            this.gridBasvurular.Location = new System.Drawing.Point(12, 266);
+            this.gridBasvurular.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridBasvurular.Location = new System.Drawing.Point(2, 23);
             this.gridBasvurular.MainView = this.gridViewBasvurular;
             this.gridBasvurular.Name = "gridBasvurular";
-            this.gridBasvurular.Size = new System.Drawing.Size(1176, 350);
-            this.gridBasvurular.TabIndex = 3;
+            this.gridBasvurular.Size = new System.Drawing.Size(1172, 255);
+            this.gridBasvurular.TabIndex = 0;
             this.gridBasvurular.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
                 this.gridViewBasvurular});
             
@@ -132,31 +137,42 @@ namespace MetinBank.Desktop
             this.gridViewBasvurular.Name = "gridViewBasvurular";
             this.gridViewBasvurular.OptionsView.ShowGroupPanel = false;
             
+            // cmbBasvuruTipi
+            this.cmbBasvuruTipi.Location = new System.Drawing.Point(100, 504);
+            this.cmbBasvuruTipi.Name = "cmbBasvuruTipi";
+            this.cmbBasvuruTipi.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cmbBasvuruTipi.Size = new System.Drawing.Size(300, 20);
+            this.cmbBasvuruTipi.StyleController = this.layoutControl1;
+            this.cmbBasvuruTipi.TabIndex = 3;
+            
             // btnYeniBasvuru
-            this.btnYeniBasvuru.Location = new System.Drawing.Point(400, 242);
+            this.btnYeniBasvuru.Appearance.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
+            this.btnYeniBasvuru.Appearance.Options.UseFont = true;
+            this.btnYeniBasvuru.Location = new System.Drawing.Point(404, 504);
             this.btnYeniBasvuru.Name = "btnYeniBasvuru";
-            this.btnYeniBasvuru.Size = new System.Drawing.Size(200, 22);
+            this.btnYeniBasvuru.Size = new System.Drawing.Size(784, 22);
             this.btnYeniBasvuru.StyleController = this.layoutControl1;
             this.btnYeniBasvuru.TabIndex = 4;
-            this.btnYeniBasvuru.Text = "Yeni Başvuru";
+            this.btnYeniBasvuru.Text = "💳  Kart Başvurusu Yap";
             this.btnYeniBasvuru.Click += new System.EventHandler(this.BtnYeniBasvuru_Click);
             
             // btnYenile
-            this.btnYenile.Location = new System.Drawing.Point(12, 620);
+            this.btnYenile.Location = new System.Drawing.Point(12, 530);
             this.btnYenile.Name = "btnYenile";
             this.btnYenile.Size = new System.Drawing.Size(588, 30);
             this.btnYenile.StyleController = this.layoutControl1;
             this.btnYenile.TabIndex = 5;
-            this.btnYenile.Text = "Yenile";
+            this.btnYenile.Text = "🔄  Yenile";
             this.btnYenile.Click += new System.EventHandler(this.BtnYenile_Click);
             
             // btnKapat
-            this.btnKapat.Location = new System.Drawing.Point(604, 620);
+            this.btnKapat.Location = new System.Drawing.Point(604, 530);
             this.btnKapat.Name = "btnKapat";
             this.btnKapat.Size = new System.Drawing.Size(584, 30);
             this.btnKapat.StyleController = this.layoutControl1;
             this.btnKapat.TabIndex = 6;
-            this.btnKapat.Text = "Kapat";
+            this.btnKapat.Text = "❌  Kapat";
             this.btnKapat.Click += new System.EventHandler(this.BtnKapat_Click);
             
             // layoutControlGroup1
@@ -178,45 +194,45 @@ namespace MetinBank.Desktop
             this.layoutControlItem1.Control = this.txtMusteriArama;
             this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(1080, 26);
+            this.layoutControlItem1.Size = new System.Drawing.Size(1180, 24);
             this.layoutControlItem1.Text = "Müşteri Ara:";
             this.layoutControlItem1.TextSize = new System.Drawing.Size(76, 13);
             
             // layoutControlItem2
             this.layoutControlItem2.Control = this.gridMusteriler;
-            this.layoutControlItem2.Location = new System.Drawing.Point(0, 26);
+            this.layoutControlItem2.Location = new System.Drawing.Point(0, 24);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(1180, 204);
+            this.layoutControlItem2.Size = new System.Drawing.Size(1180, 184);
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
             
             // layoutControlItem3
-            this.layoutControlItem3.Control = this.cmbBasvuruTipi;
-            this.layoutControlItem3.Location = new System.Drawing.Point(0, 230);
+            this.layoutControlItem3.Control = this.groupHesaplar;
+            this.layoutControlItem3.Location = new System.Drawing.Point(0, 208);
             this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(288, 24);
-            this.layoutControlItem3.Text = "Başvuru Tipi:";
-            this.layoutControlItem3.TextSize = new System.Drawing.Size(76, 13);
+            this.layoutControlItem3.Size = new System.Drawing.Size(1180, 284);
+            this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem3.TextVisible = false;
             
             // layoutControlItem4
-            this.layoutControlItem4.Control = this.btnYeniBasvuru;
-            this.layoutControlItem4.Location = new System.Drawing.Point(288, 230);
+            this.layoutControlItem4.Control = this.cmbBasvuruTipi;
+            this.layoutControlItem4.Location = new System.Drawing.Point(0, 492);
             this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(204, 24);
-            this.layoutControlItem4.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem4.TextVisible = false;
+            this.layoutControlItem4.Size = new System.Drawing.Size(392, 26);
+            this.layoutControlItem4.Text = "Kart Markası:";
+            this.layoutControlItem4.TextSize = new System.Drawing.Size(76, 13);
             
             // layoutControlItem5
-            this.layoutControlItem5.Control = this.gridBasvurular;
-            this.layoutControlItem5.Location = new System.Drawing.Point(0, 254);
+            this.layoutControlItem5.Control = this.btnYeniBasvuru;
+            this.layoutControlItem5.Location = new System.Drawing.Point(392, 492);
             this.layoutControlItem5.Name = "layoutControlItem5";
-            this.layoutControlItem5.Size = new System.Drawing.Size(1180, 354);
+            this.layoutControlItem5.Size = new System.Drawing.Size(788, 26);
             this.layoutControlItem5.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem5.TextVisible = false;
             
             // layoutControlItem6
             this.layoutControlItem6.Control = this.btnYenile;
-            this.layoutControlItem6.Location = new System.Drawing.Point(0, 608);
+            this.layoutControlItem6.Location = new System.Drawing.Point(0, 518);
             this.layoutControlItem6.Name = "layoutControlItem6";
             this.layoutControlItem6.Size = new System.Drawing.Size(592, 34);
             this.layoutControlItem6.TextSize = new System.Drawing.Size(0, 0);
@@ -224,7 +240,7 @@ namespace MetinBank.Desktop
             
             // layoutControlItem7
             this.layoutControlItem7.Control = this.btnKapat;
-            this.layoutControlItem7.Location = new System.Drawing.Point(592, 608);
+            this.layoutControlItem7.Location = new System.Drawing.Point(592, 518);
             this.layoutControlItem7.Name = "layoutControlItem7";
             this.layoutControlItem7.Size = new System.Drawing.Size(588, 34);
             this.layoutControlItem7.TextSize = new System.Drawing.Size(0, 0);
@@ -246,6 +262,8 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.gridMusteriler)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewMusteriler)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbBasvuruTipi.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.groupHesaplar)).EndInit();
+            this.groupHesaplar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridBasvurular)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewBasvurular)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
