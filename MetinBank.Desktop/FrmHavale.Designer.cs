@@ -334,6 +334,15 @@ namespace MetinBank.Desktop
             this.layoutControlGroup1.Size = new System.Drawing.Size(1400, 750);
             this.layoutControlGroup1.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
             this.layoutControlGroup1.TextVisible = false;
+            // TableLayout yapılandırması - 2 sütun, 2 satır
+            this.layoutControlGroup1.LayoutMode = DevExpress.XtraLayout.Utils.LayoutMode.Table;
+            this.layoutControlGroup1.OptionsTableLayoutGroup.ColumnDefinitions.AddRange(new DevExpress.XtraLayout.ColumnDefinition[] {
+                new DevExpress.XtraLayout.ColumnDefinition() { SizeType = System.Windows.Forms.SizeType.Percent, Width = 50 },
+                new DevExpress.XtraLayout.ColumnDefinition() { SizeType = System.Windows.Forms.SizeType.Percent, Width = 50 }});
+            this.layoutControlGroup1.OptionsTableLayoutGroup.RowDefinitions.AddRange(new DevExpress.XtraLayout.RowDefinition[] {
+                new DevExpress.XtraLayout.RowDefinition() { SizeType = System.Windows.Forms.SizeType.Percent, Height = 85 },
+                new DevExpress.XtraLayout.RowDefinition() { SizeType = System.Windows.Forms.SizeType.AutoSize },
+                new DevExpress.XtraLayout.RowDefinition() { SizeType = System.Windows.Forms.SizeType.AutoSize }});
             // 
             // grpGonderen
             // 
@@ -353,6 +362,8 @@ namespace MetinBank.Desktop
             this.grpGonderen.Size = new System.Drawing.Size(690, 631);
             this.grpGonderen.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
             this.grpGonderen.Text = "📤 GÖNDEREN MÜŞTERİ";
+            this.grpGonderen.OptionsTableLayoutItem.ColumnIndex = 0;
+            this.grpGonderen.OptionsTableLayoutItem.RowIndex = 0;
             // 
             // layoutItemGonderenArama
             // 
@@ -406,6 +417,8 @@ namespace MetinBank.Desktop
             this.grpAlici.Size = new System.Drawing.Size(690, 631);
             this.grpAlici.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
             this.grpAlici.Text = "📥 ALICI MÜŞTERİ / IBAN";
+            this.grpAlici.OptionsTableLayoutItem.ColumnIndex = 1;
+            this.grpAlici.OptionsTableLayoutItem.RowIndex = 0;
             // 
             // layoutItemAliciIBAN
             // 
@@ -462,6 +475,9 @@ namespace MetinBank.Desktop
             this.grpTransfer.Name = "grpTransfer";
             this.grpTransfer.Size = new System.Drawing.Size(1380, 69);
             this.grpTransfer.Text = "💰 TRANSFER BİLGİLERİ";
+            this.grpTransfer.OptionsTableLayoutItem.ColumnIndex = 0;
+            this.grpTransfer.OptionsTableLayoutItem.RowIndex = 1;
+            this.grpTransfer.OptionsTableLayoutItem.ColumnSpan = 2;
             // 
             // layoutItemTutar
             // 
@@ -488,6 +504,9 @@ namespace MetinBank.Desktop
             this.layoutItemGonder.Name = "layoutItemGonder";
             this.layoutItemGonder.Size = new System.Drawing.Size(1380, 30);
             this.layoutItemGonder.TextVisible = false;
+            this.layoutItemGonder.OptionsTableLayoutItem.ColumnIndex = 0;
+            this.layoutItemGonder.OptionsTableLayoutItem.RowIndex = 2;
+            this.layoutItemGonder.OptionsTableLayoutItem.ColumnSpan = 2;
 
             // 
             // FrmHavale

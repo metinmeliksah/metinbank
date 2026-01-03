@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
@@ -57,38 +58,22 @@ namespace MetinBank.Desktop
             layoutControl1.BeginUpdate();
             try
             {
-                DevExpress.XtraLayout.LayoutControlGroup splitGroup = layoutControlGroup1.Items.FindByName("splitGroup") as DevExpress.XtraLayout.LayoutControlGroup;
-                if (splitGroup == null)
+                // Kısıtlamaları kaldır (esnek boyutlandırma için)
+                grpGonderen.MaxSize = new System.Drawing.Size(0, 0);
+                grpGonderen.MinSize = new System.Drawing.Size(100, 100);
+                grpAlici.MaxSize = new System.Drawing.Size(0, 0);
+                grpAlici.MinSize = new System.Drawing.Size(100, 100);
+                
+                // Root grubundaki boşlukları temizle
+                List<DevExpress.XtraLayout.BaseLayoutItem> itemsToRemove = new List<DevExpress.XtraLayout.BaseLayoutItem>();
+                foreach (DevExpress.XtraLayout.BaseLayoutItem item in layoutControlGroup1.Items)
                 {
-                    splitGroup = layoutControlGroup1.AddGroup();
-                    splitGroup.Name = "splitGroup";
-                    splitGroup.GroupBordersVisible = false;
-                    splitGroup.TextVisible = false;
-                    
-                    splitGroup.AddItem(grpGonderen);
-                    splitGroup.AddItem(grpAlici);
-                    
-                    splitGroup.LayoutMode = DevExpress.XtraLayout.Utils.LayoutMode.Table;
-                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Clear();
-                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Add(new DevExpress.XtraLayout.ColumnDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Width = 50 });
-                    splitGroup.OptionsTableLayoutGroup.ColumnDefinitions.Add(new DevExpress.XtraLayout.ColumnDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Width = 50 });
-                    
-                    splitGroup.OptionsTableLayoutGroup.RowDefinitions.Clear();
-                    splitGroup.OptionsTableLayoutGroup.RowDefinitions.Add(new DevExpress.XtraLayout.RowDefinition { SizeType = System.Windows.Forms.SizeType.Percent, Height = 100 });
-                    
-                    grpGonderen.OptionsTableLayoutItem.ColumnIndex = 0;
-                    grpGonderen.OptionsTableLayoutItem.RowIndex = 0;
-                    
-                    grpAlici.OptionsTableLayoutItem.ColumnIndex = 1;
-                    grpAlici.OptionsTableLayoutItem.RowIndex = 0;
-                    
-                    grpGonderen.MaxSize = new System.Drawing.Size(0, 0);
-                    grpGonderen.MinSize = new System.Drawing.Size(100, 100);
-                    grpAlici.MaxSize = new System.Drawing.Size(0, 0);
-                    grpAlici.MinSize = new System.Drawing.Size(100, 100);
-
-                    layoutControlGroup1.Move(splitGroup, DevExpress.XtraLayout.Utils.InsertType.Top);
+                    if (item is DevExpress.XtraLayout.EmptySpaceItem)
+                    {
+                        itemsToRemove.Add(item);
+                    }
                 }
+                foreach (var item in itemsToRemove) layoutControlGroup1.Remove(item);
             }
             catch (Exception ex)
             {
