@@ -46,7 +46,6 @@ namespace MetinBank.Desktop
             // Buton textlerini güncelle
             btnYeniBasvuru.Text = "💳  Kart Başvurusu Yap";
             btnYenile.Text = "🔄  Yenile";
-            btnKapat.Text = "❌  Kapat";
             
             // ID sütunlarını gizle
             gridViewMusteriler.OptionsView.ShowGroupPanel = false;
@@ -305,9 +304,6 @@ namespace MetinBank.Desktop
             HesaplariYukle();
         }
 
-        private void BtnKapat_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+
     }
 }

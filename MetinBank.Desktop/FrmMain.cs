@@ -16,13 +16,41 @@ namespace MetinBank.Desktop
         public FrmMain(KullaniciModel kullanici)
         {
             // Apply DevExpress skin before InitializeComponent
-            UserLookAndFeel.Default.SetSkinStyle(SkinStyle.WXI);
+            // UserLookAndFeel.Default.SetSkinStyle(SkinStyle.WXI);
             
             InitializeComponent();
             _kullanici = kullanici;
             this.IsMdiContainer = true;
             ConfigureUI();
+            ConfigureCleanUI();
             LoadNavBarIcons();
+        }
+
+        private void ConfigureCleanUI()
+        {
+            // Reset manual colors to allow WXI Skin to take full effect
+            navBarControl1.Appearance.Background.BackColor = System.Drawing.Color.Empty;
+            navBarControl1.Appearance.Background.Options.UseBackColor = false;
+            
+            navBarControl1.Appearance.GroupHeader.BackColor = System.Drawing.Color.Empty;
+            navBarControl1.Appearance.GroupHeader.Options.UseBackColor = false;
+            navBarControl1.Appearance.GroupHeader.ForeColor = System.Drawing.Color.Empty;
+            navBarControl1.Appearance.GroupHeader.Options.UseForeColor = false;
+            
+            navBarControl1.Appearance.Item.ForeColor = System.Drawing.Color.Empty;
+            navBarControl1.Appearance.Item.Options.UseForeColor = false;
+            
+            navBarControl1.Appearance.ItemActive.BackColor = System.Drawing.Color.Empty;
+            navBarControl1.Appearance.ItemActive.Options.UseBackColor = false;
+            navBarControl1.Appearance.ItemActive.ForeColor = System.Drawing.Color.Empty;
+            navBarControl1.Appearance.ItemActive.Options.UseForeColor = false;
+            
+            // Clean Bar items if they have hardcoded colors
+            barStaticItemLogo.ItemAppearance.Normal.ForeColor = System.Drawing.Color.Empty;
+            barStaticItemLogo.ItemAppearance.Normal.Options.UseForeColor = false;
+            
+            barStaticItemKullanici.ItemAppearance.Normal.ForeColor = System.Drawing.Color.Empty;
+            barStaticItemKullanici.ItemAppearance.Normal.Options.UseForeColor = false;
         }
 
         private void ConfigureUI()
@@ -78,11 +106,26 @@ namespace MetinBank.Desktop
                 navBarGroupDigerIslemler.SmallImageIndex = 14;    // other
                 navBarItemKartlar.SmallImageIndex = 11;           // card
                 navBarItemBasvurular.SmallImageIndex = 12;        // apps
+                navBarItemBasvurular.SmallImageIndex = 12;        // apps
                 navBarItemOnayBekleyenler.SmallImageIndex = 13;   // pending
             }
             catch
             {
                 // Icon loading failed silently
+            }
+
+            // Yetki kontrolü - Onay Bekleyenler menüsünü sadece yetkili kişilere göster
+            string rol = _kullanici.RolAdi;
+            if (rol.IndexOf("Mudur", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                rol.IndexOf("Müdür", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                rol.IndexOf("Genel", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                rol.IndexOf("Merkez", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                navBarItemOnayBekleyenler.Visible = true;
+            }
+            else
+            {
+                navBarItemOnayBekleyenler.Visible = false;
             }
         }
 
@@ -176,17 +219,17 @@ namespace MetinBank.Desktop
 
         private void barButtonItemCikis_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (XtraMessageBox.Show("Uygulamadan çıkmak istediğinize emin misiniz?", 
-                "Çıkış", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                Application.Exit();
-            }
+            this.Close();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (XtraMessageBox.Show("Uygulamadan çıkmak istediğinize emin misiniz?", 
-                "Çıkış", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                "Çıkış", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                this.DialogResult = DialogResult.Abort;
+            }
+            else
             {
                 e.Cancel = true;
             }

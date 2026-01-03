@@ -19,7 +19,7 @@ namespace MetinBank.Util
         /// Yeni IBAN oluşturur
         /// </summary>
         /// <param name="subeKodu">Şube kodu (5 haneli)</param>
-        /// <param name="hesapNo">Hesap numarası (16 haneli)</param>
+        /// <param name="hesapNo">Hesap numarası (11 haneli olacak şekilde)</param>
         /// <returns>IBAN (26 karakter)</returns>
         public static string GenerateIban(string subeKodu, string hesapNo)
         {
@@ -28,13 +28,14 @@ namespace MetinBank.Util
                 // Şube kodunu 5 haneye tamamla
                 subeKodu = subeKodu.PadLeft(5, '0');
                 
-                // Hesap numarasını 16 haneye tamamla
-                hesapNo = hesapNo.PadLeft(16, '0');
+                // Hesap numarasını 11 haneye tamamla (Toplam 16 hane için: 5 şube + 11 hesap)
+                hesapNo = hesapNo.PadLeft(11, '0');
 
                 // Kontrol rakamını hesapla
                 string kontrolRakam = CalculateCheckDigits(subeKodu, hesapNo);
 
                 // IBAN'ı birleştir
+                // TR + Kontrol(2) + Banka(5) + Rezerv(1) + Şube(5) + Hesap(11) = 26 Karakter
                 string iban = $"{COUNTRY_CODE}{kontrolRakam}{METIN_BANK_CODE}{RESERVE_DIGIT}{subeKodu}{hesapNo}";
 
                 // Formatla (4'erli gruplar halinde)
@@ -49,12 +50,10 @@ namespace MetinBank.Util
         /// <summary>
         /// IBAN kontrol rakamlarını hesaplar (Mod 97 algoritması)
         /// </summary>
-        /// <param name="subeKodu">Şube kodu</param>
-        /// <param name="hesapNo">Hesap numarası</param>
-        /// <returns>2 haneli kontrol rakamı</returns>
         private static string CalculateCheckDigits(string subeKodu, string hesapNo)
         {
             // IBAN'ı yeniden düzenle: Banka+Rezerv+Şube+Hesap+Ülke Kodu(sayısal)+00
+            // Banka(5) + Rezerv(1) + Şube(5) + Hesap(11) + TR(numeric) + 00
             string rearranged = $"{METIN_BANK_CODE}{RESERVE_DIGIT}{subeKodu}{hesapNo}{ConvertLettersToNumbers(COUNTRY_CODE)}00";
 
             // BigInteger ile Mod 97 hesapla
@@ -69,8 +68,6 @@ namespace MetinBank.Util
         /// <summary>
         /// Harfleri sayıya çevirir (A=10, B=11, ..., Z=35)
         /// </summary>
-        /// <param name="letters">Harfler</param>
-        /// <returns>Sayısal değer</returns>
         private static string ConvertLettersToNumbers(string letters)
         {
             StringBuilder result = new StringBuilder();
@@ -93,8 +90,6 @@ namespace MetinBank.Util
         /// <summary>
         /// IBAN'ı formatlar (4'erli gruplar)
         /// </summary>
-        /// <param name="iban">Format edilmemiş IBAN</param>
-        /// <returns>Format edilmiş IBAN (TR33 0001 0012 3456 7890 1234 56)</returns>
         public static string FormatIban(string iban)
         {
             // Boşlukları kaldır
@@ -103,7 +98,7 @@ namespace MetinBank.Util
             if (iban.Length != 26)
                 return iban;
 
-            // 4'erli gruplar halinde formatla
+            // 4'erli gruplar halinde formatla (TR33 0001 0012 3456 7890 1234 56)
             return $"{iban.Substring(0, 4)} {iban.Substring(4, 4)} {iban.Substring(8, 4)} " +
                    $"{iban.Substring(12, 4)} {iban.Substring(16, 4)} {iban.Substring(20, 4)} " +
                    $"{iban.Substring(24, 2)}";
@@ -112,8 +107,6 @@ namespace MetinBank.Util
         /// <summary>
         /// IBAN'dan boşlukları kaldırır
         /// </summary>
-        /// <param name="iban">Format edilmiş IBAN</param>
-        /// <returns>Boşluksuz IBAN</returns>
         public static string RemoveIbanSpaces(string iban)
         {
             return iban?.Replace(" ", "").Trim() ?? string.Empty;
@@ -122,8 +115,6 @@ namespace MetinBank.Util
         /// <summary>
         /// IBAN doğrulaması yapar
         /// </summary>
-        /// <param name="iban">Doğrulanacak IBAN</param>
-        /// <returns>Hata mesajı veya null (IBAN geçerli ise)</returns>
         public static string ValidateIban(string iban)
         {
             if (string.IsNullOrWhiteSpace(iban))
@@ -154,8 +145,6 @@ namespace MetinBank.Util
         /// <summary>
         /// IBAN kontrol rakamlarını doğrular
         /// </summary>
-        /// <param name="iban">IBAN</param>
-        /// <returns>Kontrol rakamı doğru ise true</returns>
         private static bool VerifyCheckDigits(string iban)
         {
             try
@@ -179,8 +168,6 @@ namespace MetinBank.Util
         /// <summary>
         /// IBAN'dan şube kodunu çıkarır
         /// </summary>
-        /// <param name="iban">IBAN</param>
-        /// <returns>Şube kodu</returns>
         public static string ExtractSubeKodu(string iban)
         {
             iban = RemoveIbanSpaces(iban);
@@ -188,29 +175,29 @@ namespace MetinBank.Util
                 return null;
 
             // TR(2) + Kontrol(2) + Banka(5) + Rezerv(1) + Şube(5)
+            // Banka(5) = index 4-8. Rezerv(1) = index 9. Şube(5) = index 10-14.
             return iban.Substring(10, 5);
         }
 
         /// <summary>
         /// IBAN'dan hesap numarasını çıkarır
         /// </summary>
-        /// <param name="iban">IBAN</param>
-        /// <returns>Hesap numarası</returns>
         public static string ExtractHesapNo(string iban)
         {
             iban = RemoveIbanSpaces(iban);
             if (iban.Length != 26)
                 return null;
 
-            // Son 16 karakter
-            return iban.Substring(10, 16);
+            // Hesap no = Son 11 karakter (TR standardında banka içi hesap no)
+            // Ya da Şube + Hesap olarak 16 hane istenir? 
+            // Genelde "Hesap No" sadece müşteri hesabını ifade ederse son 11,
+            // ama teknik olarak unique ID ise son 11 yeterli (bizim sistemde).
+            return iban.Substring(15, 11);
         }
 
         /// <summary>
         /// IBAN'ın Metin Bank'a ait olup olmadığını kontrol eder
         /// </summary>
-        /// <param name="iban">IBAN</param>
-        /// <returns>Metin Bank IBAN'ı ise true</returns>
         public static bool IsMetinBankIban(string iban)
         {
             iban = RemoveIbanSpaces(iban);
@@ -224,10 +211,7 @@ namespace MetinBank.Util
 
         /// <summary>
         /// IBAN'ı maskeler (güvenlik için)
-        /// Örnek: TR33 0001 0012 3456 **** **** **
         /// </summary>
-        /// <param name="iban">IBAN</param>
-        /// <returns>Maskelenmiş IBAN</returns>
         public static string MaskIban(string iban)
         {
             string formattedIban = FormatIban(RemoveIbanSpaces(iban));
@@ -241,20 +225,15 @@ namespace MetinBank.Util
         /// <summary>
         /// Sonraki hesap numarasını üretir
         /// </summary>
-        /// <param name="sonHesapNo">Son kullanılan hesap numarası</param>
-        /// <returns>Yeni hesap numarası</returns>
         public static string GenerateNextHesapNo(long sonHesapNo)
         {
             long yeniHesapNo = sonHesapNo + 1;
-            return yeniHesapNo.ToString("D16"); // 16 haneye tamamla
+            return yeniHesapNo.ToString("D11"); // 11 haneye tamamla
         }
 
         /// <summary>
         /// Test IBAN'ları oluşturur (development için)
         /// </summary>
-        /// <param name="subeKodu">Şube kodu</param>
-        /// <param name="count">Oluşturulacak IBAN sayısı</param>
-        /// <returns>IBAN listesi</returns>
         public static string[] GenerateTestIbans(string subeKodu, int count)
         {
             string[] ibans = new string[count];
@@ -267,4 +246,3 @@ namespace MetinBank.Util
         }
     }
 }
-

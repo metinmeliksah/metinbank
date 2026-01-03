@@ -215,8 +215,16 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                MessageBox.Show($"Para yatırma işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
-                    "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (numTutar.Value > 50000)
+                {
+                    MessageBox.Show($"Para yatırma isteği alındı.\n\nİşlem limit (50.000 TL) üzerinde olduğu için yönetici onayına düşmüştür.\nİşlem No: TRX{islemID}", 
+                        "Onay Bekliyor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Para yatırma işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
+                        "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
 
                 HesaplariYukle();
                 numTutar.Value = 0;

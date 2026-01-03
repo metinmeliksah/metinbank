@@ -38,15 +38,40 @@ namespace MetinBank.Desktop
             }
 
             gridOnaylar.DataSource = dt;
-            gridViewOnaylar.BestFitColumns();
+            // GridView Ayarları
+            gridViewOnaylar.OptionsBehavior.Editable = false;
+            gridViewOnaylar.OptionsView.ShowGroupPanel = false;
+            gridViewOnaylar.OptionsView.EnableAppearanceEvenRow = true;
+            gridViewOnaylar.Appearance.HeaderPanel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
+
+            // Kolon Başlıkları ve Format
+            if (gridViewOnaylar.Columns["IslemTarihi"] != null)
+            {
+                gridViewOnaylar.Columns["IslemTarihi"].Caption = "İşlem Tarihi";
+                gridViewOnaylar.Columns["IslemTarihi"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+                gridViewOnaylar.Columns["IslemTarihi"].DisplayFormat.FormatString = "dd.MM.yyyy HH:mm";
+            }
+            if (gridViewOnaylar.Columns["Tutar"] != null)
+            {
+                gridViewOnaylar.Columns["Tutar"].Caption = "Tutar";
+                gridViewOnaylar.Columns["Tutar"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                gridViewOnaylar.Columns["Tutar"].DisplayFormat.FormatString = "N2";
+            }
+            if (gridViewOnaylar.Columns["Aciklama"] != null) gridViewOnaylar.Columns["Aciklama"].Caption = "Açıklama";
+            if (gridViewOnaylar.Columns["IslemTanimi"] != null) gridViewOnaylar.Columns["IslemTanimi"].Caption = "İşlem Türü";
+            if (gridViewOnaylar.Columns["MusteriAdSoyad"] != null) gridViewOnaylar.Columns["MusteriAdSoyad"].Caption = "Müşteri";
+            if (gridViewOnaylar.Columns["HesapNo"] != null) gridViewOnaylar.Columns["HesapNo"].Caption = "Hesap No";
+            if (gridViewOnaylar.Columns["OnayDurumu"] != null) gridViewOnaylar.Columns["OnayDurumu"].Caption = "Durum";
             
             // Gizlenmesi gereken kolonlar
-            string[] hiddenCols = { "IslemID", "KaynakHesapID", "HedefHesapID", "KullaniciID", "SubeID", "IPAdresi", "IslemCikisTarihi", "BasariliMi" };
+            string[] hiddenCols = { "IslemID", "KaynakHesapID", "HedefHesapID", "KullaniciID", "SubeID", "IPAdresi", "IslemCikisTarihi", "BasariliMi", "ParaBirimi", "IslemUcreti", "IslemTipi", "HedefIBAN", "IslemReferansNo", "AliciAdi" };
             foreach (string col in hiddenCols)
             {
                 if (gridViewOnaylar.Columns[col] != null)
                     gridViewOnaylar.Columns[col].Visible = false;
             }
+
+            gridViewOnaylar.BestFitColumns();
 
             // Clear detail panel
             ClearDetailPanel();

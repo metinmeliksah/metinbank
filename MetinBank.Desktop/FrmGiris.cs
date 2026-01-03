@@ -17,7 +17,10 @@ namespace MetinBank.Desktop
         public FrmGiris()
         {
             InitializeComponent();
-            _sAuth = new SAuth();
+            if (!this.DesignMode)
+            {
+                _sAuth = new SAuth();
+            }
         }
 
         /// <summary>
@@ -36,11 +39,11 @@ namespace MetinBank.Desktop
             ApplyModernStyling();
 
             // Varsayılan değerler (test için)
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                txtKullaniciAdi.Text = "merkez.calisan1";
-                txtSifre.Text = "Password123!";
-            }
+            // if (System.Diagnostics.Debugger.IsAttached)
+            // {
+            //     txtKullaniciAdi.Text = "merkez.calisan1";
+            //     txtSifre.Text = "Password123!";
+            // }
 
             // Enter tuşu ile giriş
             txtKullaniciAdi.KeyPress += TxtKeyPress;
@@ -55,41 +58,43 @@ namespace MetinBank.Desktop
         private void ApplyModernStyling()
         {
             // Gradient arka plan efekti için form boyama
-            this.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
-            
-            // Layout control görünümü
-            layoutControl1.Appearance.Control.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
-            layoutControl1.Appearance.Control.Options.UseBackColor = true;
+            // WXI Skin handles backgrounds automatically
+            // layoutControl1.Appearance.Control.BackColor = System.Drawing.Color.FromArgb(240, 244, 248);
+            // layoutControl1.Appearance.Control.Options.UseBackColor = true;
 
-            // Giriş butonu - Modern mavi stili
-            btnGiris.Appearance.BackColor = System.Drawing.Color.FromArgb(21, 101, 192);
-            btnGiris.Appearance.BackColor2 = System.Drawing.Color.FromArgb(25, 118, 210);
-            btnGiris.Appearance.ForeColor = System.Drawing.Color.White;
-            btnGiris.Appearance.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            btnGiris.Appearance.Options.UseBackColor = true;
-            btnGiris.Appearance.Options.UseForeColor = true;
-            btnGiris.Appearance.Options.UseFont = true;
-            btnGiris.Text = "🔐  GİRİŞ YAP";
+            // Logo background transparency
+            pictureEdit1.BackColor = System.Drawing.Color.Transparent;
+            pictureEdit1.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            pictureEdit1.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
+            pictureEdit1.Properties.Appearance.Options.UseBackColor = true;
+
+            // Giriş butonu
+            btnGiris.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            btnGiris.Height = 40;
+            btnGiris.Text = "GİRİŞ YAP";
 
             // Çıkış butonu
-            btnCikis.Appearance.BackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            btnCikis.Appearance.ForeColor = System.Drawing.Color.FromArgb(97, 97, 97);
             btnCikis.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F);
-            btnCikis.Appearance.Options.UseBackColor = true;
-            btnCikis.Appearance.Options.UseForeColor = true;
-            btnCikis.Appearance.Options.UseFont = true;
-            btnCikis.Text = "✖  ÇIKIŞ";
+            btnCikis.Text = "ÇIKIŞ";
 
             // Text kutuları için modern görünüm
-            txtKullaniciAdi.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 11F);
+            txtKullaniciAdi.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
             txtKullaniciAdi.Properties.Appearance.Options.UseFont = true;
-            txtKullaniciAdi.Properties.NullValuePrompt = "👤  Kullanıcı adınızı giriniz";
+            txtKullaniciAdi.Properties.NullValuePrompt = "Kullanıcı Adı";
             txtKullaniciAdi.Properties.NullValuePromptShowForEmptyValue = true;
+            try {
+                txtKullaniciAdi.Properties.ContextImageOptions.SvgImage = DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.People.user.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly);
+                txtKullaniciAdi.Properties.ContextImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
+            } catch {}
 
-            txtSifre.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 11F);
+            txtSifre.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
             txtSifre.Properties.Appearance.Options.UseFont = true;
-            txtSifre.Properties.NullValuePrompt = "🔒  Şifrenizi giriniz";
+            txtSifre.Properties.NullValuePrompt = "Şifre";
             txtSifre.Properties.NullValuePromptShowForEmptyValue = true;
+            try {
+                txtSifre.Properties.ContextImageOptions.SvgImage = DevExpress.Utils.Svg.SvgImage.FromResources("DevExpress.Utils.Svg.Images.Security.key.svg", typeof(DevExpress.Utils.Svg.SvgImage).Assembly);
+                txtSifre.Properties.ContextImageOptions.SvgImageSize = new System.Drawing.Size(20, 20);
+            } catch {}
         }
 
         /// <summary>
@@ -162,14 +167,21 @@ namespace MetinBank.Desktop
                 MessageBox.Show($"Hoş geldiniz, {kullanici.TamAd}", "Giriş Başarılı", 
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Ana MDI formuna yönlendir
+                // Ana mdi formuna yönlendir
                 this.Hide();
                 FrmMain frmMain = new FrmMain(kullanici);
-                frmMain.ShowDialog();
+                DialogResult result = frmMain.ShowDialog();
+
+                if (result == DialogResult.Abort)
+                {
+                    this.Close();
+                    return;
+                }
                 
-                // Ana form kapandığında giriş formunu tekrar göster
+                // Ana form kapandığında giriş formunu tekrar göster (Logout)
                 this.Show();
                 txtSifre.Clear();
+                txtKullaniciAdi.Clear();
                 txtKullaniciAdi.Focus();
                 
                 btnGiris.Enabled = true;

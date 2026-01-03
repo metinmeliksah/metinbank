@@ -63,16 +63,15 @@ namespace MetinBank.Business
 
                 if (hesap.Durum != "Aktif") { _dataAccess.RollbackTransaction(); return "Hesap aktif değil."; }
 
-                // Bakiye güncelle
-                hata = _bHesap.BakiyeGuncelle(hesapID, tutar);
-                if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                // Onay durumu belirle
+                string onayDurumu = BelirleIlkOnayDurumu(tutar);
 
                 // İşlem kaydı
                 string refNo = CommonFunctions.GenerateTransactionReference();
                 string query = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefHesapID, IslemTipi, IslemAltTipi, 
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, KullaniciID, SubeID, OnayDurumu, KanalTipi, BasariliMi)
                                 VALUES (@refNo, NULL, @hesapID, 'Yatırma', 'Nakit', @tutar, 'TL', 0, @aciklama, @kullaniciID, 
-                                @subeID, 'Tamamlandı', 'Sube', 1)";
+                                @subeID, @onayDurumu, 'Sube', 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
@@ -81,7 +80,8 @@ namespace MetinBank.Business
                     new MySqlParameter("@tutar", tutar),
                     new MySqlParameter("@aciklama", aciklama ?? "Para yatırma"),
                     new MySqlParameter("@kullaniciID", kullaniciID),
-                    new MySqlParameter("@subeID", subeID)
+                    new MySqlParameter("@subeID", subeID),
+                    new MySqlParameter("@onayDurumu", onayDurumu)
                 };
 
                 int affectedRows;
@@ -89,6 +89,29 @@ namespace MetinBank.Business
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
                 islemID = _dataAccess.GetLastInsertId();
+
+                if (onayDurumu == "Tamamlandı")
+                {
+                    // Normal bakiye güncelleme
+                    hata = _bHesap.BakiyeGuncelle(hesapID, tutar);
+                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                }
+                else
+                {
+                    // Onay bekliyor: Hem Bakiyeye Ekle HEM de Blokeye Ekle (Kullanılabilir artmasın)
+                    string queryBakiyeBloke = "UPDATE Hesap SET Bakiye = Bakiye + @tutar, BlokeBakiye = BlokeBakiye + @tutar WHERE HesapID = @hesapID";
+                    MySqlParameter[] paramsBloke = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tutar", tutar),
+                        new MySqlParameter("@hesapID", hesapID)
+                    };
+                    hata = _dataAccess.ExecuteNonQuery(queryBakiyeBloke, paramsBloke, out affectedRows);
+                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+
+                    // Log oluştur
+                    hata = CreateOnayRec(islemID, "Yatırma", kullaniciID, "Mudur", "Beklemede");
+                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                }
 
                 hata = _dataAccess.CommitTransaction();
                 if (hata != null) return hata;
@@ -128,16 +151,15 @@ namespace MetinBank.Business
                 hata = ValidationHelper.ValidateBakiye(hesap.KullanilabilirBakiye, tutar);
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
-                // Bakiye güncelle
-                hata = _bHesap.BakiyeGuncelle(hesapID, -tutar);
-                if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                // Onay durumu
+                string onayDurumu = BelirleIlkOnayDurumu(tutar);
 
                 // İşlem kaydı
                 string refNo = CommonFunctions.GenerateTransactionReference();
                 string query = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefHesapID, IslemTipi, IslemAltTipi, 
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, KullaniciID, SubeID, OnayDurumu, KanalTipi, BasariliMi)
                                 VALUES (@refNo, @hesapID, NULL, 'Çekme', 'Nakit', @tutar, 'TL', 0, @aciklama, @kullaniciID, 
-                                @subeID, 'Tamamlandı', 'Sube', 1)";
+                                @subeID, @onayDurumu, 'Sube', 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
@@ -146,7 +168,8 @@ namespace MetinBank.Business
                     new MySqlParameter("@tutar", tutar),
                     new MySqlParameter("@aciklama", aciklama ?? "Para çekme"),
                     new MySqlParameter("@kullaniciID", kullaniciID),
-                    new MySqlParameter("@subeID", subeID)
+                    new MySqlParameter("@subeID", subeID),
+                    new MySqlParameter("@onayDurumu", onayDurumu)
                 };
 
                 int affectedRows;
@@ -154,6 +177,29 @@ namespace MetinBank.Business
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
                 islemID = _dataAccess.GetLastInsertId();
+
+                if (onayDurumu == "Tamamlandı")
+                {
+                    // Bakiye güncelle
+                    hata = _bHesap.BakiyeGuncelle(hesapID, -tutar);
+                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                }
+                else
+                {
+                    // Onay bekliyor: Tutarı bloke et (Kullanılabilir bakiyeden düşer)
+                    string queryBloke = "UPDATE Hesap SET BlokeBakiye = BlokeBakiye + @tutar WHERE HesapID = @hesapID";
+                    MySqlParameter[] paramsBloke = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tutar", tutar),
+                        new MySqlParameter("@hesapID", hesapID)
+                    };
+                    hata = _dataAccess.ExecuteNonQuery(queryBloke, paramsBloke, out affectedRows);
+                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+
+                    // Log
+                    hata = CreateOnayRec(islemID, "Çekme", kullaniciID, "Mudur", "Beklemede");
+                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                }
 
                 hata = _dataAccess.CommitTransaction();
                 if (hata != null) return hata;
@@ -488,14 +534,35 @@ namespace MetinBank.Business
                 string mevcutDurum = row["OnayDurumu"].ToString();
                 decimal tutar = Convert.ToDecimal(row["Tutar"]);
                 string islemTipi = row["IslemTipi"].ToString();
-                int kaynakHesapID = Convert.ToInt32(row["KaynakHesapID"]);
+                
+                // ID'leri güvenli al
+                int? kaynakHesapID = row["KaynakHesapID"] != DBNull.Value ? (int?)Convert.ToInt32(row["KaynakHesapID"]) : null;
                 int? hedefHesapID = row["HedefHesapID"] != DBNull.Value ? (int?)Convert.ToInt32(row["HedefHesapID"]) : null;
+                
                 decimal toplamTutar = tutar + Convert.ToDecimal(row["IslemUcreti"]);
 
                 string yeniDurum = "";
+
+                // Rol Normalizasyonu
+                string normalizedRol = "";
+                if (rol.IndexOf("Mudur", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                    rol.IndexOf("Müdür", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    normalizedRol = "Mudur";
+                }
+                else if (rol.IndexOf("Genel", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                         rol.IndexOf("Merkez", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    normalizedRol = "GenelMerkez";
+                }
+                else
+                {
+                     _dataAccess.RollbackTransaction();
+                     return "Geçersiz onay rolü.";
+                }
                 
                 // Rol ve Tutar Kontrolü
-                if (rol == "Mudur")
+                if (normalizedRol == "Mudur")
                 {
                     if (mevcutDurum != "OnayBekliyor_Mudur") { _dataAccess.RollbackTransaction(); return "Bu işlem müdür onayı beklemiyor."; }
                     
@@ -508,15 +575,10 @@ namespace MetinBank.Business
                         yeniDurum = "Tamamlandı"; // Altı ise biter
                     }
                 }
-                else if (rol == "GenelMerkez")
+                else if (normalizedRol == "GenelMerkez")
                 {
                     if (mevcutDurum != "OnayBekliyor_GenelMerkez") { _dataAccess.RollbackTransaction(); return "Bu işlem GM onayı beklemiyor."; }
                     yeniDurum = "Tamamlandı";
-                }
-                else
-                {
-                    _dataAccess.RollbackTransaction();
-                    return "Geçersiz onay rolü.";
                 }
 
                 // Durum Güncelle
@@ -529,7 +591,7 @@ namespace MetinBank.Business
                 hata = _dataAccess.ExecuteNonQuery(queryUpdate, paramsUpdate, out int affected);
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
-                // Log Güncelle (Önceki logu güncelle veya yeni log at - Basitlik için yeni log)
+                // Log Güncelle
                 string queryLog = @"INSERT INTO OnayLog (IslemID, IslemTipi, OnaylayanID, OnayDurumu, OnayTarihi)
                                   VALUES (@islemID, @islemTipi, @kullaniciID, @durum, NOW())";
                 MySqlParameter[] paramsLog = new MySqlParameter[]
@@ -545,34 +607,49 @@ namespace MetinBank.Business
                 // Eğer TAMAMLANDI ise para transferini gerçekleştir
                 if (yeniDurum == "Tamamlandı")
                 {
-                    // 1. Kaynak hesaptan bloke ve bakiyeyi düş
-                    // Not: Para zaten bakiyede duruyor ama BlokeBakiye'de de duruyor. 
-                    // KullanilabilirBakiye = Bakiye - Bloke.
-                    // İşlem yapılırsa: Bakiye düşer, Bloke çözülür.
-                    
-                    // Önce Blokeyi Kaldır ve Bakiyeyi Düş (Çünkü create anında bakiyeden düşmemiştik, sadece bloke koymuştuk değil mi?
-                    // KONROL: Eski koda bakalım. "CreateOnayRec" ise bakiye düşmüyordu, SADECE Bloke artıyordu.
-                    // string queryBloke = "UPDATE Hesap SET BlokeBakiye = BlokeBakiye + @tutar WHERE HesapID = @hesapID";
-                    
-                    // Yani Bakiye hala eski Tutar. Bloke arttı.
-                    // Şimdi işlem tamamlandı:
-                    // BlokeBakiye azalmalı (-Tutar)
-                    // Bakiye azalmalı (-Tutar)
-                    
-                    string queryBlokeCoz = "UPDATE Hesap SET BlokeBakiye = BlokeBakiye - @tutar, Bakiye = Bakiye - @tutar WHERE HesapID = @hesapID";
-                    MySqlParameter[] paramsBlokeCoz = new MySqlParameter[]
+                    if (islemTipi == "Yatırma")
                     {
-                        new MySqlParameter("@tutar", toplamTutar), // EFT ise ücret dahil
-                        new MySqlParameter("@hesapID", kaynakHesapID)
-                    };
-                    hata = _dataAccess.ExecuteNonQuery(queryBlokeCoz, paramsBlokeCoz, out affected);
-                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                        // Yatırma: Sadece blokeyi (ve bakiyeyi güncellemeye gerek yok, zaten eklenmişti) çözmeliyiz AMA
+                        // ParaYatir fonksiyonunda hem Bakiye hem BlokeBakiye artırılmıştı.
+                        // Yani şu an para hesapta VAR ama BLOKE.
+                        // BlokeBakiye düşürülmeli.
+                        if (hedefHesapID.HasValue)
+                        {
+                            string queryBlokeCoz = "UPDATE Hesap SET BlokeBakiye = BlokeBakiye - @tutar WHERE HesapID = @hesapID";
+                            MySqlParameter[] paramsBlokeCoz = new MySqlParameter[]
+                            {
+                                new MySqlParameter("@tutar", tutar), 
+                                new MySqlParameter("@hesapID", hedefHesapID.Value)
+                            };
+                            hata = _dataAccess.ExecuteNonQuery(queryBlokeCoz, paramsBlokeCoz, out affected);
+                            if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                        }
+                    }
+                    else
+                    {
+                        // Havale, EFT, Virman, Çekme:
+                        // Kaynak hesaptan hem Bloke hem Bakiye düşülmeli.
+                        // Çünkü işlem oluşturulurken Bakiye düşülmemiş, SADECE Bloke eklenmişti (ParaCek'te bu şekilde planladım).
+                        // Havale/EFT/Virman'da da böyle: 'OnayBekliyor' durumunda bakiye düşülmedi, bloke kondu.
+                        
+                        if (kaynakHesapID.HasValue)
+                        {
+                            string queryBlokeCoz = "UPDATE Hesap SET BlokeBakiye = BlokeBakiye - @tutar, Bakiye = Bakiye - @tutar WHERE HesapID = @hesapID";
+                            MySqlParameter[] paramsBlokeCoz = new MySqlParameter[]
+                            {
+                                new MySqlParameter("@tutar", toplamTutar), // EFT ise ücret dahil
+                                new MySqlParameter("@hesapID", kaynakHesapID.Value)
+                            };
+                            hata = _dataAccess.ExecuteNonQuery(queryBlokeCoz, paramsBlokeCoz, out affected);
+                            if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                        }
 
-                    // 2. Hedef hesaba ekle (Varsa)
-                    if (hedefHesapID.HasValue)
-                    {
-                        hata = _bHesap.BakiyeGuncelle(hedefHesapID.Value, tutar); // Burada bloke yok, direkt ekle
-                         if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                        // Hedef hesaba ekle (Sadece Havale ve Virman için, Çekme/EFT için hedef hesap bizde değil veya NULL)
+                        if (hedefHesapID.HasValue && (islemTipi == "Havale" || islemTipi == "Virman"))
+                        {
+                            hata = _bHesap.BakiyeGuncelle(hedefHesapID.Value, tutar);
+                             if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                        }
                     }
                 }
                 
@@ -605,9 +682,13 @@ namespace MetinBank.Business
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
                 
                 DataRow row = dtIslem.Rows[0];
-                int kaynakHesapID = Convert.ToInt32(row["KaynakHesapID"]);
+                int? kaynakHesapID = row["KaynakHesapID"] != DBNull.Value ? (int?)Convert.ToInt32(row["KaynakHesapID"]) : null;
+                int? hedefHesapID = row["HedefHesapID"] != DBNull.Value ? (int?)Convert.ToInt32(row["HedefHesapID"]) : null;
+                
                 decimal tutar = Convert.ToDecimal(row["Tutar"]);
                 decimal ucret = Convert.ToDecimal(row["IslemUcreti"]);
+                string islemTipi = row["IslemTipi"].ToString();
+                
                 decimal toplamTutar = tutar + ucret;
 
                 // Durum Güncelle
@@ -620,15 +701,38 @@ namespace MetinBank.Business
                 hata = _dataAccess.ExecuteNonQuery(queryUpdate, paramsUpdate, out int affected);
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
-                // Blokeyi Kaldır (Ama bakiyeden düşme! Para iade edilmiş gibi olur, yani blokeyi sıfırla)
-                string queryBlokeCoz = "UPDATE Hesap SET BlokeBakiye = BlokeBakiye - @tutar WHERE HesapID = @hesapID";
-                MySqlParameter[] paramsBlokeCoz = new MySqlParameter[]
+                if (islemTipi == "Yatırma")
                 {
-                    new MySqlParameter("@tutar", toplamTutar),
-                    new MySqlParameter("@hesapID", kaynakHesapID)
-                };
-                hata = _dataAccess.ExecuteNonQuery(queryBlokeCoz, paramsBlokeCoz, out affected);
-                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                    // Yatırma reddedildi: Parayı hesaptan geri almalıyız.
+                    // Hem Bakiye hem Bloke düşülecek.
+                    if (hedefHesapID.HasValue)
+                    {
+                        string queryTersIslem = "UPDATE Hesap SET Bakiye = Bakiye - @tutar, BlokeBakiye = BlokeBakiye - @tutar WHERE HesapID = @hesapID";
+                        MySqlParameter[] paramsTers = new MySqlParameter[]
+                        {
+                            new MySqlParameter("@tutar", tutar),
+                            new MySqlParameter("@hesapID", hedefHesapID.Value)
+                        };
+                        hata = _dataAccess.ExecuteNonQuery(queryTersIslem, paramsTers, out affected);
+                        if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                    }
+                }
+                else
+                {
+                    // Çekme, Havale, EFT, Virman reddedildi:
+                    // Sadece blokeyi kaldırmalıyız (Bakiye zaten düşülmemişti).
+                    if (kaynakHesapID.HasValue)
+                    {
+                        string queryBlokeCoz = "UPDATE Hesap SET BlokeBakiye = BlokeBakiye - @tutar WHERE HesapID = @hesapID";
+                        MySqlParameter[] paramsBlokeCoz = new MySqlParameter[]
+                        {
+                            new MySqlParameter("@tutar", toplamTutar),
+                            new MySqlParameter("@hesapID", kaynakHesapID.Value)
+                        };
+                        hata = _dataAccess.ExecuteNonQuery(queryBlokeCoz, paramsBlokeCoz, out affected);
+                         if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                    }
+                }
 
                 hata = _dataAccess.CommitTransaction();
                 return null;
@@ -721,23 +825,44 @@ namespace MetinBank.Business
         {
             islemler = null;
             string durum = "";
-            if (rol == "Mudur") durum = "OnayBekliyor_Mudur";
-            else if (rol == "GenelMerkez") durum = "OnayBekliyor_GenelMerkez";
-            else return "Geçersiz rol.";
+            
+            // Rol kontrolünü esnek yap
+            if (rol.IndexOf("Mudur", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                rol.IndexOf("Müdür", StringComparison.OrdinalIgnoreCase) >= 0) 
+            {
+                durum = "OnayBekliyor_Mudur";
+            }
+            else if (rol.IndexOf("Genel", StringComparison.OrdinalIgnoreCase) >= 0 || 
+                     rol.IndexOf("Merkez", StringComparison.OrdinalIgnoreCase) >= 0) 
+            {
+                durum = "OnayBekliyor_GenelMerkez";
+            }
+            else 
+            {
+                // Yetkisiz kullanıcılar için boş tablo döndür veya hata ver
+                // Hata yerine boş liste dönmek UI için daha güvenli olabilir ama kullanıcı "hata veriyor" demiş.
+                return "Bu işlem için yetkiniz bulunmamaktadır.";
+            }
 
             // Basit select
              string query = @"SELECT i.*, 
                             CASE 
                                 WHEN i.IslemTipi = 'Havale' THEN CONCAT('Havale - ', i.AliciAdi)
                                 WHEN i.IslemTipi = 'EFT' THEN CONCAT('EFT - ', i.AliciAdi)
+                                WHEN i.IslemTipi = 'Yatırma' THEN 'Para Yatırma'
+                                WHEN i.IslemTipi = 'Çekme' THEN 'Para Çekme'
                                 ELSE i.IslemTipi 
                             END as IslemTanimi,
                             h.HesapNo, CONCAT(m.Ad, ' ', m.Soyad) as MusteriAdSoyad
                             FROM Islem i
-                            JOIN Hesap h ON i.KaynakHesapID = h.HesapID
+                            JOIN Hesap h ON i.KaynakHesapID = h.HesapID OR i.HedefHesapID = h.HesapID
                             JOIN Musteri m ON h.MusteriID = m.MusteriID
                             WHERE i.OnayDurumu = @durum
                             ORDER BY i.IslemTarihi ASC";
+            
+            // NOT: Yatırma işleminde KaynakHesapID NULL, HedefHesapID dolu.
+            // Bu yüzden JOIN'i OR ile güncelledim: i.KaynakHesapID = h.HesapID OR i.HedefHesapID = h.HesapID
+            // Bu sayede hem çekme (kaynak) hem yatırma (hedef) işlemleri listelenir.
             
             MySqlParameter[] parameters = new MySqlParameter[]
             {
