@@ -164,15 +164,21 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .card-number {
+        .card-text-emboss {
             font-family: 'Courier New', monospace;
-            font-size: 1.25rem;
-            letter-spacing: 0.1rem;
-            margin-bottom: 0.5rem;
+            color: #d4af37;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8), -1px -1px 1px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+            font-weight: bold;
         }
 
-        .card-expiry {
-            font-size: 0.875rem;
+        .card-label-small {
+            font-family: sans-serif;
+            font-size: 0.5rem;
+            color: #d4af37;
+            text-align: center;
+            line-height: 1.2;
+            font-weight: 600;
         }
 
         /* Transactions Table */
@@ -466,9 +472,21 @@
                         <div class="card-visual-wrapper">
                             <div class="card-visual">
                                 <img src="${cardTemplate}" alt="Kart" class="card-background">
-                                <div class="card-overlay">
-                                    <div class="card-number">${maskedNumber}</div>
-                                    <div class="card-expiry">SKT: ${expiryDate}</div>
+                                <div class="card-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%;">
+                                    <!-- Number -->
+                                    <div class="card-text-emboss" style="position: absolute; top: 52%; width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 0px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
+                                        ${maskedNumber}
+                                    </div>
+
+                                    <!-- Expiry -->
+                                    <div class="card-text-emboss" style="position: absolute; top: 68%; width: 100%; text-align: center; font-size: 1.1rem;">
+                                        ${expiryDate}
+                                    </div>
+
+                                    <!-- Name -->
+                                    <div class="card-text-emboss" style="position: absolute; bottom: 8%; left: 8%; font-size: 1rem; text-transform:uppercase;">
+                                        ${card.kartSahibiAdi || user.ad + ' ' + user.soyad}
+                                    </div>
                                 </div>
                             </div>
                         </div>
