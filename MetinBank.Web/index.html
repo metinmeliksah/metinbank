@@ -4,570 +4,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetinBank | metinbank.mtndev.tr</title>
-    <!-- Tailwind CSS CDN -->
+    <title>MetinBank | Güven, Birikim, Gelecek</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font Ailesi -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles.css">
+    <link href="assets/styles.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
 
-        /* Küçük bir animasyon ekleyelim */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+        .hero-section {
+            background-color: #0f172a;
+            /* Fallback */
+            position: relative;
+            height: 600px;
+            overflow: hidden;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0.8;
+            transition: transform 10s ease;
+        }
 
+        .hero-section:hover .hero-bg {
+            transform: scale(1.05);
+        }
+
+        .gold-text {
+            color: #d4af37;
+            background: linear-gradient(to right, #d4af37, #f3e5ab, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
             to {
-                opacity: 1;
-                transform: translateY(0);
+                background-position: 200% center;
             }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
     </style>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
 
-    <!-- UYARI BANNER'I (artık warning.js ile inject ediliyor) -->
-    <script src="assets/warning.js" defer></script>
+    <div id="header-placeholder"></div>
+    <script src="assets/js/header.js"></script>
 
-    <!-- HEADER / NAVİGASYON -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="#" class="logo-wrapper" aria-label="MetinBank">
-                        <img src="assets/images/metinbanklogo.png" alt="MetinBank" class="header-logo" />
-                        <span class="sr-only">MetinBank</span>
-                    </a>
+
+    <!-- Hero Section (Right Aligned Image) -->
+    <section class="hero-section relative bg-gray-900 overflow-hidden" style="height: 650px;">
+        <!-- Background Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-blue-900/40 z-10"></div>
+
+        <!-- Hero Background Image -->
+        <img src="publishingimages/ana-sayfa/bireysel/2026/banner.png" alt="MetinBank Hero"
+            class="absolute top-0 right-0 h-full w-auto object-cover object-right-top z-0"
+            style="max-width: 70%; mask-image: linear-gradient(to left, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%);">
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 h-full flex items-center">
+            <div class="max-w-2xl pt-10">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-300 text-sm font-semibold mb-6 backdrop-blur">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                    Yenilikçi Dijital Bankacılık
                 </div>
-
-                <!-- Ana Menü - Masaüstü -->
-                <div class="hidden md:flex md:items-center md:space-x-6">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight">
+                    Gelecek <br>
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-300">Cebinizde</span>
+                </h1>
+                <p
+                    class="text-xl md:text-2xl text-gray-300 mb-10 font-light leading-relaxed max-w-lg border-l-4 border-blue-500 pl-6">
+                    MetinBank ile bankacılık işlemlerinizi güvenle yönetin, size özel ayrıcalıkların tadını çıkarın.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
                     <a href="#"
-                        class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150">Bireysel</a>
-
-                    <!-- Hizmetler açılır menü (dropdown) -->
-                    <div class="relative">
-                        <button id="services-toggle" aria-expanded="false" aria-haspopup="true"
-                            class="flex items-center text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150 focus:outline-none">
-                            Hizmetler
-                            <svg class="ml-2 h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div id="services-menu"
-                            class="hidden absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 ring-1 ring-black ring-opacity-5 z-50">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Krediler</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Mevduat</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Kartlar</a>
-                        </div>
-                    </div>
-
-                    <a href="#"
-                        class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150">Ticari</a>
-                    <a href="#"
-                        class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150">Kurumsal</a>
-                    <a href="#"
-                        class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150">Hakkımızda</a>
-                </div>
-
-                <!-- Butonlar - Masaüstü -->
-                <div class="hidden md:flex items-center space-x-2">
-                    <a href="internet-sube.html"
-                        class="inline-flex items-center justify-center text-blue-700 bg-blue-100 hover:bg-blue-200 px-3 py-2 rounded-full text-sm font-medium transition duration-150 whitespace-nowrap">
-                        İnternet Şubeye Giriş
-                    </a>
-                    <a href="#"
-                        class="inline-flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md whitespace-nowrap">
+                        class="px-8 py-4 bg-blue-600 text-white rounded-full font-bold text-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/50 text-center flex items-center justify-center gap-2 group">
                         Müşteri Ol
-                    </a>
-                </div>
-
-                <!-- Mobil Menü Butonu -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button"
-                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
-                        <span class="sr-only">Menüyü aç</span>
-                        <!-- Hamburger İkonu -->
-                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16m-7 6h7" />
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                         </svg>
-                    </button>
+                    </a>
+                    <a href="kartlar/banka-kartlari/mastercard/index.html"
+                        class="px-8 py-4 bg-white/10 border border-white/20 text-white rounded-full font-bold text-lg hover:bg-white/20 transition text-center backdrop-blur-sm">
+                        Kartları İncele
+                    </a>
                 </div>
-            </div>
-        </nav>
-
-        <!-- Mobil Menü - Açılır -->
-        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#"
-                    class="text-gray-700 hover:bg-blue-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Bireysel</a>
-                <a href="#"
-                    class="text-gray-700 hover:bg-blue-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Ticari</a>
-                <a href="#"
-                    class="text-gray-700 hover:bg-blue-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Kurumsal</a>
-                <a href="#"
-                    class="text-gray-700 hover:bg-blue-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Hakkımızda</a>
-            </div>
-            <div class="px-4 py-3 border-t border-gray-200 space-y-2">
-                <a href="#"
-                    class="block w-full text-center text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full text-base font-medium transition duration-150">
-                    Müşteri Ol
-                </a>
-                <a href="#"
-                    class="block w-full text-center text-blue-700 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded-full text-base font-medium transition duration-150">
-                    İnternet Şubeye Giriş
-                </a>
             </div>
         </div>
-    </header>
+    </section>
 
-    <!-- ANA İÇERİK -->
-    <main>
-        <!-- Hero Alanı -->
-        <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white pt-16 pb-24 fade-in">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8 items-center">
-                <!-- Hero Metni -->
-                <div class="text-center md:text-left">
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                        Geleceğin Bankacılığı <br class="hidden md:inline"> Sizinle Başlar
-                    </h1>
-                    <p class="mt-4 text-lg md:text-xl text-blue-100 max-w-lg mx-auto md:mx-0">
-                        MetinBank'ın yenilikçi çözümleri ile finansal hayatınızı kolaylaştırın. Hızlı, güvenli ve size
-                        özel.
-                    </p>
-                    <div class="mt-8 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-                        <a href="#"
-                            class="inline-flex items-center justify-center text-center bg-white text-blue-700 font-semibold px-8 py-3 rounded-full text-lg shadow-lg hover:bg-gray-100 transition duration-200 transform hover:scale-105">
-                            Hemen Başvur
-                        </a>
-                        <a href="#"
-                            class="inline-flex items-center justify-center text-center text-white border-2 border-white font-semibold px-8 py-3 rounded-full text-lg hover:bg-white hover:text-blue-700 transition duration-200">
-                            Hizmetler
-                        </a>
-                    </div>
+    <!-- Quick Actions (Glassmorphism) -->
+    <div class="relative z-20 -mt-16 container mx-auto px-4">
+        <div class="glass-panel p-6 rounded-2xl grid grid-cols-2 md:grid-cols-4 gap-6">
+            <a href="#"
+                class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-blue-50 transition group">
+                <div
+                    class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg>
                 </div>
-                <!-- Hero Görseli -->
-                <div class="flex justify-center">
-                    <img src="assets/images/banner1.png" alt="MetinBank Hero" class="banner-img" />
+                <span class="font-semibold text-gray-700">İhtiyaç Kredisi</span>
+            </a>
+            <a href="#"
+                class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-green-50 transition group">
+                <div
+                    class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                        </path>
+                    </svg>
                 </div>
+                <span class="font-semibold text-gray-700">Kredi Kartı</span>
+            </a>
+            <a href="#"
+                class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-purple-50 transition group">
+                <div
+                    class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-700">Yatırım Hesabı</span>
+            </a>
+            <a href="#"
+                class="flex flex-col items-center justify-center p-4 rounded-xl hover:bg-orange-50 transition group">
+                <div
+                    class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-700">Başvuru Takip</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Cards Showcase Section -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Size Özel Kart Ayrıcalıkları</h2>
+                <p class="text-gray-600 text-lg">MetinBank kartları ile alışverişlerinizde kazanın, nakit
+                    ihtiyaçlarınızı ertelemeyin.</p>
             </div>
-        </section>
 
-        <!-- Hizmetler Alanı -->
-        <section class="py-20 bg-white">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-gray-900 mb-4">Size Özel Çözümler</h2>
-                <p class="text-center text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
-                    İhtiyaçlarınıza yönelik hazırladığımız kredi, yatırım ve sigorta ürünlerimizle her an yanınızdayız.
-                </p>
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Hizmet Kartı 1 -->
-                    <div class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div class="flex items-center justify-center h-20 w-20 bg-blue-100 text-blue-600 rounded-full mb-4"
-                            aria-hidden="true">
-                            <!-- Yeni: banka / avantajlı krediler ikonu (daha okunaklı ve büyük) -->
-                            <svg class="h-12 w-12 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                fill="currentColor">
-                                <path d="M12 3l9 4v2H3V7l9-4zM5 10h14v9H5v-9zm4 2v5h2v-5H9zm4 0v5h2v-5h-2z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Avantajlı Krediler</h3>
-                        <p class="text-gray-600">İhtiyaç, konut veya taşıt kredilerinde size özel faiz oranları.</p>
-                    </div>
-                    <!-- Hizmet Kartı 2 -->
-                    <div class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div
-                            class="flex items-center justify-center h-16 w-16 bg-blue-100 text-blue-600 rounded-full mb-4">
-                            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Yatırım Fırsatları</h3>
-                        <p class="text-gray-600">Birikimlerinizi uzman portföy yöneticilerimizle değerlendirin.</p>
-                    </div>
-                    <!-- Hizmet Kartı 3 -->
-                    <div class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div
-                            class="flex items-center justify-center h-16 w-16 bg-blue-100 text-blue-600 rounded-full mb-4">
-                            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Güvence Paketleri</h3>
-                        <p class="text-gray-600">Sağlık, hayat ve araç sigortaları ile geleceğinizi koruyun.</p>
-                    </div>
-                    <!-- Hizmet Kartı 4 -->
-                    <div class="bg-gray-50 p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div
-                            class="flex items-center justify-center h-16 w-16 bg-blue-100 text-blue-600 rounded-full mb-4">
-                            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Mobil Bankacılık</h3>
-                        <p class="text-gray-600">Tüm bankacılık işlemlerinizi cebinizden 7/24 gerçekleştirin.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
 
-        <!-- Banka Kartları Bölümü -->
-        <section class="py-20 bg-gradient-to-br from-blue-50 to-gray-100">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-gray-900 mb-4">Banka Kartlarımız</h2>
-                <p class="text-center text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
-                    İhtiyaçlarınıza uygun, güvenli ve avantajlı banka kartlarımızla tanışın.
-                </p>
-
-                <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-                    <!-- MetinBank Mastercard -->
+                <!-- Mastercard -->
+                <div
+                    class="bg-gray-50 rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 group">
                     <div
-                        class="bg-white rounded-3xl shadow-2xl overflow-hidden hover:shadow-3xl transition-shadow duration-300 transform hover:-translate-y-2">
+                        class="mb-8 relative transform transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
+                        <!-- Card Visual Container (Fixed Ratio) -->
                         <div
-                            class="relative h-56 bg-gradient-to-br from-gray-800 via-gray-900 to-black p-4 flex flex-col justify-between">
+                            style="position: relative; width: 100%; padding-bottom: 54.5%; background: linear-gradient(to bottom right, #1f2937, #111827, #000000); border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);">
                             <img src="publishingimages/bireysel-kartlar/banka_karti_mastercard.png"
-                                alt="MetinBank Mastercard"
-                                class="absolute inset-0 w-full h-full object-contain p-4 opacity-50">
-                            <!-- Overlay Content -->
-                            <div class="absolute inset-0 z-10 w-full h-full">
-                                <!-- Number -->
-                                <div
-                                    style="position: absolute; top: 52%; width: 100%; text-align: center; font-family: 'Courier New', monospace; color: #d4af37; text-shadow: 2px 2px 2px rgba(0,0,0,0.8), -1px -1px 1px rgba(255,255,255,0.3); letter-spacing: 0px; font-weight: bold; font-size: 1.25rem;">
-                                    5412 7512 3412 3456
-                                </div>
-                                <!-- Expiry -->
-                                <div
-                                    style="position: absolute; top: 68%; width: 100%; text-align: center; font-family: 'Courier New', monospace; color: #d4af37; text-shadow: 2px 2px 2px rgba(0,0,0,0.8), -1px -1px 1px rgba(255,255,255,0.3); letter-spacing: 2px; font-weight: bold; font-size: 1.1rem;">
-                                    12/28
-                                </div>
-                                <!-- Name -->
-                                <div
-                                    style="position: absolute; bottom: 8%; left: 8%; font-family: 'Courier New', monospace; color: #d4af37; text-shadow: 2px 2px 2px rgba(0,0,0,0.8), -1px -1px 1px rgba(255,255,255,0.3); letter-spacing: 2px; font-weight: bold; font-size: 1rem;">
-                                    METİN DERMENCİOĞLU
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">MetinBank Mastercard</h3>
-                            <p class="text-gray-600 mb-4">Dünya çapında geçerli, güvenli ve avantajlı Mastercard
-                                bankamatik kartınız.</p>
-                            <ul class="space-y-2 text-sm text-gray-700">
-                                <li class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Tüm ATM'lerde geçerli
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Online alışverişlerde güvenli
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Değişken limitler
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    7/24 destek hizmeti
-                                </li>
-                            </ul>
-                            <a href="#"
-                                class="mt-6 inline-block w-full text-center bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition duration-200">Hemen
-                                Başvur</a>
+                                alt="MetinBank Mastercard" class="absolute inset-0 w-full h-full object-contain">
                         </div>
                     </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">MetinBank Mastercard</h3>
+                    <p class="text-gray-600 mb-6">Dünyanın her yerinde geçerli, prestijli ve güvenli alışverişin keyfini
+                        çıkarın.</p>
+                    <a href="kartlar/banka-kartlari/mastercard/"
+                        class="inline-flex items-center text-blue-600 font-semibold hover:text-blue-800 transition">
+                        Detaylı İncele
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </a>
+                </div>
 
-                    <!-- MetinBank Troy -->
+                <!-- Troy -->
+                <div
+                    class="bg-red-50 rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 border border-red-100 group">
                     <div
-                        class="bg-white rounded-3xl shadow-2xl overflow-hidden hover:shadow-3xl transition-shadow duration-300 transform hover:-translate-y-2">
+                        class="mb-8 relative transform transition-transform duration-500 group-hover:scale-105 group-hover:rotate-1">
+                        <!-- Card Visual Container (Fixed Ratio) -->
                         <div
-                            class="relative h-56 bg-gradient-to-br from-red-600 via-red-700 to-red-900 p-4 flex flex-col justify-between">
+                            style="position: relative; width: 100%; padding-bottom: 54.5%; background: linear-gradient(to bottom right, #dc2626, #b91c1c, #7f1d1d); border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);">
                             <img src="publishingimages/bireysel-kartlar/banka_karti_troy.png" alt="MetinBank Troy"
-                                class="absolute inset-0 w-full h-full object-contain p-4 opacity-50">
-                            <!-- Overlay Content -->
-                            <div class="absolute inset-0 z-10 w-full h-full">
-                                <!-- Number -->
-                                <div
-                                    style="position: absolute; top: 52%; width: 100%; text-align: center; font-family: 'Courier New', monospace; color: #d4af37; text-shadow: 2px 2px 2px rgba(0,0,0,0.8), -1px -1px 1px rgba(255,255,255,0.3); letter-spacing: 0px; font-weight: bold; font-size: 1.25rem;">
-                                    9792 5812 3412 1923
-                                </div>
-                                <!-- Expiry -->
-                                <div
-                                    style="position: absolute; top: 68%; width: 100%; text-align: center; font-family: 'Courier New', monospace; color: #d4af37; text-shadow: 2px 2px 2px rgba(0,0,0,0.8), -1px -1px 1px rgba(255,255,255,0.3); letter-spacing: 2px; font-weight: bold; font-size: 1.1rem;">
-                                    12/29
-                                </div>
-                                <!-- Name -->
-                                <div
-                                    style="position: absolute; bottom: 8%; left: 8%; font-family: 'Courier New', monospace; color: #d4af37; text-shadow: 2px 2px 2px rgba(0,0,0,0.8), -1px -1px 1px rgba(255,255,255,0.3); letter-spacing: 2px; font-weight: bold; font-size: 1rem;">
-                                    METİN DERMENCİOĞLU
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">MetinBank Troy</h3>
-                            <p class="text-gray-600 mb-4">Türkiye'nin milli ödeme sistemi Troy ile güvenli ve hızlı
-                                işlemler.</p>
-                            <ul class="space-y-2 text-sm text-gray-700">
-                                <li class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Türkiye geneli kullan ım
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Contactless ödeme desteği
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Yüksek güvenlik standartları
-                                </li>
-                                <li class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Anında bildirimler
-                                </li>
-                            </ul>
-                            <a href="#"
-                                class="mt-6 inline-block w-full text-center bg-red-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-700 transition duration-200">Hemen
-                                Başvur</a>
+                                class="absolute inset-0 w-full h-full object-contain">
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mobil Uygulama CTA -->
-        <section class="py-20 bg-gradient-to-r from-blue-700 to-blue-900 text-white">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="text-3xl font-extrabold mb-4">MetinBank Mobil Hep Yanınızda</h2>
-                <p class="text-lg text-blue-100 max-w-2xl mx-auto mb-10">
-                    Tüm bankacılık işlemlerinizi 7/24, hızlı ve güvenli bir şekilde gerçekleştirmek için MetinBank
-                    Mobil'i hemen indirin.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
-                    <!-- App Store -->
-                    <a href="https://apps.apple.com/" target="_blank" rel="noopener"
-                        class="inline-flex items-center bg-white text-gray-900 rounded-2xl px-4 py-2 shadow-lg hover:shadow-xl transition duration-200 transform hover:-translate-y-0.5 w-full sm:w-auto"
-                        aria-label="App Store">
-                        <img src="assets/images/appstore.png" alt="Apple logo" class="store-badge" />
-                        <div class="text-left ml-3 hidden sm:block">
-                            <span class="block text-xs text-gray-500 uppercase tracking-wider">Şimdi İndir</span>
-                            <span class="block text-lg font-semibold text-gray-900">App Store</span>
-                        </div>
-                    </a>
-
-                    <!-- Google Play -->
-                    <a href="https://play.google.com/store" target="_blank" rel="noopener"
-                        class="inline-flex items-center bg-white text-gray-900 rounded-2xl px-4 py-2 shadow-lg hover:shadow-xl transition duration-200 transform hover:-translate-y-0.5 w-full sm:w-auto"
-                        aria-label="Google Play">
-                        <img src="assets/images/googleplay.png" alt="Google Play logo" class="store-badge" />
-                        <div class="text-left ml-3 hidden sm:block">
-                            <span class="block text-xs text-gray-500 uppercase tracking-wider">Hemen Al</span>
-                            <span class="block text-lg font-semibold text-gray-900">Google Play</span>
-                        </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">MetinBank Troy</h3>
+                    <p class="text-gray-600 mb-6">Türkiye'nin gücü TROY ile yerel avantajlardan ve güvenli ödeme
+                        sisteminden yararlanın.</p>
+                    <a href="kartlar/banka-kartlari/troy/"
+                        class="inline-flex items-center text-red-600 font-semibold hover:text-red-800 transition">
+                        Detaylı İncele
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
                     </a>
                 </div>
-            </div>
-        </section>
 
-        <!-- Proje Uyarısı Alanı -->
-        <section class="py-16 bg-blue-50 border-t border-b border-blue-200">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h3 class="text-2xl font-semibold text-blue-900">Önemli Bilgilendirme</h3>
-                <p class="mt-3 text-lg text-blue-700 max-w-3xl mx-auto">
-                    Bu sistem bir eğitim projesidir. Gerçek bir banka veya finans kuruluşu değildir.
-                    <br>Sistemdeki veriler örnek amaçlıdır; <strong>hiçbir gerçek işlem veya para transferi
-                        yapılmaz.</strong>
-                </p>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-gray-900 text-gray-400">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                <!-- Logo & Açıklama -->
-                <div class="col-span-2 lg:col-span-1">
-                    <a href="#" class="flex items-center" aria-label="MetinBank footer">
-                        <img src="assets/images/metinbanklogo.png" alt="MetinBank" class="footer-logo" />
-                        <span class="sr-only">MetinBank</span>
-                    </a>
-                    <p class="mt-4 text-sm">
-                        Geleceğin bankacılığı, bugünden sizinle.
-                    </p>
-                </div>
-
-                <!-- Hızlı Menü -->
-                <div>
-                    <h4 class="text-sm font-semibold text-gray-100 uppercase tracking-wider">Hızlı Menü</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="#" class="hover:text-white transition">Krediler</a></li>
-                        <li><a href="#" class="hover:text-white transition">Mevduat</a></li>
-                        <li><a href="#" class="hover:text-white transition">Kartlar</a></li>
-                        <li><a href="#" class="hover:text-white transition">Yatırım</a></li>
-                    </ul>
-                </div>
-
-                <!-- Hakkımızda -->
-                <div>
-                    <h4 class="text-sm font-semibold text-gray-100 uppercase tracking-wider">Hakkımızda</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="#" class="hover:text-white transition">Tarihçe</a></li>
-                        <li><a href="#" class="hover:text-white transition">Yönetim</a></li>
-                        <li><a href="#" class="hover:text-white transition">Kariyer</a></li>
-                        <li><a href="#" class="hover:text-white transition">Basın Odası</a></li>
-                    </ul>
-                </div>
-
-                <!-- Destek -->
-                <div>
-                    <h4 class="text-sm font-semibold text-gray-100 uppercase tracking-wider">Destek</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li><a href="#" class="hover:text-white transition">İletişim</a></li>
-                        <li><a href="#" class="hover:text-white transition">S.S.S.</a></li>
-                        <li><a href="#" class="hover:text-white transition">Şube ve ATM'ler</a></li>
-                        <li><a href="#" class="hover:text-white transition">Güvenlik</a></li>
-                    </ul>
-                </div>
-
-                <!-- İletişim -->
-                <div class="col-span-2 md:col-span-1">
-                    <h4 class="text-sm font-semibold text-gray-100 uppercase tracking-wider">Bize Ulaşın</h4>
-                    <ul class="mt-4 space-y-2">
-                        <li>0850 222 00 00</li>
-                        <li>info@metinbank.mtndev.tr</li>
-                        <li>Genel Müdürlük, İstanbul</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-12 pt-8 border-t border-gray-700 text-center">
-                <!-- Footer Uyarı Metni -->
-                <p class="text-sm text-yellow-400 font-semibold mb-4">
-                    ** UYARI: Bu sistem bir eğitim projesidir. Gerçek bir banka veya finans kuruluşu değildir.
-                    Sistemdeki veriler örnek amaçlıdır; hiçbir gerçek işlem veya para transferi yapılmaz. **
-                </p>
-                <p class="text-sm">
-                    &copy; 2025 MetinBank. Tüm hakları (proje kapsamında) saklıdır.
-                </p>
             </div>
         </div>
-    </footer>
+    </section>
 
+    <!-- Features / Digital Banking -->
+    <section class="py-24 bg-gray-900 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-blue-600/10 blur-3xl rounded-full pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-1/3 h-full bg-purple-600/10 blur-3xl rounded-full pointer-events-none">
+        </div>
 
-    <script>
-        // Mobil menü açma/kapama
-        const menuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">Mobil Bankacılık <br><span class="text-blue-400">Cebinizdeki
+                            Şube</span></h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        MetinBank Mobil ile bankacılık işlemleri artık çok daha hızlı ve kolay. 7/24 para transferi
+                        yapın, QR ile ödeyin, yatırım hesaplarınızı yönetin.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center">
+                            <div
+                                class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center mr-4 text-green-400">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <span class="text-lg">Kullanıcı dostu arayüz</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div
+                                class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center mr-4 text-green-400">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <span class="text-lg">Yüz tanıma ile güvenli giriş</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <button
+                            class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl flex items-center transition border border-gray-700">
+                            <img src="assets/images/appstore.png" alt="App Store"
+                                class="w-8 h-8 mr-3 object-contain brightness-0 invert">
+                            <div class="text-left">
+                                <div class="text-xs text-gray-400">App Store'dan</div>
+                                <div class="font-bold">İndirin</div>
+                            </div>
+                        </button>
+                        <button
+                            class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl flex items-center transition border border-gray-700">
+                            <img src="assets/images/googleplay.png" alt="Google Play"
+                                class="w-8 h-8 mr-3 object-contain">
+                            <div class="text-left">
+                                <div class="text-xs text-gray-400">Google Play'den</div>
+                                <div class="font-bold">İndirin</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <!-- Visual Placeholder for App -->
+                <div class="relative">
+                    <div
+                        class="w-72 mx-auto bg-gray-800 border-8 border-gray-700 rounded-[3rem] h-[550px] shadow-2xl relative overflow-hidden">
+                        <div
+                            class="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-6 bg-gray-700 rounded-b-xl z-20">
+                        </div>
+                        <!-- Mock App Screen -->
+                        <div class="w-full h-full bg-white flex flex-col pt-10 px-4 relative">
+                            <div class="flex justify-between items-center mb-6">
+                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+                                <div class="w-20 h-4 bg-gray-200 rounded"></div>
+                                <div class="w-6 h-6 bg-gray-200 rounded"></div>
+                            </div>
+                            <div
+                                class="w-full h-32 bg-blue-600 rounded-2xl mb-6 shadow-lg flex items-center justify-center text-white/50">
+                                Kart Görseli
+                            </div>
+                            <div class="space-y-4">
+                                <div class="h-12 w-full bg-gray-100 rounded-xl"></div>
+                                <div class="h-12 w-full bg-gray-100 rounded-xl"></div>
+                                <div class="h-12 w-full bg-gray-100 rounded-xl"></div>
+                                <div class="h-12 w-full bg-gray-100 rounded-xl"></div>
+                            </div>
+                            <div class="mt-auto mb-6 flex justify-around">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full"></div>
+                                <div class="w-8 h-8 bg-gray-100 rounded-full"></div>
+                                <div class="w-8 h-8 bg-gray-100 rounded-full"></div>
+                                <div class="w-8 h-8 bg-gray-100 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        menuButton.addEventListener('click', () => {
-            const isMenuOpen = mobileMenu.classList.contains('hidden');
-            if (isMenuOpen) {
-                mobileMenu.classList.remove('hidden');
-                menuButton.innerHTML = `
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>`; // Kapatma ikonu
-            } else {
-                mobileMenu.classList.add('hidden');
-                menuButton.innerHTML = `
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                    </svg>`; // Hamburger ikonu
-            }
-        });
+    <div id="footer-placeholder"></div>
 
-        // Hizmetler dropdown (masaüstü) - toggle ve dış tıklamada kapatma
-        const servicesToggle = document.getElementById('services-toggle');
-        const servicesMenu = document.getElementById('services-menu');
-
-        function closeServices() {
-            servicesMenu.classList.add('hidden');
-            servicesToggle.setAttribute('aria-expanded', 'false');
-        }
-
-        servicesToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isOpen = !servicesMenu.classList.contains('hidden');
-            if (isOpen) {
-                closeServices();
-            } else {
-                servicesMenu.classList.remove('hidden');
-                servicesToggle.setAttribute('aria-expanded', 'true');
-            }
-        });
-
-        // Kapatmak için sayfaya tıklandığında
-        document.addEventListener('click', (e) => {
-            if (!servicesMenu.classList.contains('hidden')) {
-                // e.target içinde servicesToggle veya servicesMenu varsa kapatma
-                if (!servicesMenu.contains(e.target) && !servicesToggle.contains(e.target)) {
-                    closeServices();
-                }
-            }
-        });
-
-        // Escape tuşu ile kapatma
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeServices();
-            }
-        });
-    </script>
-
+    <script src="assets/js/components.js"></script>
 </body>
 
 </html>

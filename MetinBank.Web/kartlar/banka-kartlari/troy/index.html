@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetinBank TROY | Türkiye'nin Ödeme Yöntemi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-section {
+            background: linear-gradient(90deg, #b91c1c 0%, #ef4444 50%, #7f1d1d 100%);
+            /* Red inspired background for Troy */
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid #7f1d1d;
+        }
+
+        .card-visual-hero {
+            max-width: 400px;
+            transform: rotate(-5deg);
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.3));
+            transition: transform 0.5s ease;
+        }
+
+        .card-visual-hero:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <div id="header-placeholder"></div>
+
+    <!-- Hero Section (Troy Style - Red) -->
+    <section class="hero-section py-20 px-4">
+        <div class="container mx-auto grid md:grid-cols-2 gap-8 items-center">
+            <div class="text-white z-10">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-md mb-6 leading-tight">
+                    MetinBank TROY ile <br> Milli Güç Cebinizde
+                </h1>
+                <p class="text-lg md:text-xl text-white/90 mb-8 font-medium drop-shadow-sm">
+                    Türkiye'nin Ödeme Yöntemi TROY ile ülkemizin her noktasında geçerli, güvenli ve avantajlı alışveriş
+                    deneyimi.
+                </p>
+                <button
+                    class="bg-white text-red-700 hover:bg-gray-100 font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105">
+                    Hemen Başvur
+                </button>
+            </div>
+            <div class="flex justify-center md:justify-end z-10">
+                <div class="card-visual-hero relative">
+                    <img src="../../../publishingimages/bireysel-kartlar/banka_karti_troy.png" alt="Card"
+                        class="w-full h-auto rounded-xl">
+                </div>
+            </div>
+        </div>
+        <!-- Decorative Shine -->
+        <div
+            class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/10 to-transparent pointer-events-none">
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="py-16 bg-white flex-grow">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-red-500 pb-2 inline-block">Neden
+                    TROY?</h2>
+
+                <p class="text-gray-600 mb-8 text-lg leading-relaxed">
+                    MetinBank TROY Kart, Türkiye'nin yerli ve milli ödeme sistemi altyapısı ile sizlere sunulmaktadır.
+                    Hız, güven ve yerel avantajları bir arada yaşayın.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-red-600 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Türkiye'deki tüm POS, ATM ve e-ticaret sitelerinde %100
+                                geçerli.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-red-600 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Yerli teknoloji ile yüksek veri güvenliği.</span>
+                        </li>
+                    </ul>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-red-600 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Temassız özellik ile hızlı geçiş.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-red-600 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">GO-Güvenli Ödeme altyapısı.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Detaylar / SSS -->
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Sıkça Sorulan Sorular</h3>
+                    <details class="group bg-gray-50 rounded-lg p-4 cursor-pointer">
+                        <summary class="font-semibold text-gray-700 flex justify-between items-center">
+                            Uluslararası alışveriş yapabilir miyim?
+                            <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <p class="mt-4 text-gray-600 text-sm">TROY kartınızın arka yüzünde uluslararası kart şeması
+                            (örn: Discover) logosu bulunuyorsa yurt dışında da kullanılabilir.</p>
+                    </details>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+    <script src="../../../assets/js/components.js"></script>
+</body>
+
+</html>

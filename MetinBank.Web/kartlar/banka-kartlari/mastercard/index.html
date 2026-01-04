@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetinBank Mastercard® | Ayrıcalıklar Dünyası</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #FFD700 0%, #FDB931 50%, #C6930A 100%);
+        }
+
+        .hero-section {
+            background: linear-gradient(90deg, #d4af37 0%, #f3e5ab 50%, #d4af37 100%);
+            /* Gold inspired background */
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid #b8860b;
+        }
+
+        .card-visual-hero {
+            max-width: 400px;
+            transform: rotate(-5deg);
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.3));
+            transition: transform 0.5s ease;
+        }
+
+        .card-visual-hero:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <div id="header-placeholder"></div>
+
+    <!-- Hero Section (Bonus Gold Style) -->
+    <section class="hero-section py-20 px-4">
+        <div class="container mx-auto grid md:grid-cols-2 gap-8 items-center">
+            <div class="text-white z-10">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-white drop-shadow-md mb-6 leading-tight">
+                    MetinBank Mastercard® ile <br> Sınırları Kaldırın
+                </h1>
+                <p class="text-lg md:text-xl text-white/90 mb-8 font-medium drop-shadow-sm">
+                    Alışverişten seyahate, nakit ihtiyaçlarınızdan özel indirimlere kadar her an yanınızda olan güç.
+                </p>
+                <button
+                    class="bg-white text-yellow-700 hover:bg-gray-100 font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105">
+                    Hemen Başvur
+                </button>
+            </div>
+            <div class="flex justify-center md:justify-end z-10">
+                <!-- Kart Görseli (Burada manuel yazıyorum, index'teki dinamik yapı yerine statik görsel kullanılıyor) -->
+                <div class="card-visual-hero relative">
+                    <img src="../../../publishingimages/bireysel-kartlar/banka_karti_mastercard.png" alt="Card"
+                        class="w-full h-auto rounded-xl">
+                </div>
+            </div>
+        </div>
+        <!-- Decorative Shine -->
+        <div
+            class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/20 to-transparent pointer-events-none">
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section class="py-16 bg-white flex-grow">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-yellow-400 pb-2 inline-block">
+                    Ayrıcalıklar</h2>
+
+                <p class="text-gray-600 mb-8 text-lg leading-relaxed">
+                    MetinBank Mastercard®, sadece bir banka kartı değil; size özel fırsatlar sunan bir yaşam
+                    anahtarıdır.
+                    Dünyanın her yerinde geçerli olan kartınızla güvenli alışverişin keyfini çıkarın.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Tüm dünyada milyonlarca ATM ve iş yerinde geçerli.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Temassız ödeme özelliği ile hızlı ve hijyenik işlem.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">3D Secure ile internet alışverişlerinde maksimum
+                                güvenlik.</span>
+                        </li>
+                    </ul>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">MetinBank Mobil ile anlık harcama takibi ve limit
+                                yönetimi.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-6 h-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Anlaşmalı markalarda özel indirim ve taksit fırsatları.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Detaylar / SSS -->
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Sıkça Sorulan Sorular</h3>
+                    <details class="group bg-gray-50 rounded-lg p-4 cursor-pointer">
+                        <summary class="font-semibold text-gray-700 flex justify-between items-center">
+                            Kart aidatı var mı?
+                            <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <p class="mt-4 text-gray-600 text-sm">MetinBank Mastercard® banka kartlarımızda yıllık kart
+                            aidatı bulunmamaktadır.</p>
+                    </details>
+                    <details class="group bg-gray-50 rounded-lg p-4 cursor-pointer">
+                        <summary class="font-semibold text-gray-700 flex justify-between items-center">
+                            Yurt dışında kullanabilir miyim?
+                            <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <p class="mt-4 text-gray-600 text-sm">Evet, Mastercard® logosu gördüğünüz tüm ATM ve POS
+                            cihazlarında yurt dışında güvenle kullanabilirsiniz.</p>
+                    </details>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="../../../assets/js/components.js"></script>
+</body>
+
+</html>
