@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metin Bank - Hesap Ekstresi</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">METİN BANK</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
+                <a href="hesaplar.html" class="nav-link">Hesaplarım</a>
+                <a href="havale.html" class="nav-link">Havale/EFT</a>
+                <a href="ekstre.html" class="nav-link active">Ekstre</a>
+                <a href="kartlar.html" class="nav-link">Kartlarım</a>
+                <a href="profil.html" class="nav-link">Profil</a>
+                <a href="#" class="nav-link" onclick="logout()">Çıkış</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Hesap Ekstresi</h1>
+
+        <div class="filter-section">
+            <div class="form-group">
+                <label for="selectedAccount">Hesap Seç</label>
+                <select id="selectedAccount" onchange="loadStatement()">
+                    <option value="">Hesap seçiniz...</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="statementContainer" class="statement-container">
+            <p class="no-data">Lütfen bir hesap seçiniz.</p>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        checkAuth();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAccounts();
+
+            const params = new URLSearchParams(window.location.search);
+            const hesapID = params.get('hesapID');
+            if (hesapID) {
+                document.getElementById('selectedAccount').value = hesapID;
+                loadStatement();
+            }
+        });
+
+        async function loadAccounts() {
+            try {
+                const user = getUser();
+                const response = await apiGet(`/hesap/musteri/${user.MusteriID}`);
+
+                if (response.Success && response.Data) {
+                    const select = document.getElementById('selectedAccount');
+                    response.Data.forEach(acc => {
+                        const option = document.createElement('option');
+                        option.value = acc.HesapID;
+                        option.textContent = `${acc.HesapTipi} ${acc.HesapCinsi} - ${formatIBAN(acc.IBAN)}`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+            }
+        }
+
+        async function loadStatement() {
+            const hesapID = document.getElementById('selectedAccount').value;
+            if (!hesapID) {
+                document.getElementById('statementContainer').innerHTML = '<p class="no-data">Lütfen bir hesap seçiniz.</p>';
+                return;
+            }
+
+            try {
+                const response = await apiGet(`/islem/hesap/${hesapID}/ekstre`);
+
+                if (response.Success && response.Data && response.Data.length > 0) {
+                    const transactions = response.Data;
+
+                    const tableHTML = `
+                        <table class="statement-table">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>İşlem Tipi</th>
+                                    <th>Açıklama</th>
+                                    <th>Alıcı/Gönderen</th>
+                                    <th class="text-right">Tutar</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${transactions.map(tx => `
+                                    <tr>
+                                        <td>${formatDate(tx.IslemTarihi)}</td>
+                                        <td>${tx.IslemTipi}</td>
+                                        <td>${tx.Aciklama || '-'}</td>
+                                        <td>${tx.AliciAdi || '-'}</td>
+                                        <td class="text-right">${formatCurrency(tx.Tutar, tx.ParaBirimi)}</td>
+                                        <td><span class="status ${tx.OnayDurumu.toLowerCase()}">${tx.OnayDurumu}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+
+                    document.getElementById('statementContainer').innerHTML = tableHTML;
+                } else {
+                    document.getElementById('statementContainer').innerHTML = '<p class="no-data">Bu hesap için işlem bulunamadı.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading statement:', error);
+                document.getElementById('statementContainer').innerHTML = '<p class="error-message">Ekstre yüklenirken bir hata oluştu.</p>';
+            }
+        }
+    </script>
+</body>
+
+</html>

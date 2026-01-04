@@ -1,0 +1,109 @@
+:root {
+  --brand: #0b69d7;
+  --brand-dark: #084c9a;
+}
+
+/* Logo sizing (responsive) */
+.logo-wrapper { display: inline-flex; align-items: center; gap: 8px; }
+
+.header-logo {
+  display: block;
+  height: auto;
+  width: auto;
+  max-height: 44px; /* slightly reduced to fit header without shifting */
+  max-width: 180px; /* avoid very wide logos pushing layout */
+  object-fit: contain;
+}
+
+/* Larger screens: modestly larger but still within header height */
+@media (min-width: 1024px) {
+  .header-logo { max-height: 48px; }
+}
+
+/* Small screens: reduce logo height to save space */
+@media (max-width: 640px) {
+  .header-logo { max-height: 36px; }
+}
+
+/* Make logo readable on dark/colored headers by adding a subtle white inset */
+.internet-header .logo-wrapper {
+  /* when using a dedicated white logo card, don't add extra background here */
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Make header logo white on internet-sube (blue) header */
+.internet-header .header-logo {
+  /* default: if logo not inside a card, make it white for the blue header */
+  filter: grayscale(1) brightness(0) invert(1);
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* If logo is placed inside a white card, don't invert it */
+.logo-card .header-logo { filter: none; }
+
+/* Store badges (App Store / Google Play) */
+.store-badge { display: block; height: auto; width: auto; max-height: 40px; }
+@media (max-width: 640px) { .store-badge { max-height: 32px; } }
+
+/* Footer logo */
+.footer-logo {
+  display: inline-block;
+  vertical-align: middle;
+  height: auto;
+  width: auto;
+  max-height: 40px;
+  filter: brightness(0) invert(1);
+}
+
+/* Small helper classes to optionally use brand color */
+.brand-link { color: var(--brand); }
+.brand-link:hover { color: var(--brand-dark); }
+
+/* Ensure images don't overflow their containers */
+img { max-width: 100%; }
+
+/* Banner softening styles */
+.banner-wrapper {
+  position: relative;
+  border-radius: 1rem; /* soft rounded corners */
+  overflow: hidden;
+  /* subtle bluish lift shadow to match brand */
+  box-shadow: 0 18px 40px rgba(11, 69, 138, 0.06);
+}
+
+.banner-wrapper::after {
+  /* gentle semi-transparent overlay to soften contrast */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(0,0,0,0.02) 100%);
+  pointer-events: none;
+}
+
+.banner-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  /* softening filters */
+  filter: contrast(0.98) saturate(0.96) brightness(1.02);
+  transition: transform 600ms cubic-bezier(.2,.8,.2,1), filter 300ms ease;
+}
+
+.banner-wrapper:hover .banner-img {
+  transform: scale(1.02);
+  filter: contrast(1) saturate(1) brightness(1.03);
+}
+
+/* Ensure hero banner image shows without forced rounding or shadow */
+.banner-img { border-radius: 0 !important; box-shadow: none !important; }
+
+@media (max-width: 640px) {
+  .banner-wrapper { border-radius: 0.5rem; box-shadow: 0 10px 24px rgba(11,69,138,0.04); }
+}

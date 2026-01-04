@@ -167,6 +167,7 @@ namespace MetinBank.Business
                     k.GunlukHarcamaLimiti,
                     k.AylikHarcamaLimiti,
                     k.GunlukCekimLimiti,
+                    k.HesapID,
                     h.IBAN,
                     h.HesapTipi,
                     h.Bakiye

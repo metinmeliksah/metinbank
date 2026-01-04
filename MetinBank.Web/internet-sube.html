@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İnternet Şube - MetinBank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <!-- Site-wide warning (injected) -->
+    <script src="assets/warning.js" defer></script>
+
+    <!-- MetinBank mavi Header -->
+    <div class="bg-blue-700 text-white internet-header">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="logo-wrapper" aria-label="MetinBank">
+                    <img src="assets/images/metinbanklogo.png" alt="MetinBank" class="header-logo h-8" />
+                    <span class="sr-only">MetinBank</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="#" class="px-4 py-2 border border-white/30 rounded text-sm">Bireysel</a>
+                <a href="#" class="px-4 py-2 text-sm">Kurumsal</a>
+            </div>
+        </div>
+    </div>
+
+    <main class="py-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Sol geniş alan: giriş kartı -->
+                <div class="lg:col-span-8">
+                    <div class="bg-white rounded shadow-md border border-gray-200">
+                        <div class="px-8 py-8">
+                            <!-- LOGIN FORM -->
+                            <div id="login-view">
+                                <h1 class="text-3xl font-extrabold text-blue-700 mb-2">Güvenli Bankacılığa Hoş Geldiniz
+                                </h1>
+                                <p class="text-gray-600 mb-6">Lütfen müşteri numaranızı ya da T.C. kimlik numaranızı ve
+                                    size özel parolanızı girin.</p>
+
+                                <form id="login-form" class="space-y-4">
+                                    <div>
+                                        <label for="user" class="block text-sm font-medium text-gray-700">Müşteri / T.C.
+                                            Kimlik Numarası</label>
+                                        <input id="user" name="user" type="text" required
+                                            class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Müşteri numarası veya T.C.">
+                                    </div>
+
+                                    <div>
+                                        <label for="password"
+                                            class="block text-sm font-medium text-gray-700">Parola</label>
+                                        <div class="relative">
+                                            <input id="password" name="password" type="password" required
+                                                class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Parolanız">
+                                            <button type="button" id="toggle-pass"
+                                                class="absolute right-2 top-3 text-sm text-gray-500">Göster</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center gap-4">
+                                        <label class="inline-flex items-center text-sm text-gray-700">
+                                            <input type="checkbox"
+                                                class="h-4 w-4 text-blue-600 border-gray-300 rounded" />
+                                            <span class="ml-2">Beni Hatırla</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="pt-4">
+                                        <button type="submit"
+                                            class="w-48 bg-blue-600 text-white px-4 py-3 rounded font-semibold hover:bg-blue-700">MetinBank
+                                            İnternet Giriş</button>
+                                    </div>
+
+                                    <div class="mt-4 text-sm text-blue-700">
+                                        <a href="#" id="forgot-password-link" class="underline">Parolamı unuttum.</a>
+                                        <span class="mx-2">·</span>
+                                        <a href="#" id="first-time-link" class="underline">İlk kez parola almak
+                                            istiyorum.</a>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- PASSWORD VERIFICATION FORM (şifre sıfırlama/oluşturma için) -->
+                            <div id="verification-view" class="hidden">
+                                <h1 class="text-3xl font-extrabold text-blue-700 mb-2" id="verification-title">Müşteri
+                                    Doğrulama</h1>
+                                <p class="text-gray-600 mb-6">Kimliğinizi doğrulamak için lütfen aşağıdaki bilgileri
+                                    giriniz.</p>
+
+                                <form id="verification-form" class="space-y-4">
+                                    <div>
+                                        <label for="verify-tckn" class="block text-sm font-medium text-gray-700">T.C.
+                                            Kimlik No veya Müşteri No *</label>
+                                        <input id="verify-tckn" type="text" required
+                                            class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="11 haneli T.C. No veya Müşteri No">
+                                    </div>
+
+                                    <div>
+                                        <label for="verify-birth" class="block text-sm font-medium text-gray-700">Doğum
+                                            Tarihi *</label>
+                                        <input id="verify-birth" type="date" required
+                                            class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+
+                                    <div>
+                                        <label for="verify-mother" class="block text-sm font-medium text-gray-700">Anne
+                                            Adı *</label>
+                                        <input id="verify-mother" type="text" required
+                                            class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Anne adınız">
+                                    </div>
+
+                                    <div>
+                                        <label for="verify-phone" class="block text-sm font-medium text-gray-700">Cep
+                                            Telefonu *</label>
+                                        <input id="verify-phone" type="tel" required
+                                            class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="05XXXXXXXXX">
+                                    </div>
+
+                                    <div class="pt-4 flex gap-3">
+                                        <button type="submit"
+                                            class="bg-blue-600 text-white px-6 py-3 rounded font-semibold hover:bg-blue-700">Doğrula</button>
+                                        <button type="button" id="back-to-login"
+                                            class="bg-gray-300 text-gray-700 px-6 py-3 rounded font-semibold hover:bg-gray-400">Geri</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- NEW PASSWORD FORM -->
+                            <div id="newpassword-view" class="hidden">
+                                <h1 class="text-3xl font-extrabold text-blue-700 mb-2">Yeni Parola Oluştur</h1>
+                                <p class="text-gray-600 mb-6">Lütfen yeni parolanızı belirleyin.</p>
+
+                                <form id="newpassword-form" class="space-y-4">
+                                    <div class="bg-blue-50 p-4 rounded text-sm text-blue-900 mb-4">
+                                        <strong>Parola Kuralları:</strong>
+                                        <ul class="list-disc ml-5 mt-2">
+                                            <li>En az 8 karakter olmalıdır</li>
+                                            <li>En az bir büyük harf içermelidir</li>
+                                            <li>En az bir rakam içermelidir</li>
+                                            <li>En az bir özel karakter içermelidir (!@#$%^&*)</li>
+                                        </ul>
+                                    </div>
+
+                                    <div>
+                                        <label for="new-pass-1" class="block text-sm font-medium text-gray-700">Yeni
+                                            Parola *</label>
+                                        <div class="relative">
+                                            <input id="new-pass-1" type="password" required
+                                                class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded focus:ring-blue-500 focus:border-blue-500">
+                                            <button type="button" id="toggle-new-pass-1"
+                                                class="absolute right-2 top-3 text-sm text-gray-500">Göster</button>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label for="new-pass-2" class="block text-sm font-medium text-gray-700">Yeni
+                                            Parola (Tekrar) *</label>
+                                        <div class="relative">
+                                            <input id="new-pass-2" type="password" required
+                                                class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded focus:ring-blue-500 focus:border-blue-500">
+                                            <button type="button" id="toggle-new-pass-2"
+                                                class="absolute right-2 top-3 text-sm text-gray-500">Göster</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="pt-4 flex gap-3">
+                                        <button type="submit"
+                                            class="bg-blue-600 text-white px-6 py-3 rounded font-semibold hover:bg-blue-700">Parolayı
+                                            Kaydet</button>
+                                        <button type="button" id="cancel-password"
+                                            class="bg-gray-300 text-gray-700 px-6 py-3 rounded font-semibold hover:bg-gray-400">İptal</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sağ sidebar: Yardım ve Güvenlik -->
+                <aside class="lg:col-span-4">
+                    <div class="bg-white rounded shadow-md border border-gray-200 p-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">Yardım ve Güvenlik</h3>
+
+                        <div class="space-y-3">
+                            <details class="border rounded">
+                                <summary class="px-4 py-3 cursor-pointer bg-gray-50">Güvenliğiniz için lütfen aşağıdaki
+                                    bilgilere dikkat edin.</summary>
+                                <div class="p-4 text-sm text-gray-700">Güvenli bir internet deneyimi ve güncel virüsler
+                                    hakkında bilgi almak için lütfen tıklayın.</div>
+                            </details>
+
+                            <details class="border rounded">
+                                <summary class="px-4 py-3 cursor-pointer bg-gray-50">Başkası adına mı işlem
+                                    yapıyorsunuz?</summary>
+                                <div class="p-4 text-sm text-gray-700">Eğer başkasının hesabıyla işlem yapacaksanız,
+                                    yetki belgeleri ve güvenlik prosedürlerimize dikkat edin.</div>
+                            </details>
+
+                            <details class="border rounded">
+                                <summary class="px-4 py-3 cursor-pointer bg-gray-50">Tasarruf Mevduatı Güvencesi
+                                </summary>
+                                <div class="p-4 text-sm text-gray-700">Tasarruf mevduatı güvencesi hakkında detaylı
+                                    bilgi için tıklayın.</div>
+                            </details>
+                        </div>
+
+                        <div class="mt-4 text-sm">
+                            <a href="#" class="text-green-600 underline">Diğer Yardım Ve Güvenlik</a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center text-sm text-gray-500 py-8">
+        <div class="container mx-auto px-4">Copyright © 2025 MetinBank</div>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api';
+        let verifiedCustomer = null; // Doğrulanan müşteri bilgileri
+        let isPasswordReset = false; // true: şifre s\u0131f\u0131rlama, false: ilk kez oluşturma
+
+        // View switching
+        function showView(viewName) {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('verification-view').classList.add('hidden');
+            document.getElementById('newpassword-view').classList.add('hidden');
+            document.getElementById(viewName + '-view').classList.remove('hidden');
+        }
+
+        // Password toggle functions
+        function setupPasswordToggle(fieldId, toggleId) {
+            const field = document.getElementById(fieldId);
+            const toggle = document.getElementById(toggleId);
+            if (field && toggle) {
+                toggle.addEventListener('click', () => {
+                    if (field.type === 'password') {
+                        field.type = 'text';
+                        toggle.textContent = 'Gizle';
+                    } else {
+                        field.type = 'password';
+                        toggle.textContent = 'Göster';
+                    }
+                });
+            }
+        }
+
+        setupPasswordToggle('password', 'toggle-pass');
+        setupPasswordToggle('new-pass-1', 'toggle-new-pass-1');
+        setupPasswordToggle('new-pass-2', 'toggle-new-pass-2');
+
+        // Şifre unuttum linki
+        document.getElementById('forgot-password-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            isPasswordReset = true;
+            document.getElementById('verification-title').textContent = 'Parola Sıfırlama';
+            showView('verification');
+        });
+
+        // İlk kez parola linki
+        document.getElementById('first-time-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            isPasswordReset = false;
+            document.getElementById('verification-title').textContent = 'İlk Parola Oluşturma';
+            showView('verification');
+        });
+
+        // Geri dön butonları
+        document.getElementById('back-to-login').addEventListener('click', () => {
+            showView('login');
+        });
+
+        document.getElementById('cancel-password').addEventListener('click', () => {
+            showView('login');
+        });
+
+        // LOGIN FORM
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const tckn = document.getElementById('user').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/musteri-login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sifre: password,
+                        musteriNo: tckn.length <= 10 ? tckn : '',
+                        tckn: tckn.length === 11 ? parseInt(tckn) : 0
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Token'ı kaydet
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('kullanici', JSON.stringify(data.kullanici));
+
+                    // Dashboard'a yönlendir
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert('Hata: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Giriş sırasında bir hata oluştu: ' + error.message);
+            }
+        });
+
+        // VERIFICATION FORM
+        document.getElementById('verification-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const tckn = document.getElementById('verify-tckn').value.trim();
+            const birth = document.getElementById('verify-birth').value;
+            const mother = document.getElementById('verify-mother').value.trim();
+            const phone = document.getElementById('verify-phone').value.trim();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/musteri-dogrula`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tckNVeyaMusteriNo: tckn,
+                        dogumTarihi: birth,
+                        anneAdi: mother,
+                        cepTelefon: phone
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    verifiedCustomer = {
+                        MusteriID: data.musteriID,
+                        MusteriNo: data.musteriNo,
+                        TCKN: data.tckn
+                    };
+                    showView('newpassword');
+                } else {
+                    alert('Doğrulama Hatası: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Verification error:', error);
+                alert('Doğrulama sırasında bir hata oluştu: ' + error.message);
+            }
+        });
+
+        // NEW PASSWORD FORM
+        document.getElementById('newpassword-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const pass1 = document.getElementById('new-pass-1').value;
+            const pass2 = document.getElementById('new-pass-2').value;
+
+            if (pass1 !== pass2) {
+                alert('Parolalar eşleşmiyor!');
+                return;
+            }
+
+            if (!verifiedCustomer) {
+                alert('Doğrulama bilgisi bulunamadı!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/sifre-sifirla`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        musteriID: verifiedCustomer.MusteriID,
+                        yeniSifre: pass1,
+                        yeniSifreTekrar: pass2
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(data.message);
+                    // Login sayfasına dön
+                    verifiedCustomer = null;
+                    document.getElementById('newpassword-form').reset();
+                    showView('login');
+                } else {
+                    alert('Hata: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Password creation error:', error);
+                alert('Parola oluşturma sırasında bir hata oluştu: ' + error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

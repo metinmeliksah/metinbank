@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metin Bank - Profil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">METİN BANK</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
+                <a href="hesaplar.html" class="nav-link">Hesaplarım</a>
+                <a href="havale.html" class="nav-link">Havale/EFT</a>
+                <a href="ekstre.html" class="nav-link">Ekstre</a>
+                <a href="kartlar.html" class="nav-link">Kartlarım</a>
+                <a href="profil.html" class="nav-link active">Profil</a>
+                <a href="#" class="nav-link" onclick="logout()">Çıkış</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Profil Bilgileri</h1>
+
+        <div class="grid-2">
+            <div class="section">
+                <h2>Kişisel Bilgiler</h2>
+                <div id="profileInfo" class="profile-info">
+                    <!-- Profile info will be loaded here -->
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Şifre Değiştir</h2>
+                <form id="passwordForm" class="password-form">
+                    <div class="form-group">
+                        <label for="oldPassword">Eski Şifre</label>
+                        <input type="password" id="oldPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Yeni Şifre</label>
+                        <input type="password" id="newPassword" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Yeni Şifre (Tekrar)</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Şifreyi Değiştir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        checkAuth();
+
+        window.addEventListener('DOMContentLoaded', loadProfile);
+
+        async function loadProfile() {
+            try {
+                const user = getUser();
+                const response = await apiGet(`/auth/profil/${user.musteriID}`);
+
+                if (response.success && response.data) {
+                    const profile = response.data;
+
+                    const profileHTML = `
+                        <div class="info-row">
+                            <span class="info-label">Müşteri No:</span>
+                            <span class="info-value">${profile.musteriNo}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Ad Soyad:</span>
+                            <span class="info-value">${profile.ad} ${profile.soyad}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">TC Kimlik No:</span>
+                            <span class="info-value">${profile.tckn}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">E-posta:</span>
+                            <span class="info-value">${profile.email || '-'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Telefon:</span>
+                            <span class="info-value">${profile.cepTelefon || '-'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Adres:</span>
+                            <span class="info-value">${profile.adres || '-'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Müşteri Tipi:</span>
+                            <span class="info-value">${profile.musteriTipi}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Kayıt Tarihi:</span>
+                            <span class="info-value">${formatDate(profile.kayitTarihi)}</span>
+                        </div>
+                    `;
+
+                    document.getElementById('profileInfo').innerHTML = profileHTML;
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                document.getElementById('profileInfo').innerHTML = '<p class="error-message">Profil bilgileri yüklenemedi.</p>';
+            }
+        }
+
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('Yeni şifreler eşleşmiyor!');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                alert('Yeni şifre en az 6 karakter olmalıdır!');
+                return;
+            }
+
+            try {
+                const user = getUser();
+                const response = await apiPost('/auth/sifre-degistir', {
+                    musteriID: user.musteriID,
+                    eskiSifre: oldPassword,
+                    yeniSifre: newPassword
+                });
+
+                if (response.success) {
+                    alert('Şifre başarıyla değiştirildi.');
+                    document.getElementById('passwordForm').reset();
+                } else {
+                    alert('Hata: ' + response.message);
+                }
+            } catch (error) {
+                alert('İşlem sırasında bir hata oluştu.');
+            }
+        });
+    </script>
+</body>
+
+</html>
