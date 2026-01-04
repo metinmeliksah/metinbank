@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Text;
 using MySql.Data.MySqlClient;
 using MetinBank.Models;
 using MetinBank.Util;
@@ -14,6 +15,8 @@ namespace MetinBank.Business
         {
             _dataAccess = new DataAccess();
         }
+
+        private static Random _random = new Random();
 
         public string HesapAc(HesapModel hesap, out int hesapID)
         {
@@ -34,64 +37,62 @@ namespace MetinBank.Business
 
                 string subeKodu = dtSube.Rows[0]["SubeKodu"].ToString();
 
-                // Son hesap numarasını al ve artır
-                string querySonHesap = "SELECT SonHesapNo FROM HesapSayaci WHERE SubeID = @subeID FOR UPDATE";
-                MySqlParameter[] paramsSonHesap = new MySqlParameter[] { new MySqlParameter("@subeID", hesap.SubeID) };
-                object resultSonHesap;
-                hata = _dataAccess.ExecuteScalar(querySonHesap, paramsSonHesap, out resultSonHesap);
-                if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
-
-                long sonHesapNo = resultSonHesap != null && resultSonHesap != DBNull.Value ? Convert.ToInt64(resultSonHesap) : 0;
-                long yeniHesapNo = sonHesapNo + 1;
+                // Benzersiz hesap numarası üret (16 haneli)
+                // Format: Sabit 4 haneli prefix (1000-1999) + 12 haneli rastgele
+                // NOT: BIGINT başındaki 0'ları tutamaz, bu yüzden ilk rakam 1 olmalı
+                long hesapNo = 0;
+                string hesapNoStr = "";
+                int maxAttempts = 10;
                 
-                if (yeniHesapNo <= 0)
+                for (int attempt = 0; attempt < maxAttempts; attempt++)
                 {
-                    _dataAccess.RollbackTransaction();
-                    return "Hesap numarası üretilemedi (Geçersiz Sayaç).";
+                    // 16 haneli: Sabit "1000" prefix + 12 hane rastgele
+                    // Bu sayede her zaman 16 haneli kalır (1000XXXXXXXXXXXX)
+                    string prefix = "1000"; // Sabit prefix, değişmez
+                    string randomPart = GenerateRandomDigits(12);
+                    hesapNoStr = prefix + randomPart;
+                    hesapNo = long.Parse(hesapNoStr);
+
+                    // Benzersizlik kontrolü
+                    string queryCheck = "SELECT COUNT(*) FROM Hesap WHERE HesapNo = @hesapNo";
+                    MySqlParameter[] paramsCheck = new MySqlParameter[] { new MySqlParameter("@hesapNo", hesapNo) };
+                    object countObj;
+                    hata = _dataAccess.ExecuteScalar(queryCheck, paramsCheck, out countObj);
+                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+
+                    int count = Convert.ToInt32(countObj ?? 0);
+                    if (count == 0)
+                    {
+                        break; // Benzersiz numara bulundu
+                    }
+
+                    if (attempt == maxAttempts - 1)
+                    {
+                        _dataAccess.RollbackTransaction();
+                        return "Benzersiz hesap numarası üretilemedi. Lütfen tekrar deneyiniz.";
+                    }
                 }
 
-                string hesapNoStr = yeniHesapNo.ToString("D16");
-
-                // IBAN oluştur
-                string iban = IbanHelper.GenerateIban(subeKodu, hesapNoStr);
+                // IBAN oluştur - Son 11 haneyi kullan
+                string hesapNoForIban = hesapNoStr.Substring(hesapNoStr.Length - 11);
+                string iban = IbanHelper.GenerateIban(subeKodu, hesapNoForIban);
                 iban = IbanHelper.RemoveIbanSpaces(iban);
 
-                // Hesap numarasını güncelle
-                string queryUpdateSayac = "UPDATE HesapSayaci SET SonHesapNo = @yeniHesapNo WHERE SubeID = @subeID";
-                MySqlParameter[] paramsUpdateSayac = new MySqlParameter[]
-                {
-                    new MySqlParameter("@yeniHesapNo", yeniHesapNo),
-                    new MySqlParameter("@subeID", hesap.SubeID)
-                };
-                int affectedRows;
-                hata = _dataAccess.ExecuteNonQuery(queryUpdateSayac, paramsUpdateSayac, out affectedRows);
-                if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
-
-                if (affectedRows == 0)
-                {
-                    // İlk hesap, sayaç ekle
-                    string queryInsertSayac = "INSERT INTO HesapSayaci (SubeID, SonHesapNo) VALUES (@subeID, @yeniHesapNo)";
-                    hata = _dataAccess.ExecuteNonQuery(queryInsertSayac, paramsUpdateSayac, out affectedRows);
-                    if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
-                }
-
-                // Hesap ekle
+                // Hesap ekle - Bakiye ve BlokeBakiye 0 olarak
                 string queryHesap = @"INSERT INTO Hesap (HesapNo, IBAN, MusteriID, HesapTipi, HesapCinsi, Bakiye, BlokeBakiye, 
                                      FaizOrani, VadeTarihi, Durum, SubeID, GunlukTransferLimiti, AylikTransferLimiti, 
                                      OlusturanKullaniciID, OnaylayanKullaniciID, OnayTarihi)
-                                     VALUES (@hesapNo, @iban, @musteriID, @hesapTipi, @hesapCinsi, @bakiye, @blokeBakiye,
+                                     VALUES (@hesapNo, @iban, @musteriID, @hesapTipi, @hesapCinsi, 0.00, 0.00,
                                      @faizOrani, @vadeTarihi, @durum, @subeID, @gunlukLimit, @aylikLimit,
                                      @olusturanID, @onaylayanID, @onayTarihi)";
 
                 MySqlParameter[] paramsHesap = new MySqlParameter[]
                 {
-                    new MySqlParameter("@hesapNo", Convert.ToInt64(hesapNoStr)),
+                    new MySqlParameter("@hesapNo", hesapNo),
                     new MySqlParameter("@iban", iban),
                     new MySqlParameter("@musteriID", hesap.MusteriID),
                     new MySqlParameter("@hesapTipi", hesap.HesapTipi),
                     new MySqlParameter("@hesapCinsi", hesap.HesapCinsi),
-                    new MySqlParameter("@bakiye", 0),
-                    new MySqlParameter("@blokeBakiye", 0),
                     new MySqlParameter("@faizOrani", hesap.FaizOrani),
                     new MySqlParameter("@vadeTarihi", (object)hesap.VadeTarihi ?? DBNull.Value),
                     new MySqlParameter("@durum", "Aktif"),
@@ -103,6 +104,7 @@ namespace MetinBank.Business
                     new MySqlParameter("@onayTarihi", (object)hesap.OnayTarihi ?? DBNull.Value)
                 };
 
+                int affectedRows;
                 hata = _dataAccess.ExecuteNonQuery(queryHesap, paramsHesap, out affectedRows);
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
@@ -122,6 +124,19 @@ namespace MetinBank.Business
             {
                 _dataAccess.CloseConnection();
             }
+        }
+
+        /// <summary>
+        /// Belirtilen uzunlukta rastgele rakam dizisi üretir
+        /// </summary>
+        private static string GenerateRandomDigits(int length)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < length; i++)
+            {
+                sb.Append(_random.Next(0, 10));
+            }
+            return sb.ToString();
         }
 
         public string HesapGetir(int hesapID, out HesapModel hesap)

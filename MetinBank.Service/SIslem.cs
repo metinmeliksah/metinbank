@@ -183,6 +183,65 @@ namespace MetinBank.Service
         {
             return _bIslem.HesabinIslemleri(hesapID, out islemler);
         }
+
+        public string IslemOnayla(long islemID, int kullaniciID, string rol)
+        {
+             try
+            {
+                string hata = _bIslem.IslemOnayla(islemID, kullaniciID, rol);
+
+                _bLog.IslemLoguKaydet(
+                    kullaniciID,
+                    "IslemOnay",
+                    "Islem",
+                    islemID,
+                    null,
+                    $"Rol: {rol}",
+                    $"İşlem onaylandı ({rol})",
+                    CommonFunctions.GetLocalIPAddress(),
+                    hata == null,
+                    hata
+                );
+
+                return hata;
+            }
+            catch (Exception ex)
+            {
+                return $"Servis hatası: {ex.Message}";
+            }
+        }
+
+        public string IslemReddet(long islemID, int kullaniciID, string aciklama)
+        {
+            try
+            {
+                string hata = _bIslem.IslemReddet(islemID, kullaniciID, aciklama);
+
+                _bLog.IslemLoguKaydet(
+                    kullaniciID,
+                    "IslemRed",
+                    "Islem",
+                    islemID,
+                    null,
+                    $"Red Nedeni: {aciklama}",
+                    "İşlem reddedildi",
+                    CommonFunctions.GetLocalIPAddress(),
+                    hata == null,
+                    hata
+                );
+
+                return hata;
+            }
+            catch (Exception ex)
+            {
+                return $"Servis hatası: {ex.Message}";
+            }
+        }
+
+        public string OnayBekleyenIslemleriGetir(string rol, out DataTable islemler)
+        {
+            return _bIslem.OnayBekleyenIslemleriGetir(rol, out islemler);
+        }
     }
 }
 

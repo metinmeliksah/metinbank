@@ -92,6 +92,30 @@ namespace MetinBank.Service
         {
             return _bMusteri.MusteriAra(aramaKelimesi, out sonuclar);
         }
+
+        /// <summary>
+        /// Şube bazlı müşteri arama
+        /// </summary>
+        public string MusteriAra(string aramaKelimesi, int? subeID, bool isGenelMerkez, out DataTable sonuclar)
+        {
+            return _bMusteri.MusteriAra(aramaKelimesi, subeID, isGenelMerkez, out sonuclar);
+        }
+
+        /// <summary>
+        /// Şubenin müşteri listesi (Müdür için)
+        /// </summary>
+        public string SubeninMusterileri(int subeID, out DataTable sonuclar)
+        {
+            return _bMusteri.SubeninMusterileri(subeID, out sonuclar);
+        }
+
+        /// <summary>
+        /// Tüm müşterileri getirir (Genel Merkez için)
+        /// </summary>
+        public string TumMusteriler(out DataTable sonuclar)
+        {
+            return _bMusteri.MusterileriGetir(out sonuclar);
+        }
     }
 }
 

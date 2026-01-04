@@ -17,6 +17,7 @@ namespace MetinBank.Desktop
         private int _seciliMusteriID;
         private int _seciliHesapID;
         private System.Windows.Forms.Timer _aramaTimer;
+        private bool _isGenelMerkez;
 
         public FrmParaCek(KullaniciModel kullanici)
         {
@@ -26,9 +27,13 @@ namespace MetinBank.Desktop
             _sMusteri = new SMusteri();
             _sHesap = new SHesap();
             
+            // Genel Merkez kontrolü
+            _isGenelMerkez = _kullanici.RolAdi != null && 
+                            (_kullanici.RolAdi.Contains("Genel") || _kullanici.RolAdi.Contains("Merkez"));
+            
             // Canlı arama timer'ı
             _aramaTimer = new System.Windows.Forms.Timer();
-            _aramaTimer.Interval = 500; // 500ms bekle
+            _aramaTimer.Interval = 500;
             _aramaTimer.Tick += (s, e) => {
                 _aramaTimer.Stop();
                 MusteriAra();
@@ -58,7 +63,6 @@ namespace MetinBank.Desktop
 
         private void TxtMusteriArama_TextChanged(object sender, EventArgs e)
         {
-            // Canlı arama - yazarken listele
             if (string.IsNullOrWhiteSpace(txtMusteriArama.Text))
             {
                 gridMusteriler.DataSource = null;
@@ -82,7 +86,8 @@ namespace MetinBank.Desktop
                 }
 
                 DataTable sonuclar;
-                string hata = _sMusteri.MusteriAra(arama, out sonuclar);
+                // Şube bazlı arama
+                string hata = _sMusteri.MusteriAra(arama, _kullanici.SubeID, _isGenelMerkez, out sonuclar);
                 
                 if (hata != null)
                 {
@@ -94,11 +99,11 @@ namespace MetinBank.Desktop
                 gridViewMusteriler.BestFitColumns();
                 
                 // ID sütunlarını gizle
-                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID", "KayitSubeID");
             }
-            catch (Exception ex)
+            catch
             {
-                // Sessizce hata yok say
+                gridMusteriler.DataSource = null;
             }
         }
 
@@ -216,8 +221,16 @@ namespace MetinBank.Desktop
                     return;
                 }
 
-                MessageBox.Show($"Para çekme işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
-                    "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (numTutar.Value > 50000)
+                {
+                    MessageBox.Show($"Para çekme isteği alındı.\n\nİşlem limit (50.000 TL) üzerinde olduğu için yönetici onayına düşmüştür.\nİşlem No: TRX{islemID}", 
+                        "Onay Bekliyor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Para çekme işlemi başarılı!\n\nİşlem No: TRX{islemID}\nTutar: {numTutar.Value:N2} TL", 
+                        "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
 
                 // Hesapları yenile
                 HesaplariYukle();

@@ -67,12 +67,6 @@
     <Compile Include="FrmGiris.Designer.cs">
       <DependentUpon>FrmGiris.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmAnaSayfa.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmAnaSayfa.Designer.cs">
-      <DependentUpon>FrmAnaSayfa.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmMusteriIslem.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,25 +151,40 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmDovizAlSat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmDovizAlSat.Designer.cs">
+      <DependentUpon>FrmDovizAlSat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmBasvurular.resx">
+      <DependentUpon>FrmBasvurular.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmEFT.resx">
       <DependentUpon>FrmEFT.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmGiris.resx">
       <DependentUpon>FrmGiris.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmAnaSayfa.resx">
-      <DependentUpon>FrmAnaSayfa.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FrmHavale.resx">
       <DependentUpon>FrmHavale.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmIslemGecmisi.resx">
+      <DependentUpon>FrmIslemGecmisi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmKartlar.resx">
+      <DependentUpon>FrmKartlar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMusteriIslem.resx">
       <DependentUpon>FrmMusteriIslem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmHesapIslem.resx">
       <DependentUpon>FrmHesapIslem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmParaCek.resx">
+      <DependentUpon>FrmParaCek.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmParaYatir.resx">
       <DependentUpon>FrmParaYatir.cs</DependentUpon>

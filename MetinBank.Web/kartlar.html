@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metin Bank - Kartlarım</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .card-wrapper {
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .card-visual {
+            position: relative;
+            width: 100%;
+            padding-bottom: 63%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .card-visual:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+        }
+
+        .card-number-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            letter-spacing: 0.1rem;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            bottom: 5rem;
+            left: 2rem;
+        }
+
+        .card-expiry-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            bottom: 3rem;
+            left: 2rem;
+        }
+
+        .card-info {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .card-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .card-status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .card-status-badge.aktif {
+            background: #10b981;
+            color: white;
+        }
+
+        .card-status-badge.blokeli {
+            background: #ef4444;
+            color: white;
+        }
+
+        .card-status-badge.iptal {
+            background: #6b7280;
+            color: white;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-sm:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .no-data,
+        .error-message {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">METİN BANK</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
+                <a href="hesaplar.html" class="nav-link">Hesaplarım</a>
+                <a href="havale.html" class="nav-link">Havale/EFT</a>
+                <a href="ekstre.html" class="nav-link">Ekstre</a>
+                <a href="kartlar.html" class="nav-link active">Kartlarım</a>
+                <a href="profil.html" class="nav-link">Profil</a>
+                <a href="#" class="nav-link" onclick="logout()">Çıkış</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Kartlarım</h1>
+
+        <div id="cardsContainer" class="cards-grid">
+            <!-- Cards will be loaded here -->
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        checkAuth();
+
+        window.addEventListener('DOMContentLoaded', loadCards);
+
+        function maskCardNumber(cardNumber) {
+            const str = cardNumber.toString();
+            if (str.length >= 16) {
+                return str.substring(0, 4) + ' **** **** ' + str.substring(12);
+            }
+            return '**** **** **** ****';
+        }
+
+        function getCardTemplate(cardNumber) {
+            const firstDigit = cardNumber.toString().charAt(0);
+            if (firstDigit === '9') {
+                return 'publishingimages/bireysel-kartlar/kart_troy.png';
+            } else if (firstDigit === '5') {
+                return 'publishingimages/bireysel-kartlar/kart_mastercard.png';
+            }
+            // Default to Mastercard
+            return 'publishingimages/bireysel-kartlar/kart_mastercard.png';
+        }
+
+        function formatExpiry(dateStr) {
+            const date = new Date(dateStr);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear().toString().substring(2);
+            return `${month}/${year}`;
+        }
+
+        async function loadCards() {
+            try {
+                const user = getUser();
+                const response = await apiGet(`/kart/musteri/${user.musteriID}`);
+
+                if (response.success && response.data && response.data.length > 0) {
+                    const cards = response.data;
+
+                    const cardsHTML = cards.map(card => {
+                        const maskedNumber = maskCardNumber(card.kartNo);
+                        const cardTemplate = getCardTemplate(card.kartNo);
+                        const expiryDate = formatExpiry(card.sonKullanimTarihi);
+
+                        return `
+                        <div class="card-wrapper">
+                            <div class="card-visual">
+                                <img src="${cardTemplate}" alt="Kart" class="card-background">
+                                <div class="card-overlay">
+                                    <div class="card-number-display">${maskedNumber}</div>
+                                    <div class="card-expiry-display">SKT: ${expiryDate}</div>
+                                </div>
+                            </div>
+                            <div class="card-info">
+                                <div class="card-info-row">
+                                    <span><strong>Kart Tipi:</strong></span>
+                                    <span>${card.kartTipi}</span>
+                                </div>
+                                <div class="card-info-row">
+                                    <span><strong>Durum:</strong></span>
+                                    <span class="card-status-badge ${card.durum.toLowerCase()}">${card.durum}</span>
+                                </div>
+                                <div class="card-actions">
+                                    ${card.durum === 'Aktif' ?
+                                `<button onclick="blockCard(${card.kartID})" class="btn-sm btn-warning">Bloke Et</button>` :
+                                card.durum === 'Blokeli' ?
+                                    `<button onclick="activateCard(${card.kartID})" class="btn-sm btn-success">Aktifleştir</button>` :
+                                    ''
+                            }
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    }).join('');
+
+                    document.getElementById('cardsContainer').innerHTML = cardsHTML;
+                } else {
+                    document.getElementById('cardsContainer').innerHTML = '<p class="no-data">Kayıtlı kartınız bulunmamaktadır.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading cards:', error);
+                document.getElementById('cardsContainer').innerHTML = '<p class="error-message">Kartlar yüklenirken bir hata oluştu.</p>';
+            }
+        }
+
+        async function blockCard(kartID) {
+            if (!confirm('Kartınızı bloke etmek istediğinizden emin misiniz?')) {
+                return;
+            }
+
+            try {
+                const user = getUser();
+                const response = await apiPost(`/kart/${kartID}/bloke?kullaniciID=${user.musteriID}`);
+
+                if (response.success) {
+                    alert('Kart başarıyla bloke edildi.');
+                    loadCards();
+                } else {
+                    alert('Hata: ' + response.message);
+                }
+            } catch (error) {
+                alert('İşlem sırasında bir hata oluştu.');
+            }
+        }
+
+        async function activateCard(kartID) {
+            if (!confirm('Kartınızı aktifleştirmek istediğinizden emin misiniz?')) {
+                return;
+            }
+
+            try {
+                const user = getUser();
+                const response = await apiPost(`/kart/${kartID}/aktiflestir?kullaniciID=${user.musteriID}`);
+
+                if (response.success) {
+                    alert('Kart başarıyla aktifleştirildi.');
+                    loadCards();
+                } else {
+                    alert('Hata: ' + response.message);
+                }
+            } catch (error) {
+                alert('İşlem sırasında bir hata oluştu.');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -16,6 +16,7 @@ namespace MetinBank.Desktop
         private int _seciliMusteriID;
         private string _seciliMusteriAd;
         private System.Windows.Forms.Timer _aramaTimer;
+        private bool _isGenelMerkez;
 
         public FrmHesapIslem(KullaniciModel kullanici)
         {
@@ -23,6 +24,10 @@ namespace MetinBank.Desktop
             _kullanici = kullanici;
             _sHesap = new SHesap();
             _sMusteri = new SMusteri();
+            
+            // Genel Merkez kontrolü
+            _isGenelMerkez = _kullanici.RolAdi != null && 
+                            (_kullanici.RolAdi.Contains("Genel") || _kullanici.RolAdi.Contains("Merkez"));
             
             // Live search timer
             _aramaTimer = new System.Windows.Forms.Timer();
@@ -80,7 +85,30 @@ namespace MetinBank.Desktop
                 }
 
                 DataTable sonuclar;
-                string hata = _sMusteri.MusteriAra(arama, out sonuclar);
+                // Hesap aç için sadece kendi şube müşterileri (Genel Merkez hariç)
+                // NOT: HesapAc için TCKN ile diğer şube müşterilerine erişim YOK
+                string hata;
+                if (_isGenelMerkez)
+                {
+                    hata = _sMusteri.MusteriAra(arama, null, true, out sonuclar);
+                }
+                else
+                {
+                    // Sadece kendi şube müşterileri - TCKN ile de olsa diğer şubeler yok
+                    hata = _sMusteri.MusteriAra(arama, _kullanici.SubeID, false, out sonuclar);
+                    // Diğer şube müşterilerini filtrele
+                    if (sonuclar != null && sonuclar.Rows.Count > 0)
+                    {
+                        for (int i = sonuclar.Rows.Count - 1; i >= 0; i--)
+                        {
+                            int kayitSubeID = Convert.ToInt32(sonuclar.Rows[i]["KayitSubeID"] ?? 0);
+                            if (kayitSubeID != (_kullanici.SubeID ?? 0))
+                            {
+                                sonuclar.Rows.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
                 
                 if (hata != null)
                 {
@@ -92,7 +120,7 @@ namespace MetinBank.Desktop
                 gridViewMusteriler.BestFitColumns();
                 
                 // ID sütunlarını gizle
-                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID", "KayitSubeID");
             }
             catch
             {

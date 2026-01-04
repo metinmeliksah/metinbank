@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Service", "MetinB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.Data", "MetinBank.Data\MetinBank.Data.csproj", "{A7B8C9D1-E2F3-4456-A7B8-C9D1E2F34567}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetinBank.WebAPI", "MetinBank.WebAPI\MetinBank.WebAPI.csproj", "{F7A8B9C0-D1E2-4567-F7A8-B9C0D1E23457}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{A7B8C9D1-E2F3-4456-A7B8-C9D1E2F34567}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7B8C9D1-E2F3-4456-A7B8-C9D1E2F34567}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7B8C9D1-E2F3-4456-A7B8-C9D1E2F34567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A8B9C0-D1E2-4567-F7A8-B9C0D1E23457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A8B9C0-D1E2-4567-F7A8-B9C0D1E23457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A8B9C0-D1E2-4567-F7A8-B9C0D1E23457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A8B9C0-D1E2-4567-F7A8-B9C0D1E23457}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
 

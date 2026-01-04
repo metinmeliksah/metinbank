@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metin Bank - Hesaplarım</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">METİN BANK</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
+                <a href="hesaplar.html" class="nav-link active">Hesaplarım</a>
+                <a href="havale.html" class="nav-link">Havale/EFT</a>
+                <a href="ekstre.html" class="nav-link">Ekstre</a>
+                <a href="kartlar.html" class="nav-link">Kartlarım</a>
+                <a href="profil.html" class="nav-link">Profil</a>
+                <a href="#" class="nav-link" onclick="logout()">Çıkış</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Hesaplarım</h1>
+
+        <div id="accountsContainer" class="accounts-grid">
+            <!-- Accounts will be loaded here -->
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        checkAuth();
+
+        window.addEventListener('DOMContentLoaded', loadAccounts);
+
+        async function loadAccounts() {
+            try {
+                const user = getUser();
+                const response = await apiGet(`/hesap/musteri/${user.musteriID}`);
+
+                if (response.success && response.data) {
+                    const accounts = response.data;
+
+                    const accountsHTML = accounts.map(acc => `
+                        <div class="account-card">
+                            <div class="account-header">
+                                <h3>${acc.hesapTipi} ${acc.hesapCinsi} Hesap</h3>
+                                <span class="account-status ${acc.durum.toLowerCase()}">${acc.durum}</span>
+                            </div>
+                            <div class="account-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">IBAN:</span>
+                                    <span class="detail-value">${formatIBAN(acc.iban)}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Hesap No:</span>
+                                    <span class="detail-value">${acc.hesapNo}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Bakiye:</span>
+                                    <span class="detail-value balance">${formatCurrency(acc.bakiye, acc.hesapTipi)}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Kullanılabilir:</span>
+                                    <span class="detail-value">${formatCurrency(acc.kullanilabilirBakiye, acc.hesapTipi)}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Açılış Tarihi:</span>
+                                    <span class="detail-value">${formatDate(acc.acilisTarihi)}</span>
+                                </div>
+                            </div>
+                            <div class="account-actions">
+                                <button onclick="viewStatement(${acc.hesapID})" class="btn-sm btn-primary">Ekstre</button>
+                                <button onclick="transfer(${acc.hesapID})" class="btn-sm btn-secondary">Havale Yap</button>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    document.getElementById('accountsContainer').innerHTML = accountsHTML;
+                } else {
+                    document.getElementById('accountsContainer').innerHTML = '<p class="no-data">Hesap bulunamadı.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+                document.getElementById('accountsContainer').innerHTML = '<p class="error-message">Hesaplar yüklenirken bir hata oluştu.</p>';
+            }
+        }
+
+        function viewStatement(hesapID) {
+            window.location.href = `ekstre.html?hesapID=${hesapID}`;
+        }
+
+        function transfer(hesapID) {
+            window.location.href = `havale.html?sourceAccount=${hesapID}`;
+        }
+    </script>
+</body>
+
+</html>
