@@ -4,205 +4,562 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metin Bank - Ana Sayfa</title>
+    <title>MetinBank - Ana Sayfa</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Dashboard Specific Styles */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: var(--spacing-2xl);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .welcome-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        /* Collapsible Account */
+        .account-preview {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .account-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-lg);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .account-header:hover {
+            background: var(--gray-50);
+        }
+
+        .account-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .account-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .account-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .account-details.open {
+            max-height: 300px;
+        }
+
+        .account-content {
+            padding: 0 var(--spacing-lg) var(--spacing-lg);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        .account-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .account-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-bottom: 0.25rem;
+        }
+
+        .account-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .balance-primary {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Card Preview */
+        .card-preview-container {
+            background: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .card-visual-wrapper {
+            max-width: 340px;
+            /* Reduced from 400px */
+            margin: 0 auto var(--spacing-md);
+        }
+
+        .card-visual {
+            position: relative;
+            width: 100%;
+            padding-bottom: 54.5%;
+            /* 1024x558 aspect ratio */
+            /* 1.83:1 aspect ratio */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-number {
+            font-family: 'Courier New', monospace;
+            font-size: 1.25rem;
+            letter-spacing: 0.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-expiry {
+            font-size: 0.875rem;
+        }
+
+        /* Transactions Table */
+        .transactions-section {
+            background: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transactions-table thead {
+            background: var(--gray-50);
+        }
+
+        .transactions-table th {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .transactions-table td {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .transactions-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .transaction-type {
+            font-weight: 500;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .amount-positive {
+            color: var(--success);
+        }
+
+        .amount-negative {
+            color: var(--danger);
+        }
+
+        /* Currency Rates */
+        .currency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .currency-card {
+            background: white;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .currency-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .currency-rates {
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.875rem;
+        }
+
+        .currency-rates span {
+            color: var(--gray-600);
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">METİN BANK</div>
-            <div class="nav-menu">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="assets/images/logo.png" alt="MetinBank">
+            </div>
+            <nav class="header-nav">
                 <a href="dashboard.html" class="nav-link active">Ana Sayfa</a>
                 <a href="hesaplar.html" class="nav-link">Hesaplarım</a>
-                <a href="havale.html" class="nav-link">Havale/EFT</a>
+                <div class="nav-dropdown">
+                    <div class="nav-link nav-dropdown-toggle">Para Transferi</div>
+                    <div class="nav-dropdown-menu">
+                        <a href="havale.html">Havale</a>
+                        <a href="eft.html">EFT</a>
+                        <a href="virman.html">Virman</a>
+                    </div>
+                </div>
                 <a href="ekstre.html" class="nav-link">Ekstre</a>
                 <a href="kartlar.html" class="nav-link">Kartlarım</a>
                 <a href="profil.html" class="nav-link">Profil</a>
-                <a href="#" class="nav-link" onclick="logout()">Çıkış</a>
-            </div>
+                <a href="#" class="nav-link" onclick="logout(); return false;">Çıkış</a>
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <!-- Main Content -->
-    <div class="container">
-        <div class="welcome-section">
-            <h1>Hoş Geldiniz, <span id="userName">...</span></h1>
-            <p>Son giriş: <span id="lastLogin">...</span></p>
-        </div>
+    <main>
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1>Hoş Geldiniz, <span id="userName">...</span></h1>
+                <p>Son giriş: <span id="lastLogin">...</span></p>
+            </div>
 
-        <!-- Account Summary -->
-        <div class="grid-3">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Toplam Bakiye</div>
+                    <div class="stat-value" id="totalBalance">0,00 TL</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Toplam Hesap</div>
+                    <div class="stat-value" id="accountCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Bu Ay İşlem</div>
+                    <div class="stat-value" id="monthlyTx">0</div>
+                </div>
+            </div>
+
+            <!-- Account Preview (Collapsible) -->
+            <div class="account-preview" id="accountPreview">
+                <div class="account-header" onclick="toggleAccount()">
+                    <div>
+                        <h2 class="card-title">Hesaplarım</h2>
+                        <p class="text-muted" style="font-size: 0.875rem;">1 hesap gösteriliyor</p>
+                    </div>
+                    <span class="account-toggle" id="accountToggle">▼</span>
+                </div>
+                <div class="account-details" id="accountDetails">
+                    <div class="account-content" id="accountContent">
+                        <!-- Will be filled by JS -->
+                    </div>
+                </div>
+                <div style="padding: 0 var(--spacing-lg) var(--spacing-lg);">
+                    <a href="hesaplar.html" class="btn btn-secondary" style="width: 100%;">Tümünü Gör</a>
+                </div>
+            </div>
+
+            <!-- Card Preview -->
+            <div class="card-preview-container">
+                <div class="section-header">
+                    <h2 class="card-title">Kartlarım</h2>
+                    <a href="kartlar.html" class="btn btn-sm btn-primary">Kartlarımı Yönet</a>
+                </div>
+                <div id="cardPreview">
+                    <!-- Will be filled by JS -->
+                </div>
+            </div>
+
+            <!-- Transactions -->
+            <div class="transactions-section">
+                <div class="section-header">
+                    <h2 class="card-title">Son İşlemler</h2>
+                    <a href="ekstre.html" class="btn btn-sm btn-primary">Tüm İşlemleri Gör</a>
+                </div>
+                <div id="transactionsContainer">
+                    <!-- Will be filled by JS -->
+                </div>
+            </div>
+
+            <!-- Currency Rates -->
             <div class="card">
-                <div class="card-icon">💰</div>
-                <div class="card-title">Toplam Bakiye</div>
-                <div class="card-value" id="totalBalance">0,00 TL</div>
-            </div>
-            <div class="card">
-                <div class="card-icon">📊</div>
-                <div class="card-title">Aktif Hesap</div>
-                <div class="card-value" id="accountCount">0</div>
-            </div>
-            <div class="card">
-                <div class="card-icon">📈</div>
-                <div class="card-title">Bu Ay İşlem</div>
-                <div class="card-value" id="monthlyTransactions">0</div>
+                <h2 class="card-title mb-2">Döviz Kurları</h2>
+                <div class="currency-grid" id="currencyRates">
+                    <!-- Will be filled by JS -->
+                </div>
             </div>
         </div>
+    </main>
 
-        <!-- Accounts List -->
-        <div class="section">
-            <h2>Hesaplarım</h2>
-            <div id="accountsList" class="accounts-list">
-                <!-- Accounts will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Recent Transactions -->
-        <div class="section">
-            <h2>Son İşlemler</h2>
-            <div id="recentTransactions" class="transaction-list">
-                <!-- Transactions will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Currency Rates -->
-        <div class="section">
-            <h2>Döviz Kurları</h2>
-            <div id="currencyRates" class="currency-list">
-                <!-- Currency rates will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <h2>Hızlı İşlemler</h2>
-            <div class="grid-4">
-                <a href="havale.html" class="action-btn">
-                    <div class="action-icon">💳</div>
-                    <div class="action-text">Havale</div>
-                </a>
-                <a href="havale.html?type=eft" class="action-btn">
-                    <div class="action-icon">🏦</div>
-                    <div class="action-text">EFT</div>
-                </a>
-                <a href="ekstre.html" class="action-btn">
-                    <div class="action-icon">📄</div>
-                    <div class="action-text">Ekstre</div>
-                </a>
-                <a href="kartlar.html" class="action-btn">
-                    <div class="action-icon">💳</div>
-                    <div class="action-text">Kartlarım</div>
-                </a>
-            </div>
-        </div>
-    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        Copyright © 2026 MetinBank - Güven, Birikim, Gelecek
+    </footer>
 
     <script src="assets/js/api.js"></script>
     <script src="assets/js/app.js"></script>
     <script>
-        // Check authentication
         checkAuth();
 
-        // Load dashboard data
+        // Load all dashboard data
         window.addEventListener('DOMContentLoaded', async () => {
             const user = getUser();
             if (!user) {
-                window.location.href = 'login.html';
+                window.location.href = 'internet-sube.html';
                 return;
             }
 
             document.getElementById('userName').textContent = `${user.ad} ${user.soyad}`;
             document.getElementById('lastLogin').textContent = new Date().toLocaleString('tr-TR');
 
-            await loadAccounts();
-            await loadRecentTransactions();
-            await loadCurrencyRates();
+            await Promise.all([
+                loadAccountPreview(),
+                loadCardPreview(),
+                loadRecentTransactions(),
+                loadCurrencyRates()
+            ]);
         });
 
-        async function loadAccounts() {
+        // Toggle account details
+        function toggleAccount() {
+            const details = document.getElementById('accountDetails');
+            const toggle = document.getElementById('accountToggle');
+            details.classList.toggle('open');
+            toggle.classList.toggle('open');
+        }
+
+        // Load single account preview
+        async function loadAccountPreview() {
             try {
                 const user = getUser();
                 const response = await apiGet(`/hesap/musteri/${user.musteriID}`);
 
-                if (response.success && response.data) {
+                if (response.success && response.data && response.data.length > 0) {
                     const accounts = response.data;
-                    let totalBalance = 0;
+                    const account = accounts[0]; // Show only first account
 
-                    const accountsHTML = accounts.map(acc => {
-                        totalBalance += acc.bakiye;
-                        return `
-                            <div class="account-item">
-                                <div class="account-info">
-                                    <div class="account-name">${acc.hesapTipi} ${acc.hesapCinsi} Hesap</div>
-                                    <div class="account-iban">${formatIBAN(acc.iban)}</div>
-                                </div>
-                                <div class="account-balance">${formatCurrency(acc.bakiye, acc.hesapTipi)}</div>
-                            </div>
-                        `;
-                    }).join('');
-
-                    document.getElementById('accountsList').innerHTML = accountsHTML;
+                    // Update total balance and count
+                    const totalBalance = accounts.reduce((sum, acc) => sum + parseFloat(acc.bakiye || 0), 0);
                     document.getElementById('totalBalance').textContent = formatCurrency(totalBalance, 'TL');
                     document.getElementById('accountCount').textContent = accounts.length;
+
+                    // Display first account details
+                    const accountHTML = `
+                        <div class="account-info">
+                            <span class="account-label">Hesap Tipi</span>
+                            <span class="account-value">${account.hesapTipi} ${account.hesapCinsi}</span>
+                        </div>
+                        <div class="account-info">
+                            <span class="account-label">IBAN</span>
+                            <span class="account-value">${formatIBAN(account.iban)}</span>
+                        </div>
+                        <div class="account-info">
+                            <span class="account-label">Bakiye</span>
+                            <span class="account-value balance-primary">${formatCurrency(account.bakiye, account.hesapTipi)}</span>
+                        </div>
+                        <div class="account-info">
+                            <span class="account-label">Kullanılabilir</span>
+                            <span class="account-value">${formatCurrency(account.kullanilabilirBakiye, account.hesapTipi)}</span>
+                        </div>
+                    `;
+                    document.getElementById('accountContent').innerHTML = accountHTML;
                 }
             } catch (error) {
                 console.error('Error loading accounts:', error);
             }
         }
 
+        // Load single card preview
+        async function loadCardPreview() {
+            try {
+                const user = getUser();
+                const response = await apiGet(`/kart/musteri/${user.musteriID}`);
+
+                if (response.success && response.data && response.data.length > 0) {
+                    const card = response.data[0]; // Show only first card
+                    const cardTemplate = card.kartNo.toString().charAt(0) === '9'
+                        ? 'publishingimages/bireysel-kartlar/kart_troy.png'
+                        : 'publishingimages/bireysel-kartlar/kart_mastercard.png';
+
+                    const maskedNumber = maskCardNumber(card.kartNo);
+                    const expiryDate = formatExpiry(card.sonKullanimTarihi);
+
+                    const cardHTML = `
+                        <div class="card-visual-wrapper">
+                            <div class="card-visual">
+                                <img src="${cardTemplate}" alt="Kart" class="card-background">
+                                <div class="card-overlay">
+                                    <div class="card-number">${maskedNumber}</div>
+                                    <div class="card-expiry">SKT: ${expiryDate}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('cardPreview').innerHTML = cardHTML;
+                } else {
+                    document.getElementById('cardPreview').innerHTML = '<p class="text-muted text-center">Kayıtlı kartınız bulunmamaktadır.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading cards:', error);
+            }
+        }
+
+        // Load recent 5 transactions
         async function loadRecentTransactions() {
             try {
                 const user = getUser();
                 const response = await apiGet(`/islem/musteri/${user.musteriID}/gecmis`);
 
-                if (response.success && response.data) {
-                    const transactions = response.data.slice(0, 5); // Son 5 işlem
+                if (response.success && response.data && response.data.length > 0) {
+                    const transactions = response.data.slice(0, 5); // Only 5
+                    document.getElementById('monthlyTx').textContent = response.data.length;
 
-                    const transactionsHTML = transactions.map(tx => `
-                        <div class="transaction-item">
-                            <div class="transaction-info">
-                                <div class="transaction-type">${tx.islemTipi}</div>
-                                <div class="transaction-date">${formatDate(tx.islemTarihi)}</div>
-                                <div class="transaction-desc">${tx.aciklama || '-'}</div>
-                            </div>
-                            <div class="transaction-amount">${formatCurrency(tx.tutar, tx.paraBirimi)}</div>
-                        </div>
-                    `).join('');
-
-                    document.getElementById('recentTransactions').innerHTML = transactionsHTML || '<p class="no-data">Henüz işlem bulunmamaktadır.</p>';
-                    document.getElementById('monthlyTransactions').textContent = transactions.length;
+                    const tableHTML = `
+                        <table class="transactions-table">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>İşlem Tipi</th>
+                                    <th>Açıklama</th>
+                                    <th class="text-right">Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${transactions.map(tx => `
+                                    <tr>
+                                        <td>${formatDate(tx.islemTarihi)}</td>
+                                        <td class="transaction-type">${tx.islemTipi}</td>
+                                        <td>${tx.aciklama || '-'}</td>
+                                        <td class="transaction-amount ${parseFloat(tx.tutar) > 0 ? 'amount-positive' : 'amount-negative'}">
+                                            ${formatCurrency(tx.tutar, tx.paraBirimi)}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    document.getElementById('transactionsContainer').innerHTML = tableHTML;
+                } else {
+                    document.getElementById('transactionsContainer').innerHTML = '<p class="text-muted text-center">Henüz işlem bulunmamaktadır.</p>';
                 }
             } catch (error) {
                 console.error('Error loading transactions:', error);
-                document.getElementById('recentTransactions').innerHTML = '<p class="no-data">İşlemler yüklenemedi.</p>';
             }
         }
 
+        // Load currency rates
         async function loadCurrencyRates() {
             try {
                 const response = await apiGet('/doviz/kurlar');
 
                 if (response.success && response.data) {
-                    const rates = response.data;
-
-                    const ratesHTML = rates.map(rate => `
-                        <div class="currency-item">
+                    const ratesHTML = response.data.map(rate => `
+                        <div class="currency-card">
                             <div class="currency-name">${rate.paraBirimi}</div>
                             <div class="currency-rates">
-                                <span>Alış: ${rate.alisFiyati.toFixed(4)} TL</span>
-                                <span>Satış: ${rate.satisFiyati.toFixed(4)} TL</span>
+                                <span>Alış: ${rate.alisFiyati.toFixed(4)}</span>
+                                <span>Satış: ${rate.satisFiyati.toFixed(4)}</span>
                             </div>
                         </div>
                     `).join('');
-
                     document.getElementById('currencyRates').innerHTML = ratesHTML;
                 }
             } catch (error) {
                 console.error('Error loading currency rates:', error);
-                document.getElementById('currencyRates').innerHTML = '<p class="no-data">Döviz kurları yüklenemedi.</p>';
             }
+        }
+
+        function maskCardNumber(cardNo) {
+            const str = cardNo.toString();
+            if (str.length >= 16) {
+                return str.substring(0, 4) + ' **** **** ' + str.substring(12);
+            }
+            return '**** **** **** ****';
+        }
+
+        function formatExpiry(dateStr) {
+            const date = new Date(dateStr);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear().toString().substring(2);
+            return `${month}/${year}`;
         }
     </script>
 </body>

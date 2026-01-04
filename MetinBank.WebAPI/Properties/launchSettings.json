@@ -3,10 +3,11 @@
     "MetinBank.WebAPI": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:51639;http://localhost:51640"
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }

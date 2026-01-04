@@ -4,50 +4,330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metin Bank - Hesap Ekstresi</title>
+    <title>MetinBank - Hesap Ekstresi</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .btn-filter {
+            padding: 0.75rem 1.5rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-filter:hover {
+            background: #2563eb;
+        }
+
+        .statement-table {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .statement-table thead {
+            background: #f3f4f6;
+        }
+
+        .statement-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .statement-table td {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status.tamamlandı {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.beklemede {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status.reddedildi {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .no-data,
+        .error-message {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .btn-detail {
+            padding: 0.375rem 0.75rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .btn-detail:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+
+        .modal-body {
+            padding: var(--spacing-lg);
+        }
+
+        .detail-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .detail-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--gray-900);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-900);
+        }
+
+        .summary-box {
+            background: var(--gray-50);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            padding-top: var(--spacing-md);
+            margin-top: var(--spacing-sm);
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">METİN BANK</div>
-            <div class="nav-menu">
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="assets/images/logo.png" alt="MetinBank">
+            </div>
+            <nav class="header-nav">
                 <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
                 <a href="hesaplar.html" class="nav-link">Hesaplarım</a>
-                <a href="havale.html" class="nav-link">Havale/EFT</a>
+                <div class="nav-dropdown">
+                    <div class="nav-link nav-dropdown-toggle">Para Transferi</div>
+                    <div class="nav-dropdown-menu">
+                        <a href="havale.html">Havale</a>
+                        <a href="eft.html">EFT</a>
+                        <a href="virman.html">Virman</a>
+                    </div>
+                </div>
                 <a href="ekstre.html" class="nav-link active">Ekstre</a>
                 <a href="kartlar.html" class="nav-link">Kartlarım</a>
                 <a href="profil.html" class="nav-link">Profil</a>
-                <a href="#" class="nav-link" onclick="logout()">Çıkış</a>
+                <a href="#" class="nav-link" onclick="logout(); return false;">Çıkış</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Hesap Ekstresi</h1>
+
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="selectedAccount">Hesap Seç</label>
+                        <select id="selectedAccount">
+                            <option value="">Hesap seçiniz...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="startDate">Başlangıç Tarihi</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">Bitiş Tarihi</label>
+                        <input type="date" id="endDate">
+                    </div>
+                    <button class="btn-filter" onclick="loadStatement()">Filtrele</button>
+                </div>
+            </div>
+
+            <div id="statementContainer" class="statement-container">
+                <p class="no-data">Lütfen bir hesap seçiniz.</p>
             </div>
         </div>
-    </nav>
+    </main>
 
-    <div class="container">
-        <h1>Hesap Ekstresi</h1>
-
-        <div class="filter-section">
-            <div class="form-group">
-                <label for="selectedAccount">Hesap Seç</label>
-                <select id="selectedAccount" onchange="loadStatement()">
-                    <option value="">Hesap seçiniz...</option>
-                </select>
+    <!-- Transaction Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">İşlem Detayları</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
-        </div>
-
-        <div id="statementContainer" class="statement-container">
-            <p class="no-data">Lütfen bir hesap seçiniz.</p>
+            <div class="modal-body" id="modalBody">
+                <!-- Will be filled by JS -->
+            </div>
         </div>
     </div>
+
+    <footer class="footer">
+        Copyright © 2026 MetinBank - Güven, Birikim, Gelecek
+    </footer>
 
     <script src="assets/js/api.js"></script>
     <script src="assets/js/app.js"></script>
     <script>
         checkAuth();
 
+        let allTransactions = [];
+
         window.addEventListener('DOMContentLoaded', () => {
             loadAccounts();
+
+            // Set default dates (last 30 days)
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - 30);
+
+            document.getElementById('endDate').valueAsDate = endDate;
+            document.getElementById('startDate').valueAsDate = startDate;
 
             const params = new URLSearchParams(window.location.search);
             const hesapID = params.get('hesapID');
@@ -60,14 +340,14 @@
         async function loadAccounts() {
             try {
                 const user = getUser();
-                const response = await apiGet(`/hesap/musteri/${user.MusteriID}`);
+                const response = await apiGet(`/hesap/musteri/${user.musteriID}`);
 
-                if (response.Success && response.Data) {
+                if (response.success && response.data) {
                     const select = document.getElementById('selectedAccount');
-                    response.Data.forEach(acc => {
+                    response.data.forEach(acc => {
                         const option = document.createElement('option');
-                        option.value = acc.HesapID;
-                        option.textContent = `${acc.HesapTipi} ${acc.HesapCinsi} - ${formatIBAN(acc.IBAN)}`;
+                        option.value = acc.hesapID;
+                        option.textContent = `${acc.hesapTipi} ${acc.hesapCinsi} - ${formatIBAN(acc.iban)}`;
                         select.appendChild(option);
                     });
                 }
@@ -83,11 +363,24 @@
                 return;
             }
 
-            try {
-                const response = await apiGet(`/islem/hesap/${hesapID}/ekstre`);
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
 
-                if (response.Success && response.Data && response.Data.length > 0) {
-                    const transactions = response.Data;
+            try {
+                let url = `/islem/hesap/${hesapID}/ekstre`;
+                const params = [];
+
+                if (startDate) params.push(`baslangicTarihi=${startDate}`);
+                if (endDate) params.push(`bitisTarihi=${endDate}`);
+
+                if (params.length > 0) {
+                    url += '?' + params.join('&');
+                }
+
+                const response = await apiGet(url);
+
+                if (response.success && response.data && response.data.length > 0) {
+                    allTransactions = response.data;
 
                     const tableHTML = `
                         <table class="statement-table">
@@ -99,17 +392,19 @@
                                     <th>Alıcı/Gönderen</th>
                                     <th class="text-right">Tutar</th>
                                     <th>Durum</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${transactions.map(tx => `
+                                ${allTransactions.map((tx, idx) => `
                                     <tr>
-                                        <td>${formatDate(tx.IslemTarihi)}</td>
-                                        <td>${tx.IslemTipi}</td>
-                                        <td>${tx.Aciklama || '-'}</td>
-                                        <td>${tx.AliciAdi || '-'}</td>
-                                        <td class="text-right">${formatCurrency(tx.Tutar, tx.ParaBirimi)}</td>
-                                        <td><span class="status ${tx.OnayDurumu.toLowerCase()}">${tx.OnayDurumu}</span></td>
+                                        <td>${formatDate(tx.islemTarihi)}</td>
+                                        <td>${tx.islemTipi}</td>
+                                        <td>${tx.aciklama || '-'}</td>
+                                        <td>${tx.aliciAdi || '-'}</td>
+                                        <td class="text-right">${formatCurrency(tx.tutar, tx.paraBirimi)}</td>
+                                        <td><span class="status ${tx.onayDurumu.toLowerCase()}">${tx.onayDurumu}</span></td>
+                                        <td><button class="btn-detail" onclick="showDetail(${idx})">Detay</button></td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -124,6 +419,139 @@
                 console.error('Error loading statement:', error);
                 document.getElementById('statementContainer').innerHTML = '<p class="error-message">Ekstre yüklenirken bir hata oluştu.</p>';
             }
+        }
+
+        function showDetail(index) {
+            const tx = allTransactions[index];
+            if (!tx) return;
+
+            const modalHTML = `
+                <div class="detail-section">
+                    <h3>İşlem Bilgileri</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">İşlem Tipi</span>
+                            <span class="detail-value">${tx.islemTipi}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">İşlem Tarihi</span>
+                            <span class="detail-value">${formatDate(tx.islemTarihi)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">İşlem Saati</span>
+                            <span class="detail-value">${formatTime(tx.islemTarihi)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Durum</span>
+                            <span class="detail-value">
+                                <span class="status ${tx.onayDurumu.toLowerCase()}">${tx.onayDurumu}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                ${tx.kaynakHesapNo || tx.kaynakIBAN ? `
+                <div class="detail-section">
+                    <h3>Gönderen Bilgileri</h3>
+                    <div class="detail-grid">
+                        ${tx.kaynakHesapNo ? `
+                        <div class="detail-item">
+                            <span class="detail-label">Hesap No</span>
+                            <span class="detail-value">${tx.kaynakHesapNo}</span>
+                        </div>
+                        ` : ''}
+                        ${tx.kaynakIBAN ? `
+                        <div class="detail-item">
+                            <span class="detail-label">IBAN</span>
+                            <span class="detail-value">${formatIBAN(tx.kaynakIBAN)}</span>
+                        </div>
+                        ` : ''}
+                        ${tx.gondenenAdi ? `
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <span class="detail-label">Ad Soyad</span>
+                            <span class="detail-value">${tx.gondenenAdi}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${tx.hedefHesapNo || tx.hedefIBAN || tx.aliciAdi ? `
+                <div class="detail-section">
+                    <h3>Alıcı Bilgileri</h3>
+                    <div class="detail-grid">
+                        ${tx.hedefHesapNo ? `
+                        <div class="detail-item">
+                            <span class="detail-label">Hesap No</span>
+                            <span class="detail-value">${tx.hedefHesapNo}</span>
+                        </div>
+                        ` : ''}
+                        ${tx.hedefIBAN ? `
+                        <div class="detail-item">
+                            <span class="detail-label">IBAN</span>
+                            <span class="detail-value">${formatIBAN(tx.hedefIBAN)}</span>
+                        </div>
+                        ` : ''}
+                        ${tx.aliciAdi ? `
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <span class="detail-label">Ad Soyad</span>
+                            <span class="detail-value">${tx.aliciAdi}</span>
+                        </div>
+                        ` : ''}
+                        ${tx.aliciBanka ? `
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <span class="detail-label">Banka</span>
+                            <span class="detail-value">${tx.aliciBanka}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${tx.aciklama ? `
+                <div class="detail-section">
+                    <h3>Açıklama</h3>
+                    <p style="color: var(--gray-700);">${tx.aciklama}</p>
+                </div>
+                ` : ''}
+
+                <div class="detail-section">
+                    <h3>Tutar Bilgileri</h3>
+                    <div class="summary-box">
+                        <div class="summary-row">
+                            <span>İşlem Tutarı:</span>
+                            <span>${formatCurrency(tx.tutar, tx.paraBirimi)}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>İşlem Ücreti:</span>
+                            <span>${formatCurrency(tx.islemUcreti || 0, tx.paraBirimi)}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Toplam Tutar:</span>
+                            <span>${formatCurrency(parseFloat(tx.tutar) + parseFloat(tx.islemUcreti || 0), tx.paraBirimi)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalBody').innerHTML = modalHTML;
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        // Close modal on background click
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailModal') {
+                closeModal();
+            }
+        });
+
+        function formatTime(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
         }
     </script>
 </body>

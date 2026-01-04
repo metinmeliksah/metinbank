@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetinBank - Ürün ve Hizmet Ücretleri</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        .fees-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .fees-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--gray-600);
+            font-size: 1rem;
+        }
+
+        .fees-table {
+            width: 100%;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .fees-table thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .fees-table th {
+            padding: 1.25rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .fees-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .fees-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .fees-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .fee-amount {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+
+        .fee-free {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .channel-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .channel-internet {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .channel-sube {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .note-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin-top: 2rem;
+        }
+
+        .note-box h4 {
+            font-weight: 700;
+            color: #78350f;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-box p {
+            color: #78350f;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-box ul {
+            color: #78350f;
+            margin-left: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="assets/images/logo.png" alt="MetinBank">
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">Ana Sayfa</a>
+                <a href="internet-sube.html" class="nav-link">İnternet Şube</a>
+                <a href="ucretler.html" class="nav-link active">Ücretler</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1>Ürün ve Hizmet Ücretleri</h1>
+        <p>Şeffaf ve rekabetçi ücretlerimiz ile hizmetinizdeyiz</p>
+    </section>
+
+    <!-- Fees Content -->
+    <div class="fees-container">
+        <!-- İnternet/Mobil Bankacılık Ücretleri -->
+        <div class="fees-section">
+            <div class="section-header">
+                <h2 class="section-title">📱 İnternet ve Mobil Bankacılık</h2>
+                <p class="section-subtitle">Dijital kanallarımızdan yapılan tüm işlemler ücretsizdir</p>
+            </div>
+
+            <table class="fees-table">
+                <thead>
+                    <tr>
+                        <th>İşlem Tipi</th>
+                        <th>Tutar Aralığı</th>
+                        <th>Kanal</th>
+                        <th>Ücret</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="3"><strong>Havale İşlemi</strong></td>
+                        <td>0 TL - 7.900 TL</td>
+                        <td><span class="channel-badge channel-internet">İnternet/Mobil</span></td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td>7.900 TL - 382.500 TL</td>
+                        <td><span class="channel-badge channel-internet">İnternet/Mobil</span></td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td>382.500 TL ve Üzeri</td>
+                        <td><span class="channel-badge channel-internet">İnternet/Mobil</span></td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"><strong>EFT İşlemi</strong></td>
+                        <td>0 TL - 7.900 TL</td>
+                        <td><span class="channel-badge channel-internet">İnternet/Mobil</span></td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td>7.900 TL - 382.500 TL</td>
+                        <td><span class="channel-badge channel-internet">İnternet/Mobil</span></td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td>382.500 TL ve Üzeri</td>
+                        <td><span class="channel-badge channel-internet">İnternet/Mobil</span></td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Virman İşlemi</strong></td>
+                        <td>Tüm Tutarlar</td>
+                        <td><span class="channel-badge channel-internet">İnternet/Mobil</span></td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Para Yatırma/Çekme</strong></td>
+                        <td>Tüm Tutarlar (ATM)</td>
+                        <td><span class="channel-badge channel-internet">İnternet/Mobil</span></td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Şube Ücretleri -->
+        <div class="fees-section">
+            <div class="section-header">
+                <h2 class="section-title">🏦 Şube İşlemleri</h2>
+                <p class="section-subtitle">Vezne üzerinden yapılan işlem ücretleri</p>
+            </div>
+
+            <table class="fees-table">
+                <thead>
+                    <tr>
+                        <th>İşlem Tipi</th>
+                        <th>Tutar Aralığı</th>
+                        <th>Kanal</th>
+                        <th>Azami Ücret</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="3"><strong>Havale İşlemi</strong></td>
+                        <td>0 TL - 7.900 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">40,15 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>7.900 TL - 382.500 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">80,30 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>382.500 TL ve Üzeri</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">501,88 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"><strong>EFT İşlemi</strong></td>
+                        <td>0 TL - 7.900 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">40,15 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>7.900 TL - 382.500 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">80,30 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>382.500 TL ve Üzeri</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">501,88 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"><strong>Virman İşlemi</strong></td>
+                        <td>0 TL - 7.900 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">20,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>7.900 TL - 382.500 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">40,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>382.500 TL ve Üzeri</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">250,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"><strong>Para Yatırma</strong></td>
+                        <td>0 TL - 7.900 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">10,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>7.900 TL - 382.500 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">20,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>382.500 TL ve Üzeri</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">100,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"><strong>Para Çekme</strong></td>
+                        <td>0 TL - 7.900 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">10,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>7.900 TL - 382.500 TL</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">20,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td>382.500 TL ve Üzeri</td>
+                        <td><span class="channel-badge channel-sube">Şube</span></td>
+                        <td><span class="fee-amount">100,00 TL</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Diğer Hizmetler -->
+        <div class="fees-section">
+            <div class="section-header">
+                <h2 class="section-title">💳 Kart Hizmetleri</h2>
+                <p class="section-subtitle">Banka kartı ve kredi kartı işlem ücretleri</p>
+            </div>
+
+            <table class="fees-table">
+                <thead>
+                    <tr>
+                        <th>Hizmet</th>
+                        <th>Açıklama</th>
+                        <th>Ücret</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Banka Kartı Yıllık Ücreti</strong></td>
+                        <td>Troy Banka Kartı</td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contactless Ücret</strong></td>
+                        <td>Temassız ödeme işlemleri</td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kart Değiştirme</strong></td>
+                        <td>Kayıp/Çalıntı durumunda</td>
+                        <td><span class="fee-amount">25,00 TL</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ATM Para Çekme</strong></td>
+                        <td>MetinBank ATM'lerinden</td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ATM Para Çekme</strong></td>
+                        <td>Diğer Banka ATM'lerinden</td>
+                        <td><span class="fee-amount">5,00 TL</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Hesap İşlemleri -->
+        <div class="fees-section">
+            <div class="section-header">
+                <h2 class="section-title">📋 Hesap İşlemleri</h2>
+                <p class="section-subtitle">Hesap açma ve yönetim ücretleri</p>
+            </div>
+
+            <table class="fees-table">
+                <thead>
+                    <tr>
+                        <th>Hizmet</th>
+                        <th>Açıklama</th>
+                        <th>Ücret</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Vadesiz Mevduat Hesabı</strong></td>
+                        <td>Hesap açılışı ve işletim ücreti</td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vadeli Mevduat Hesabı</strong></td>
+                        <td>Hesap açılışı ve işletim ücreti</td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Döviz Hesabı</strong></td>
+                        <td>Hesap açılışı ve işletim ücreti</td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hesap Ekstresi</strong></td>
+                        <td>İnternet/Mobil'den görüntüleme</td>
+                        <td><span class="fee-free">ÜCRETSİZ</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kağıt Ekstre</strong></td>
+                        <td>Şubeden talep edilen ekstre</td>
+                        <td><span class="fee-amount">15,00 TL</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Notlar -->
+        <div class="note-box">
+            <h4>📌 Önemli Notlar</h4>
+            <ul>
+                <li>Yukarıda belirtilen ücretler 2026 yılı tahminleridir ve değişiklik gösterebilir.</li>
+                <li>İnternet ve Mobil bankacılık üzerinden yapılan tüm para transfer işlemleri tamamen ücretsizdir.</li>
+                <li>Şube üzerinden yapılan işlemlerde belirtilen ücretler azami ücretlerdir.</li>
+                <li>Ücretler KDV dahildir.</li>
+                <li>Güncel ücret tarifesi için şubelerimizle iletişime geçebilirsiniz.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        Copyright © 2026 MetinBank - Güven, Birikim, Gelecek
+    </footer>
+</body>
+
+</html>

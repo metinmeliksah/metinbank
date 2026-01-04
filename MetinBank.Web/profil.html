@@ -9,52 +9,66 @@
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">METİN BANK</div>
-            <div class="nav-menu">
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="assets/images/logo.png" alt="MetinBank">
+            </div>
+            <nav class="header-nav">
                 <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
                 <a href="hesaplar.html" class="nav-link">Hesaplarım</a>
-                <a href="havale.html" class="nav-link">Havale/EFT</a>
+                <div class="nav-dropdown">
+                    <div class="nav-link nav-dropdown-toggle">Para Transferi</div>
+                    <div class="nav-dropdown-menu">
+                        <a href="havale.html">Havale</a>
+                        <a href="eft.html">EFT</a>
+                        <a href="virman.html">Virman</a>
+                    </div>
+                </div>
                 <a href="ekstre.html" class="nav-link">Ekstre</a>
                 <a href="kartlar.html" class="nav-link">Kartlarım</a>
                 <a href="profil.html" class="nav-link active">Profil</a>
-                <a href="#" class="nav-link" onclick="logout()">Çıkış</a>
-            </div>
+                <a href="#" class="nav-link" onclick="logout(); return false;">Çıkış</a>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <div class="container">
-        <h1>Profil Bilgileri</h1>
+    <main>
+        <div class="container">
+            <h1>Profil Bilgileri</h1>
 
-        <div class="grid-2">
-            <div class="section">
-                <h2>Kişisel Bilgiler</h2>
-                <div id="profileInfo" class="profile-info">
-                    <!-- Profile info will be loaded here -->
+            <div class="grid-2">
+                <div class="section">
+                    <h2>Kişisel Bilgiler</h2>
+                    <div id="profileInfo" class="profile-info">
+                        <!-- Profile info will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Şifre Değiştir</h2>
+                    <form id="passwordForm" class="password-form">
+                        <div class="form-group">
+                            <label for="oldPassword">Eski Şifre</label>
+                            <input type="password" id="oldPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">Yeni Şifre</label>
+                            <input type="password" id="newPassword" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Yeni Şifre (Tekrar)</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Şifreyi Değiştir</button>
+                    </form>
                 </div>
             </div>
+    </main>
 
-            <div class="section">
-                <h2>Şifre Değiştir</h2>
-                <form id="passwordForm" class="password-form">
-                    <div class="form-group">
-                        <label for="oldPassword">Eski Şifre</label>
-                        <input type="password" id="oldPassword" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="newPassword">Yeni Şifre</label>
-                        <input type="password" id="newPassword" required minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Yeni Şifre (Tekrar)</label>
-                        <input type="password" id="confirmPassword" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Şifreyi Değiştir</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <footer class="footer">
+        Copyright © 2026 MetinBank - Güven, Birikim, Gelecek
+    </footer>
 
     <script src="assets/js/api.js"></script>
     <script src="assets/js/app.js"></script>

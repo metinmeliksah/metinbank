@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetinBank - Havale</title>
+    <title>MetinBank - EFT</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        /* Use same styles as havale.html */
         .transfer-container {
             max-width: 1000px;
             margin: 0 auto;
@@ -38,7 +39,7 @@
         .panel-icon {
             width: 48px;
             height: 48px;
-            background: var(--primary);
+            background: var(--warning);
             color: white;
             border-radius: var(--radius-md);
             display: flex;
@@ -79,24 +80,6 @@
             color: var(--success);
         }
 
-        .iban-lookup {
-            display: flex;
-            gap: var(--spacing-sm);
-        }
-
-        .iban-lookup input {
-            flex: 1;
-        }
-
-        .recipient-name {
-            background: var(--gray-50);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin-top: var(--spacing-sm);
-            font-weight: 600;
-            color: var(--primary);
-        }
-
         .transfer-summary {
             background: white;
             padding: var(--spacing-xl);
@@ -115,7 +98,7 @@
             border-bottom: none;
             font-size: 1.25rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--warning);
         }
 
         @media (max-width: 768px) {
@@ -156,14 +139,14 @@
     <main>
         <div class="container">
             <div class="transfer-container">
-                <h1 style="margin-bottom: var(--spacing-xl);">Havale İşlemi</h1>
+                <h1 style="margin-bottom: var(--spacing-xl);">EFT İşlemi</h1>
 
                 <!-- Two Column Layout -->
                 <div class="transfer-grid">
                     <!-- Left Panel - Sender -->
                     <div class="transfer-panel">
                         <div class="panel-header">
-                            <div class="panel-icon">📤</div>
+                            <div class="panel-icon">🏦</div>
                             <div class="panel-title">Gönderen Hesap</div>
                         </div>
 
@@ -185,19 +168,37 @@
                     <!-- Right Panel - Recipient -->
                     <div class="transfer-panel">
                         <div class="panel-header">
-                            <div class="panel-icon">📥</div>
+                            <div class="panel-icon">🏧</div>
                             <div class="panel-title">Alıcı Bilgileri</div>
                         </div>
 
                         <div class="form-group">
+                            <label class="form-label">Alıcı Bankası</label>
+                            <select class="form-select" id="recipientBank">
+                                <option value="">Banka seçiniz...</option>
+                                <option value="Ziraat Bankası">Ziraat Bankası</option>
+                                <option value="Vakıfbank">Vakıfbank</option>
+                                <option value="Halkbank">Halkbank</option>
+                                <option value="İş Bankası">İş Bankası</option>
+                                <option value="Akbank">Akbank</option>
+                                <option value="Garanti BBVA">Garanti BBVA</option>
+                                <option value="Yapı Kredi">Yapı Kredi</option>
+                                <option value="QNB Finansbank">QNB Finansbank</option>
+                                <option value="DenizBank">DenizBank</option>
+                                <option value="TEB">TEB</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label class="form-label">Alıcı IBAN</label>
-                            <div class="iban-lookup">
-                                <input type="text" class="form-input" id="recipientIBAN"
-                                    placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32"
-                                    oninput="formatIBANInput(this)">
-                                <button class="btn btn-primary" onclick="lookupIBAN()">🔍</button>
-                            </div>
-                            <div class="recipient-name" id="recipientName" style="display: none;"></div>
+                            <input type="text" class="form-input" id="recipientIBAN"
+                                placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32"
+                                oninput="formatIBANInput(this)">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Alıcı Adı</label>
+                            <input type="text" class="form-input" id="recipientName" placeholder="Alıcı adı soyadı">
                         </div>
 
                         <div class="form-group">
@@ -221,20 +222,24 @@
                         <span id="summaryFrom">-</span>
                     </div>
                     <div class="summary-row">
+                        <span>Alıcı Banka:</span>
+                        <span id="summaryBank">-</span>
+                    </div>
+                    <div class="summary-row">
                         <span>Alıcı:</span>
                         <span id="summaryTo">-</span>
                     </div>
                     <div class="summary-row">
                         <span>İşlem Ücreti:</span>
-                        <span id="feeAmount">0,00 TL</span>
+                        <span>2,50 TL</span>
                     </div>
                     <div class="summary-row">
                         <span>Toplam:</span>
                         <span id="summaryTotal">0,00 TL</span>
                     </div>
-                    <button class="btn btn-success btn-lg" style="width: 100%; margin-top: var(--spacing-md);"
-                        onclick="processTransfer()">
-                        Havale Gönder
+                    <button class="btn btn-warning btn-lg"
+                        style="width: 100%; margin-top: var(--spacing-md); color: white;" onclick="processTransfer()">
+                        EFT Gönder
                     </button>
                 </div>
             </div>
@@ -252,7 +257,7 @@
         checkAuth();
 
         let accounts = [];
-        let recipientData = null;
+        const EFT_FEE = 2.50;
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadAccounts();
@@ -309,33 +314,6 @@
             input.value = formatted;
         }
 
-        async function lookupIBAN() {
-            const iban = document.getElementById('recipientIBAN').value.replace(/\s/g, '');
-
-            if (iban.length < 26) {
-                alert('Lütfen geçerli bir IBAN giriniz.');
-                return;
-            }
-
-            try {
-                const response = await apiPost('/hesap/iban-sorgula', { iban });
-
-                if (response.success && response.data) {
-                    recipientData = response.data;
-                    const nameDiv = document.getElementById('recipientName');
-                    nameDiv.textContent = `✓ ${response.data.musteriAdi}`;
-                    nameDiv.style.display = 'block';
-                    document.getElementById('summaryTo').textContent = response.data.musteriAdi;
-                } else {
-                    alert(response.message || 'IBAN bulunamadı.');
-                    recipientData = null;
-                }
-            } catch (error) {
-                console.error('IBAN lookup error:', error);
-                alert('IBAN sorgulanırken hata oluştu.');
-            }
-        }
-
         let currentFee = 0;
 
         async function calculateFee() {
@@ -346,7 +324,7 @@
             }
 
             try {
-                const response = await apiGet(`/islemUcreti/hesapla?islemTipi=Havale&islemKanali=Internet&tutar=${amount}`);
+                const response = await apiGet(`/islemUcreti/hesapla?islemTipi=EFT&islemKanali=Internet&tutar=${amount}`);
                 if (response.success && response.data) {
                     currentFee = response.data.ucret;
                 }
@@ -358,21 +336,30 @@
 
         function updateTotal() {
             const amount = parseFloat(document.getElementById('amount').value) || 0;
-            const feeDisplay = document.querySelector('.summary-row:nth-child(3) span:last-child');
+            const total = amount + currentFee;
+            const feeDisplay = document.querySelector('.summary-row:nth-child(4) span:last-child');
             if (feeDisplay) {
                 feeDisplay.textContent = formatCurrency(currentFee, 'TL');
             }
-            document.getElementById('summaryTotal').textContent = formatCurrency(amount + currentFee, 'TL');
+            document.getElementById('summaryTotal').textContent = formatCurrency(total, 'TL');
         }
 
         document.getElementById('amount').addEventListener('input', async () => {
             await calculateFee();
             updateTotal();
         });
+        document.getElementById('recipientBank').addEventListener('change', (e) => {
+            document.getElementById('summaryBank').textContent = e.target.value || '-';
+        });
+        document.getElementById('recipientName').addEventListener('input', (e) => {
+            document.getElementById('summaryTo').textContent = e.target.value || '-';
+        });
 
         async function processTransfer() {
             const senderID = document.getElementById('senderAccount').value;
+            const bank = document.getElementById('recipientBank').value;
             const recipientIBAN = document.getElementById('recipientIBAN').value.replace(/\s/g, '');
+            const recipientName = document.getElementById('recipientName').value.trim();
             const amount = parseFloat(document.getElementById('amount').value);
             const description = document.getElementById('description').value;
 
@@ -382,8 +369,18 @@
                 return;
             }
 
-            if (!recipientData) {
-                alert('Lütfen alıcı IBAN sorgulayınız.');
+            if (!bank) {
+                alert('Lütfen alıcı bankası seçiniz.');
+                return;
+            }
+
+            if (!recipientIBAN || recipientIBAN.length < 26) {
+                alert('Lütfen geçerli bir IBAN giriniz.');
+                return;
+            }
+
+            if (!recipientName) {
+                alert('Lütfen alıcı adını giriniz.');
                 return;
             }
 
@@ -393,26 +390,31 @@
             }
 
             const senderAccount = accounts.find(acc => acc.hesapID == senderID);
-            if (amount > senderAccount.kullanilabilirBakiye) {
-                alert('Yetersiz bakiye!');
+            const totalAmount = amount + EFT_FEE;
+
+            if (totalAmount > senderAccount.kullanilabilirBakiye) {
+                alert(`Yetersiz bakiye! (İşlem ücreti dahil: ${formatCurrency(totalAmount, 'TL')})`);
                 return;
             }
 
-            if (!confirm(`${formatCurrency(amount, 'TL')} tutarında havale yapmak istediğinizden emin misiniz?`)) {
+            if (!confirm(`${formatCurrency(amount, 'TL')} + ${formatCurrency(EFT_FEE, 'TL')} ücret = ${formatCurrency(totalAmount, 'TL')} tutarında EFT yapmak istediğinizden emin misiniz?`)) {
                 return;
             }
 
             try {
-                const response = await apiPost('/islem/havale', {
+                const response = await apiPost('/islem/eft', {
                     kaynakHesapID: parseInt(senderID),
                     hedefIBAN: recipientIBAN,
+                    aliciBanka: bank,
+                    aliciAdi: recipientName,
                     tutar: amount,
-                    aciklama: description || 'Havale',
+                    islemUcreti: EFT_FEE,
+                    aciklama: description || 'EFT',
                     paraBirimi: 'TL'
                 });
 
                 if (response.success) {
-                    alert('✓ Havale işleminiz başarıyla gerçekleştirildi!');
+                    alert('✓ EFT işleminiz başarıyla gerçekleştirildi!');
                     window.location.href = 'dashboard.html';
                 } else {
                     alert('Hata: ' + (response.message || 'İşlem başarısız.'));
