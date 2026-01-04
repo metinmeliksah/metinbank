@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartlarımız - MetinBank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+    <div id="header-placeholder"></div>
+
+    <div class="bg-white border-b border-gray-200 py-12">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Kartlarımız</h1>
+            <p class="text-gray-600 text-lg">MetinBank ayrıcalıklarıyla dolu kart dünyasını keşfedin.</p>
+        </div>
+    </div>
+
+    <main class="flex-grow container mx-auto px-4 py-12">
+        <div class="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+
+            <!-- Mastercard -->
+            <div
+                class="bg-gray-50 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col">
+                <div class="mb-8 relative transform transition-transform duration-500 group-hover:scale-105">
+                    <div
+                        style="position: relative; width: 100%; padding-bottom: 54.5%; background: linear-gradient(to bottom right, #1f2937, #111827, #000000); border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);">
+                        <img src="publishingimages/bireysel-kartlar/banka_karti_mastercard.png"
+                            alt="MetinBank Mastercard" class="absolute inset-0 w-full h-full object-contain">
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">MetinBank Mastercard®</h3>
+                <p class="text-gray-600 mb-6 flex-grow">Dünyanın her yerinde geçerli, alışverişten seyahate hayatınızı
+                    kolaylaştıran banka kartı.</p>
+                <div class="flex gap-4 mt-auto">
+                    <a href="kartlar/banka-kartlari/mastercard/index.html"
+                        class="flex-1 bg-blue-600 text-white text-center py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-900/20">Detaylı
+                        İncele</a>
+                    <a href="#"
+                        class="flex-1 bg-white border border-gray-200 text-gray-700 text-center py-3 rounded-xl font-bold hover:bg-gray-50 transition">Hemen
+                        Başvur</a>
+                </div>
+            </div>
+
+            <!-- Troy -->
+            <div
+                class="bg-red-50 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-red-100 group flex flex-col">
+                <div class="mb-8 relative transform transition-transform duration-500 group-hover:scale-105">
+                    <div
+                        style="position: relative; width: 100%; padding-bottom: 54.5%; background: linear-gradient(to bottom right, #dc2626, #b91c1c, #7f1d1d); border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);">
+                        <img src="publishingimages/bireysel-kartlar/banka_karti_troy.png" alt="MetinBank Troy"
+                            class="absolute inset-0 w-full h-full object-contain">
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">MetinBank Troy</h3>
+                <p class="text-gray-600 mb-6 flex-grow">Türkiye'nin Ödeme Yöntemi TROY ile yerel avantajlar ve güvenli
+                    alışveriş.</p>
+                <div class="flex gap-4 mt-auto">
+                    <a href="kartlar/banka-kartlari/troy/index.html"
+                        class="flex-1 bg-red-600 text-white text-center py-3 rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-900/20">Detaylı
+                        İncele</a>
+                    <a href="#"
+                        class="flex-1 bg-white border border-red-100 text-red-700 text-center py-3 rounded-xl font-bold hover:bg-red-50 transition">Hemen
+                        Başvur</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <script src="assets/js/components.js"></script>
+</body>
+
+</html>
