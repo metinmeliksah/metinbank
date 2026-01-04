@@ -5,108 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MetinBank - Virman</title>
+    <link rel="stylesheet" href="../assets/styles.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        /* Use same styles as havale.html */
-        .transfer-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .transfer-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--spacing-xl);
-            margin-bottom: var(--spacing-xl);
-        }
-
-        .transfer-panel {
-            background: white;
-            padding: var(--spacing-xl);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
-            padding-bottom: var(--spacing-md);
-            border-bottom: 2px solid var(--gray-200);
-        }
-
-        .panel-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--success);
-            color: white;
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .panel-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--gray-900);
-        }
-
-        .selected-account {
-            background: var(--gray-50);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin-top: var(--spacing-md);
-        }
-
-        .account-balance {
-            display: flex;
-            justify-content: space-between;
-            margin-top: var(--spacing-sm);
-            padding-top: var(--spacing-sm);
-            border-top: 1px solid var(--gray-200);
-        }
-
-        .balance-label {
-            color: var(--gray-600);
-            font-size: 0.875rem;
-        }
-
-        .balance-amount {
-            font-weight: 700;
-            color: var(--success);
-        }
-
-        .transfer-summary {
-            background: white;
-            padding: var(--spacing-xl);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: var(--spacing-md) 0;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .summary-row:last-child {
-            border-bottom: none;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--success);
-        }
-
-        @media (max-width: 768px) {
-            .transfer-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -129,6 +29,7 @@
                 </div>
                 <a href="ekstre.html" class="nav-link">Ekstre</a>
                 <a href="kartlar.html" class="nav-link">Kartlarım</a>
+                <a href="kredi-basvuru.html" class="nav-link">Kredi Başvurusu</a>
                 <a href="profil.html" class="nav-link">Profil</a>
                 <a href="#" class="nav-link" onclick="logout(); return false;">Çıkış</a>
             </nav>
@@ -235,8 +136,8 @@
         Copyright © 2026 MetinBank - Güven, Birikim, Gelecek
     </footer>
 
-    <script src="assets/js/api.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/app.js"></script>
     <script>
         checkAuth();
 

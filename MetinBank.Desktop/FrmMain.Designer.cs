@@ -59,7 +59,11 @@ namespace MetinBank.Desktop
             this.navBarItemKartlar = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemBasvurular = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemOnayBekleyenler = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItemOnayBekleyenler = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItemDovizAlSat = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItemKrediBasvuru = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItemVadeliHesap = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItemVadesizHesap = new DevExpress.XtraNavBar.NavBarItem();
             this.svgImageCollection1 = new DevExpress.Utils.SvgImageCollection(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
@@ -212,7 +216,12 @@ namespace MetinBank.Desktop
             this.navBarItemKartlar,
             this.navBarItemBasvurular,
             this.navBarItemOnayBekleyenler,
-            this.navBarItemDovizAlSat});
+            this.navBarItemBasvurular,
+            this.navBarItemOnayBekleyenler,
+            this.navBarItemDovizAlSat,
+            this.navBarItemKrediBasvuru,
+            this.navBarItemVadeliHesap,
+            this.navBarItemVadesizHesap});
             this.navBarControl1.Location = new System.Drawing.Point(0, 54);
             this.navBarControl1.Name = "navBarControl1";
             this.navBarControl1.OptionsNavPane.ExpandedWidth = 220;
@@ -261,7 +270,8 @@ namespace MetinBank.Desktop
             this.navBarGroupHesapIslemleri.Expanded = true;
             this.navBarGroupHesapIslemleri.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.LargeIconsText;
             this.navBarGroupHesapIslemleri.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemHesapIslem),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemVadesizHesap),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemVadeliHesap),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemParaYatir),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemParaCek)});
             this.navBarGroupHesapIslemleri.Name = "navBarGroupHesapIslemleri";
@@ -271,6 +281,7 @@ namespace MetinBank.Desktop
             this.navBarItemHesapIslem.Caption = "  Hesap Aç";
             this.navBarItemHesapIslem.ImageOptions.SmallImage = ((System.Drawing.Image)(resources.GetObject("navBarItemHesapIslem.ImageOptions.SmallImage")));
             this.navBarItemHesapIslem.Name = "navBarItemHesapIslem";
+            this.navBarItemHesapIslem.Visible = false; // Gizliyoruz
             toolTipItem1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("resource.Image")));
             superToolTip1.Items.Add(toolTipItem1);
             this.navBarItemHesapIslem.SuperTip = superToolTip1;
@@ -326,7 +337,8 @@ namespace MetinBank.Desktop
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemKartlar),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemBasvurular),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemOnayBekleyenler),
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemDovizAlSat)});
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemDovizAlSat),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItemKrediBasvuru)});
             this.navBarGroupDigerIslemler.Name = "navBarGroupDigerIslemler";
             // 
             // navBarItemKartlar
@@ -352,6 +364,24 @@ namespace MetinBank.Desktop
             this.navBarItemDovizAlSat.Caption = "  Döviz Al / Sat";
             this.navBarItemDovizAlSat.Name = "navBarItemDovizAlSat";
             this.navBarItemDovizAlSat.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemDovizAlSat_LinkClicked);
+            // 
+            // navBarItemKrediBasvuru
+            // 
+            this.navBarItemKrediBasvuru.Caption = "  Kredi Başvurusu";
+            this.navBarItemKrediBasvuru.Name = "navBarItemKrediBasvuru";
+            this.navBarItemKrediBasvuru.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemKrediBasvuru_LinkClicked);
+            // 
+            // navBarItemVadeliHesap
+            // 
+            this.navBarItemVadeliHesap.Caption = "  Vadeli Hesap Aç";
+            this.navBarItemVadeliHesap.Name = "navBarItemVadeliHesap";
+            this.navBarItemVadeliHesap.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemVadeliHesap_LinkClicked);
+            // 
+            // navBarItemVadesizHesap
+            // 
+            this.navBarItemVadesizHesap.Caption = "  Vadesiz Hesap Aç";
+            this.navBarItemVadesizHesap.Name = "navBarItemVadesizHesap";
+            this.navBarItemVadesizHesap.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.navBarItemVadesizHesap_LinkClicked);
             // 
             // timer1
             // 
@@ -417,6 +447,9 @@ namespace MetinBank.Desktop
         private DevExpress.XtraNavBar.NavBarItem navBarItemBasvurular;
         private DevExpress.XtraNavBar.NavBarItem navBarItemOnayBekleyenler;
         private DevExpress.XtraNavBar.NavBarItem navBarItemDovizAlSat;
+        private DevExpress.XtraNavBar.NavBarItem navBarItemKrediBasvuru;
+        private DevExpress.XtraNavBar.NavBarItem navBarItemVadeliHesap;
+        private DevExpress.XtraNavBar.NavBarItem navBarItemVadesizHesap;
         private System.Windows.Forms.Timer timer1;
         private DevExpress.Utils.ImageCollection imageCollection1;
         private DevExpress.Utils.SvgImageCollection svgImageCollection1;

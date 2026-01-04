@@ -22,6 +22,13 @@ namespace MetinBank.Desktop
         private DevExpress.XtraLayout.LayoutControlItem layoutItemReddet;
         private DevExpress.XtraLayout.LayoutControlItem layoutItemYenile;
         private DevExpress.XtraLayout.LayoutControlItem layoutItemKapat;
+        
+        // Yeni eklenenler
+        private DevExpress.XtraTab.XtraTabControl tabControl;
+        private DevExpress.XtraTab.XtraTabPage tabIslemler;
+        private DevExpress.XtraTab.XtraTabPage tabKrediler;
+        private DevExpress.XtraGrid.GridControl gridKrediler;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridViewKrediler;
 
         protected override void Dispose(bool disposing)
         {
@@ -70,7 +77,7 @@ namespace MetinBank.Desktop
             this.SuspendLayout();
             
             // layoutControl1
-            this.layoutControl1.Controls.Add(this.gridOnaylar);
+            this.layoutControl1.Controls.Add(this.tabControl);
             this.layoutControl1.Controls.Add(this.grpDetay);
             this.layoutControl1.Controls.Add(this.btnOnayla);
             this.layoutControl1.Controls.Add(this.btnReddet);
@@ -84,7 +91,7 @@ namespace MetinBank.Desktop
             this.layoutControl1.TabIndex = 0;
             
             // gridOnaylar
-            this.gridOnaylar.Location = new System.Drawing.Point(12, 12);
+            this.gridOnaylar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridOnaylar.MainView = this.gridViewOnaylar;
             this.gridOnaylar.Name = "gridOnaylar";
             this.gridOnaylar.Size = new System.Drawing.Size(876, 590);
@@ -227,7 +234,7 @@ namespace MetinBank.Desktop
             this.layoutControlGroup1.TextVisible = false;
             
             // layoutItemGrid
-            this.layoutItemGrid.Control = this.gridOnaylar;
+            this.layoutItemGrid.Control = this.tabControl;
             this.layoutItemGrid.Location = new System.Drawing.Point(0, 0);
             this.layoutItemGrid.Name = "layoutItemGrid";
             this.layoutItemGrid.Size = new System.Drawing.Size(880, 594);
@@ -273,7 +280,75 @@ namespace MetinBank.Desktop
             this.layoutItemKapat.Size = new System.Drawing.Size(298, 44);
             this.layoutItemKapat.TextSize = new System.Drawing.Size(0, 0);
             this.layoutItemKapat.TextVisible = false;
-            
+            //
+            // tabControl
+            //
+            this.tabControl = new DevExpress.XtraTab.XtraTabControl();
+            this.tabIslemler = new DevExpress.XtraTab.XtraTabPage();
+            this.tabKrediler = new DevExpress.XtraTab.XtraTabPage();
+            this.gridKrediler = new DevExpress.XtraGrid.GridControl();
+            this.gridViewKrediler = new DevExpress.XtraGrid.Views.Grid.GridView();
+
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
+            this.layoutControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridOnaylar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewOnaylar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grpDetay)).BeginInit();
+            this.grpDetay.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl)).BeginInit();
+            this.tabControl.SuspendLayout();
+            this.tabIslemler.SuspendLayout();
+            this.tabKrediler.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridKrediler)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridViewKrediler)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemDetay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemOnayla)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemReddet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemYenile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutItemKapat)).BeginInit();
+            this.SuspendLayout();
+
+            // tabControl
+            this.tabControl.Location = new System.Drawing.Point(12, 12); // Placeholder, will be managed by layoutControl
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedTabPage = this.tabIslemler;
+            this.tabControl.Size = new System.Drawing.Size(876, 590); // Placeholder, will be managed by layoutControl
+            this.tabControl.TabIndex = 0;
+            this.tabControl.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
+            this.tabIslemler,
+            this.tabKrediler});
+
+            // tabIslemler
+            this.tabIslemler.Controls.Add(this.gridOnaylar);
+            this.tabIslemler.Name = "tabIslemler";
+            this.tabIslemler.Size = new System.Drawing.Size(874, 565);
+            this.tabIslemler.Text = "Para Transferleri";
+
+            // tabKrediler
+            this.tabKrediler.Controls.Add(this.gridKrediler);
+            this.tabKrediler.Name = "tabKrediler";
+            this.tabKrediler.Size = new System.Drawing.Size(874, 565);
+            this.tabKrediler.Text = "Kredi Başvuruları";
+
+            // gridKrediler
+            this.gridKrediler.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridKrediler.MainView = this.gridViewKrediler;
+            this.gridKrediler.Name = "gridKrediler";
+            this.gridKrediler.Size = new System.Drawing.Size(874, 565);
+            this.gridKrediler.TabIndex = 0;
+            this.gridKrediler.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridViewKrediler});
+
+            // gridViewKrediler
+            this.gridViewKrediler.GridControl = this.gridKrediler;
+            this.gridViewKrediler.Name = "gridViewKrediler";
+            this.gridViewKrediler.OptionsBehavior.Editable = false;
+            this.gridViewKrediler.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.gridViewKrediler.OptionsView.ShowGroupPanel = false;
+            this.gridViewKrediler.RowHeight = 28;
+
             // FrmOnayBekleyenler
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

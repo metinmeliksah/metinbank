@@ -345,6 +345,28 @@ namespace MetinBank.Util
 
             return "İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.";
         }
+
+        /// <summary>
+        /// DataTable'ı Dictionary listesine çevirir (JSON serialization için)
+        /// </summary>
+        /// <param name="dt">DataTable</param>
+        /// <returns>List of Dictionary</returns>
+        public static System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>> DataTableToDictionaryList(System.Data.DataTable dt)
+        {
+            var list = new System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, object>>();
+            if (dt == null) return list;
+
+            foreach (System.Data.DataRow row in dt.Rows)
+            {
+                var dict = new System.Collections.Generic.Dictionary<string, object>();
+                foreach (System.Data.DataColumn col in dt.Columns)
+                {
+                    dict[col.ColumnName] = row[col];
+                }
+                list.Add(dict);
+            }
+            return list;
+        }
     }
 }
 

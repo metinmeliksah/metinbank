@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetinBank - Kredi Başvurusu</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .calculator-card {
+            background: linear-gradient(135deg, white 0%, #f8fafc 100%);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="assets/images/logo.png" alt="MetinBank">
+            </div>
+            <nav class="header-nav">
+                <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
+                <a href="hesaplar.html" class="nav-link">Hesaplarım</a>
+                <div class="nav-dropdown">
+                    <div class="nav-link nav-dropdown-toggle">Para Transferi</div>
+                    <div class="nav-dropdown-menu">
+                        <a href="havale.html">Havale</a>
+                        <a href="eft.html">EFT</a>
+                        <a href="virman.html">Virman</a>
+                    </div>
+                </div>
+                <a href="ekstre.html" class="nav-link">Ekstre</a>
+                <a href="kartlar.html" class="nav-link">Kartlarım</a>
+                <a href="kredi-basvuru.html" class="nav-link active">Kredi Başvurusu</a>
+                <a href="profil.html" class="nav-link">Profil</a>
+                <a href="#" class="nav-link" onclick="logout(); return false;">Çıkış</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1 style="margin-bottom: var(--spacing-xl);">Kredi Başvurusu</h1>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl);">
+
+                <!-- Calculator -->
+                <div class="welcome-section calculator-card" style="background: white; color: inherit;">
+                    <h2 class="card-title" style="margin-bottom: 2rem;">Kredi Hesaplama</h2>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label>Kredi Türü</label>
+                        <select id="krediTuru" onchange="calculateKredi()"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="Ihtiyac">İhtiyaç Kredisi (%1.99)</option>
+                            <option value="Tasit">Taşıt Kredisi (%1.79)</option>
+                            <option value="Konut">Konut Kredisi (%1.49)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label>Kredi Tutarı (TL)</label>
+                        <input type="number" id="tutar" value="10000" min="1000" max="1000000"
+                            oninput="calculateKredi()"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label>Vade (Ay)</label>
+                        <input type="range" id="vade" min="3" max="120" value="12"
+                            oninput="document.getElementById('vadeVal').textContent = this.value; calculateKredi()"
+                            style="width: 100%;">
+                        <div style="text-align: right; font-weight: bold;"><span id="vadeVal">12</span> Ay</div>
+                    </div>
+
+                    <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 12px; margin-top: 2rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Aylık Taksit:</span>
+                            <span id="aylikTaksit"
+                                style="font-weight: bold; color: var(--primary); font-size: 1.2rem;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Toplam Geri Ödeme:</span>
+                            <span id="toplamOdeme" style="font-weight: bold;">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Application Form -->
+                <div class="welcome-section" style="background: white; color: inherit;">
+                    <h2 class="card-title" style="margin-bottom: 2rem;">Başvuru Bilgileri</h2>
+
+                    <div id="basvuruForm">
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label>Seçilen Kredi Bilgileri</label>
+                            <div id="selectedInfo"
+                                style="padding: 10px; background: #eee; border-radius: 6px; font-size: 0.9rem;">
+                                Hesaplama yapınız...
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label>Aylık Geliriniz (TL)</label>
+                            <input type="number" id="gelir" placeholder="Örn: 15000"
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label class="checkbox-container"
+                                style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="kvkk" style="width: 20px; height: 20px;">
+                                <span>Kişisel verilerimin işlenmesini kabul ediyorum.</span>
+                            </label>
+                        </div>
+
+                        <button class="btn-login" onclick="submitApplication()" id="btnSubmit">
+                            Bilgilerimle Başvuruyu Tamamla
+                        </button>
+                    </div>
+
+                    <div id="successMessage" style="display: none; text-align: center; color: green; padding: 20px;">
+                        <div style="font-size: 3rem;">✅</div>
+                        <h3>Başvurunuz Alındı!</h3>
+                        <p>Kredi başvurunuz değerlendirmeye alınmıştır. En kısa sürede size dönüş yapılacaktır.</p>
+                        <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'"
+                            style="margin-top: 20px;">Ana Sayfaya Dön</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        Copyright © 2026 MetinBank - Güven, Birikim, Gelecek
+    </footer>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>
+        checkAuth();
+
+        // Initialize
+        calculateKredi();
+
+        function calculateKredi() {
+            const P = parseFloat(document.getElementById('tutar').value);
+            const vade = parseInt(document.getElementById('vade').value);
+            const type = document.getElementById('krediTuru').value;
+
+            let rate = 1.99;
+            if (type === 'Tasit') rate = 1.79;
+            if (type === 'Konut') rate = 1.49;
+
+            // Monthly interest rate (r)
+            const r = rate / 100;
+
+            // Monthly Payment Formula: M = P * (r * (1+r)^n) / ((1+r)^n - 1)
+            const n = vade;
+            const numerator = r * Math.pow(1 + r, n);
+            const denominator = Math.pow(1 + r, n) - 1;
+
+            const monthlyPayment = P * (numerator / denominator);
+            const totalRepayment = monthlyPayment * n;
+
+            document.getElementById('aylikTaksit').textContent = monthlyPayment.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+            document.getElementById('toplamOdeme').textContent = totalRepayment.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+
+            // Update Summary
+            const typeName = document.getElementById('krediTuru').options[document.getElementById('krediTuru').selectedIndex].text.split('(')[0];
+            document.getElementById('selectedInfo').innerHTML = `
+                <strong>${typeName}</strong><br>
+                Tutar: ${P.toLocaleString('tr-TR')} TL<br>
+                Vade: ${vade} Ay<br>
+                Oran: %${rate}
+            `;
+        }
+
+        async function submitApplication() {
+            const gelir = document.getElementById('gelir').value;
+            const kvkk = document.getElementById('kvkk').checked;
+
+            if (!gelir || gelir <= 0) {
+                alert('Lütfen geçerli bir gelir giriniz.');
+                return;
+            }
+            if (!kvkk) {
+                alert('Lütfen KVKK metnini onaylayınız.');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            btn.textContent = 'İşleniyor...';
+
+            try {
+                const user = getUser();
+                const tutar = parseFloat(document.getElementById('tutar').value);
+                const vade = parseInt(document.getElementById('vade').value);
+                const turKod = document.getElementById('krediTuru').value === 'Ihtiyac' ? 1 :
+                    (document.getElementById('krediTuru').value === 'Tasit' ? 2 : 3);
+
+                const payload = {
+                    musteriID: user.musteriID,
+                    krediTuruID: turKod,
+                    basvuruTutari: tutar,
+                    vade: vade,
+                    aylikGelir: parseFloat(gelir)
+                };
+
+                const response = await apiPost('/kredi/basvuru', payload);
+
+                if (response.success) {
+                    document.getElementById('basvuruForm').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                } else {
+                    alert('Başvuru sırasında bir hata oluştu: ' + (response.message || 'Bilinmeyen hata'));
+                    btn.disabled = false;
+                    btn.textContent = 'Bilgilerimle Başvuruyu Tamamla';
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Bir bağlantı hatası oluştu.');
+                btn.disabled = false;
+                btn.textContent = 'Bilgilerimle Başvuruyu Tamamla';
+            }
+        }
+    </script>
+</body>
+
+</html>

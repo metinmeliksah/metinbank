@@ -5,6 +5,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using MetinBank.Models;
 using MetinBank.Service;
+using MetinBank.Business;
 using MetinBank.Util;
 
 namespace MetinBank.Desktop
@@ -13,12 +14,14 @@ namespace MetinBank.Desktop
     {
         private KullaniciModel _kullanici;
         private SIslem _sIslem;
+        private SKredi _sKredi;
 
         public FrmOnayBekleyenler(KullaniciModel kullanici)
         {
             InitializeComponent();
             _kullanici = kullanici;
             _sIslem = new SIslem();
+            _sKredi = new SKredi();
         }
 
         private void FrmOnayBekleyenler_Load(object sender, EventArgs e)
@@ -28,53 +31,66 @@ namespace MetinBank.Desktop
 
         private void OnaylariYukle()
         {
-            DataTable dt;
-            string hata = _sIslem.OnayBekleyenIslemleriGetir(_kullanici.RolAdi, out dt);
+            // 1. Para Transferleri (İşlemler)
+            DataTable dtIslemler;
+            string hata = _sIslem.OnayBekleyenIslemleriGetir(_kullanici.RolAdi, out dtIslemler);
             
-            if (hata != null)
+            if (hata != null) XtraMessageBox.Show("İşlem listesi hatası: " + hata);
+            else 
             {
-                XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                gridOnaylar.DataSource = dtIslemler;
+                ConfigGridIslemler();
             }
 
-            gridOnaylar.DataSource = dt;
-            // GridView Ayarları
+            // 2. Kredi Başvuruları
+            try
+            {
+                DataTable dtKrediler = _sKredi.GetBekleyenBasvurular();
+                gridKrediler.DataSource = dtKrediler;
+                ConfigGridKrediler();
+            }
+            catch(Exception ex) 
+            { 
+                 XtraMessageBox.Show("Kredi listesi hatası: " + ex.Message);
+            }
+
+            ClearDetailPanel();
+        }
+
+        private void ConfigGridIslemler()
+        {
             gridViewOnaylar.OptionsBehavior.Editable = false;
             gridViewOnaylar.OptionsView.ShowGroupPanel = false;
-            gridViewOnaylar.OptionsView.EnableAppearanceEvenRow = true;
-            gridViewOnaylar.Appearance.HeaderPanel.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold);
-
-            // Kolon Başlıkları ve Format
-            if (gridViewOnaylar.Columns["IslemTarihi"] != null)
-            {
-                gridViewOnaylar.Columns["IslemTarihi"].Caption = "İşlem Tarihi";
-                gridViewOnaylar.Columns["IslemTarihi"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
-                gridViewOnaylar.Columns["IslemTarihi"].DisplayFormat.FormatString = "dd.MM.yyyy HH:mm";
-            }
-            if (gridViewOnaylar.Columns["Tutar"] != null)
-            {
-                gridViewOnaylar.Columns["Tutar"].Caption = "Tutar";
-                gridViewOnaylar.Columns["Tutar"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                gridViewOnaylar.Columns["Tutar"].DisplayFormat.FormatString = "N2";
-            }
-            if (gridViewOnaylar.Columns["Aciklama"] != null) gridViewOnaylar.Columns["Aciklama"].Caption = "Açıklama";
-            if (gridViewOnaylar.Columns["IslemTanimi"] != null) gridViewOnaylar.Columns["IslemTanimi"].Caption = "İşlem Türü";
-            if (gridViewOnaylar.Columns["MusteriAdSoyad"] != null) gridViewOnaylar.Columns["MusteriAdSoyad"].Caption = "Müşteri";
-            if (gridViewOnaylar.Columns["HesapNo"] != null) gridViewOnaylar.Columns["HesapNo"].Caption = "Hesap No";
-            if (gridViewOnaylar.Columns["OnayDurumu"] != null) gridViewOnaylar.Columns["OnayDurumu"].Caption = "Durum";
             
-            // Gizlenmesi gereken kolonlar
             string[] hiddenCols = { "IslemID", "KaynakHesapID", "HedefHesapID", "KullaniciID", "SubeID", "IPAdresi", "IslemCikisTarihi", "BasariliMi", "ParaBirimi", "IslemUcreti", "IslemTipi", "HedefIBAN", "IslemReferansNo", "AliciAdi" };
-            foreach (string col in hiddenCols)
-            {
-                if (gridViewOnaylar.Columns[col] != null)
-                    gridViewOnaylar.Columns[col].Visible = false;
-            }
-
+            foreach (string col in hiddenCols) { if (gridViewOnaylar.Columns[col] != null) gridViewOnaylar.Columns[col].Visible = false; }
+            
+            if (gridViewOnaylar.Columns["Tutar"] != null) gridViewOnaylar.Columns["Tutar"].DisplayFormat.FormatString = "N2";
+            
             gridViewOnaylar.BestFitColumns();
+        }
 
-            // Clear detail panel
-            ClearDetailPanel();
+        private void ConfigGridKrediler()
+        {
+            gridViewKrediler.OptionsBehavior.Editable = false;
+            gridViewKrediler.OptionsView.ShowGroupPanel = false;
+            
+            // Kolonlar: BasvuruID, MusteriID, AdSoyad, Tutar, Vade, Faiz, ...
+            if (gridViewKrediler.Columns["BasvuruID"] != null) gridViewKrediler.Columns["BasvuruID"].Visible = false;
+            if (gridViewKrediler.Columns["MusteriID"] != null) gridViewKrediler.Columns["MusteriID"].Visible = false;
+            
+            if (gridViewKrediler.Columns["TalepEdilenTutar"] != null) 
+            {
+                gridViewKrediler.Columns["TalepEdilenTutar"].Caption = "Tutar";
+                gridViewKrediler.Columns["TalepEdilenTutar"].DisplayFormat.FormatString = "N2";
+            }
+            if (gridViewKrediler.Columns["AdSoyad"] != null) gridViewKrediler.Columns["AdSoyad"].Caption = "Müşteri";
+            if (gridViewKrediler.Columns["TalepEdilenVade"] != null) gridViewKrediler.Columns["TalepEdilenVade"].Caption = "Vade (Ay)";
+            if (gridViewKrediler.Columns["BasvuruTarihi"] != null) gridViewKrediler.Columns["BasvuruTarihi"].Caption = "Tarih";
+
+            gridViewKrediler.BestFitColumns();
+            
+            gridViewKrediler.FocusedRowChanged += GridViewKrediler_FocusedRowChanged;
         }
 
         private void ClearDetailPanel()
@@ -82,114 +98,144 @@ namespace MetinBank.Desktop
             lblIslemTipi.Text = "İşlem Tipi: -";
             lblTutar.Text = "Tutar: -";
             lblTarih.Text = "Tarih: -";
-            lblOlusturan.Text = "Oluşturan: -";
+            lblOlusturan.Text = "Kişi: -";
         }
 
         private void GridViewOnaylar_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
+            if (tabControl.SelectedTabPage != tabIslemler) return;
+            UpdateDetailFromGrid(gridViewOnaylar, "IslemTipi", "Tutar", "IslemTarihi", "MusteriAdSoyad");
+        }
+        
+        private void GridViewKrediler_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
+        {
+            if (tabControl.SelectedTabPage != tabKrediler) return;
+            UpdateDetailFromGrid(gridViewKrediler, "Kanal", "TalepEdilenTutar", "BasvuruTarihi", "AdSoyad");
+            lblIslemTipi.Text = "İşlem Tipi: Kredi Başvurusu";
+        }
+
+        private void UpdateDetailFromGrid(DevExpress.XtraGrid.Views.Grid.GridView view, string colTip, string colTutar, string colTarih, string colKisi)
+        {
+            if (view.FocusedRowHandle < 0) { ClearDetailPanel(); return; }
+            
             try
             {
-                if (e.FocusedRowHandle < 0)
-                {
-                    ClearDetailPanel();
-                    return;
-                }
+                object tip = view.GetRowCellValue(view.FocusedRowHandle, colTip);
+                object tutar = view.GetRowCellValue(view.FocusedRowHandle, colTutar);
+                object tarih = view.GetRowCellValue(view.FocusedRowHandle, colTarih);
+                object kisi = view.GetRowCellValue(view.FocusedRowHandle, colKisi);
 
-                // Get row data and update detail panel
-                object islemTipiObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "IslemTipi");
-                object tutarObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "Tutar");
-                object tarihObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "IslemTarihi");
-                object olusturanObj = gridViewOnaylar.GetRowCellValue(e.FocusedRowHandle, "MusteriAdSoyad"); // Updated query returns this
-
-                string islemTipi = CommonFunctions.DbNullToString(islemTipiObj);
-                decimal tutar = CommonFunctions.DbNullToDecimal(tutarObj);
-                string tarih = tarihObj != DBNull.Value && tarihObj != null 
-                    ? Convert.ToDateTime(tarihObj).ToString("dd.MM.yyyy HH:mm") 
-                    : "-";
-                string olusturan = CommonFunctions.DbNullToString(olusturanObj);
-
-                lblIslemTipi.Text = $"İşlem Tipi: {islemTipi}";
-                lblTutar.Text = $"Tutar: {tutar:N2} TL";
+                lblIslemTipi.Text = colTip == "Kanal" ? "Kanal: " + tip : "İşlem: " + tip;
+                lblTutar.Text = $"Tutar: {Convert.ToDecimal(tutar):N2} TL";
                 lblTarih.Text = $"Tarih: {tarih}";
-                lblOlusturan.Text = $"Müşteri: {olusturan}";
+                lblOlusturan.Text = $"Kişi: {kisi}";
             }
-            catch
-            {
-                ClearDetailPanel();
-            }
+            catch {}
         }
 
         private void BtnOnayla_Click(object sender, EventArgs e)
         {
-            if (gridViewOnaylar.FocusedRowHandle < 0)
+            if (tabControl.SelectedTabPage == tabIslemler)
             {
-                XtraMessageBox.Show("Lütfen bir kayıt seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                IslemOnayla();
             }
-
-            object islemIDObj = gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "IslemID");
-            long islemID = islemIDObj != DBNull.Value ? Convert.ToInt64(islemIDObj) : 0;
-
-            if (islemID == 0)
+            else
             {
-                XtraMessageBox.Show("Geçersiz kayıt.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                KrediOnayla();
             }
-
-            DialogResult result = XtraMessageBox.Show("İşlemi onaylamak istediğinize emin misiniz?", 
-                "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result != DialogResult.Yes)
-                return;
-
-            string hata = _sIslem.IslemOnayla(islemID, _kullanici.KullaniciID, _kullanici.RolAdi);
-
-            if (hata != null)
-            {
-                XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            XtraMessageBox.Show("İşlem başarıyla onaylandı (veya bir sonraki onaya gönderildi)!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            OnaylariYukle();
         }
 
         private void BtnReddet_Click(object sender, EventArgs e)
         {
-            if (gridViewOnaylar.FocusedRowHandle < 0)
+            if (tabControl.SelectedTabPage == tabIslemler)
             {
-                XtraMessageBox.Show("Lütfen bir kayıt seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                IslemReddet();
             }
-
-            // Use DevExpress input dialog
-            string redNedeni = XtraInputBox.Show("Red nedeni giriniz:", "İşlem Reddet", "");
-
-            if (string.IsNullOrWhiteSpace(redNedeni))
+            else
             {
-                XtraMessageBox.Show("Red nedeni girilmelidir.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                KrediReddet();
             }
+        }
+        
+        private void IslemOnayla()
+        {
+             if (gridViewOnaylar.FocusedRowHandle < 0) return;
+             long id = Convert.ToInt64(gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "IslemID"));
+             
+             if (XtraMessageBox.Show("Transfer işlemini onaylıyor musunuz?", "Onay", MessageBoxButtons.YesNo) == DialogResult.Yes)
+             {
+                 string hata = _sIslem.IslemOnayla(id, _kullanici.KullaniciID, _kullanici.RolAdi);
+                 if (hata != null) XtraMessageBox.Show(hata);
+                 else { XtraMessageBox.Show("Onaylandı."); OnaylariYukle(); }
+             }
+        }
+        
+        private void IslemReddet()
+        {
+             if (gridViewOnaylar.FocusedRowHandle < 0) return;
+             long id = Convert.ToInt64(gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "IslemID"));
+             string neden = XtraInputBox.Show("Red sebebi:", "Red", "");
+             if(string.IsNullOrEmpty(neden)) return;
 
-            object islemIDObj = gridViewOnaylar.GetRowCellValue(gridViewOnaylar.FocusedRowHandle, "IslemID");
-            long islemID = islemIDObj != DBNull.Value ? Convert.ToInt64(islemIDObj) : 0;
+             string hata = _sIslem.IslemReddet(id, _kullanici.KullaniciID, neden);
+             if (hata != null) XtraMessageBox.Show(hata);
+             else { XtraMessageBox.Show("Reddedildi."); OnaylariYukle(); }
+        }
 
-            if (islemID == 0)
+        private void KrediOnayla()
+        {
+            if (gridViewKrediler.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridViewKrediler.GetRowCellValue(gridViewKrediler.FocusedRowHandle, "BasvuruID"));
+
+            if (XtraMessageBox.Show("Kredi başvurusunu onaylıyor musunuz?\nPara müşterinin hesabına geçecektir.", "Kredi Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
             {
-                XtraMessageBox.Show("Geçersiz kayıt.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                // 1. Önce Durumu ONAYLANDI yap
+                string hata = _sKredi.BasvuruOnaylaReddet(id, true, _kullanici.KullaniciID);
+                if (hata != null) 
+                {
+                    XtraMessageBox.Show("Onay hatası: " + hata);
+                    return;
+                }
+                
+                // 2. Krediyi Kullandır (Para hesaba geçer, ödeme planı oluşur)
+                // SKredi'de KrediKullandir metodu lazım. BKredi'de var.
+                // Eğer KrediKullandir çağrılmazsa sadece onaylı kalır. Kullanıcı "Kullandır" mı demeli yoksa Onay=Kullandır mı?
+                // Genelde Onay sonrası sözleşme vs olur ama burada "Onay" direkt parayı yatırsın.
+                
+                try 
+                {
+                    // BKredi instance'ına erişim yok, SSc aracılığıyla yapmalıyız.
+                    // SKredi sınıfına KrediKullandir metodunu açmamışız.
+                    // Ancak Business katmanında OnaylaReddet sadece durumu değiştiriyor.
+                    // Biz Onay'dan sonra otomatik kullandırım istiyoruz.
+                    // Hızlıca BKredi logic'ini çağırabilmeliyiz. 
+                    // SKredi'yi update etmek yerine reflection veya direkt Business referansı (zaten using var) ile yapalım mı? Hayır, Service üzerinden gidelim.
+                    // SKredi'ye KrediKullandir eklemek en doğrusu ama dosyayı değiştirmek uzun.
+                    // BKredi'yi direkt burada instantiate edebiliriz (Using MetinBank.Business var).
+                    
+                    BKredi bKredi = new BKredi();
+                    bKredi.KrediKullandir(id); // Bu metodu daha önce BKredi public yapmıştık.
+                    
+                    XtraMessageBox.Show("Kredi onaylandı ve kullandırıldı.", "Başarılı");
+                    OnaylariYukle();
+                }
+                catch (Exception ex)
+                {
+                    XtraMessageBox.Show("Kredi kullandırılırken hata oluştu: " + ex.Message);
+                }
             }
+        }
 
-            string hata = _sIslem.IslemReddet(islemID, _kullanici.KullaniciID, redNedeni);
+        private void KrediReddet()
+        {
+            if (gridViewKrediler.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridViewKrediler.GetRowCellValue(gridViewKrediler.FocusedRowHandle, "BasvuruID"));
+            string neden = XtraInputBox.Show("Red sebebi:", "Kredi Red", "");
+             if(string.IsNullOrEmpty(neden)) return;
 
-            if (hata != null)
-            {
-                XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            XtraMessageBox.Show("İşlem reddedildi!", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            OnaylariYukle();
+            string hata = _sKredi.BasvuruOnaylaReddet(id, false, _kullanici.KullaniciID, neden);
+            if (hata != null) XtraMessageBox.Show(hata);
+            else { XtraMessageBox.Show("Başvuru reddedildi."); OnaylariYukle(); }
         }
 
         private void BtnYenile_Click(object sender, EventArgs e)

@@ -11,6 +11,11 @@ function getRelativePath() {
         return '../../../';
     }
 
+    // Depth 2: internet-sube/
+    if (path.includes('/internet-sube/')) {
+        return '../';
+    }
+
     // Depth 1: para-transferleri/
     if (path.includes('/para-transferleri/')) {
         return '../';
@@ -118,7 +123,7 @@ function getHeaderHtml() {
 
                 <!-- Right Actions -->
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="${ASSET_PREFIX}internet-sube.html" class="bg-blue-600 text-white px-6 py-2.5 rounded-full font-bold shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-300 flex items-center gap-2 transform hover:-translate-y-0.5">
+                    <a href="${ASSET_PREFIX}internet-sube/login.html" class="bg-blue-600 text-white px-6 py-2.5 rounded-full font-bold shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-300 flex items-center gap-2 transform hover:-translate-y-0.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         İnternet Şube
                     </a>

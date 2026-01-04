@@ -168,6 +168,21 @@ namespace MetinBank.Desktop
             OpenMdiChild(new FrmDovizAlSat(_kullanici));
         }
 
+        private void navBarItemKrediBasvuru_LinkClicked(object sender, NavBarLinkEventArgs e)
+        {
+            OpenMdiChild(new FrmKrediBasvuru(_kullanici));
+        }
+
+        private void navBarItemVadeliHesap_LinkClicked(object sender, NavBarLinkEventArgs e)
+        {
+            OpenMdiChild(new FrmVadeliHesapAc(_kullanici));
+        }
+
+        private void navBarItemVadesizHesap_LinkClicked(object sender, NavBarLinkEventArgs e)
+        {
+            OpenMdiChild(new FrmVadesizHesapAc(_kullanici));
+        }
+
         private void OpenMdiChild(Form childForm)
         {
             // Check if form is already open
