@@ -152,7 +152,17 @@ namespace MetinBank.Desktop
 
                 gridGonderenMusteriler.DataSource = sonuclar;
                 gridViewGonderenMusteriler.BestFitColumns();
-                GizliSutunlariAyarla(gridViewGonderenMusteriler, "MusteriID");
+                
+                // Sadece MusteriNo, TCKN, AdSoyad görünsün
+                foreach (DevExpress.XtraGrid.Columns.GridColumn col in gridViewGonderenMusteriler.Columns)
+                {
+                    string fieldName = col.FieldName;
+                    if (fieldName != "MusteriNo" && fieldName != "TCKN" && fieldName != "AdSoyad" && 
+                        fieldName != "Ad" && fieldName != "Soyad")
+                    {
+                        col.Visible = false;
+                    }
+                }
             }
             catch
             {
@@ -323,7 +333,17 @@ namespace MetinBank.Desktop
 
                 gridAliciMusteriler.DataSource = sonuclar;
                 gridViewAliciMusteriler.BestFitColumns();
-                GizliSutunlariAyarla(gridViewAliciMusteriler, "MusteriID");
+                
+                // Sadece MusteriNo, TCKN, AdSoyad görünsün
+                foreach (DevExpress.XtraGrid.Columns.GridColumn col in gridViewAliciMusteriler.Columns)
+                {
+                    string fieldName = col.FieldName;
+                    if (fieldName != "MusteriNo" && fieldName != "TCKN" && fieldName != "AdSoyad" && 
+                        fieldName != "Ad" && fieldName != "Soyad")
+                    {
+                        col.Visible = false;
+                    }
+                }
             }
             catch
             {

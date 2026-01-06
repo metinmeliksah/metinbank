@@ -46,6 +46,17 @@ namespace MetinBank.Desktop
                 _sMusteri.MusteriAra(arama, _kullanici.SubeID, false, out dt);
                 gridMusteriler.DataSource = dt;
                 gridViewMusteriler.BestFitColumns();
+                
+                // Sadece MusteriNo, TCKN, Ad, Soyad görünsün - diğer sütunları gizle (AdSoyad da gizli)
+                foreach (DevExpress.XtraGrid.Columns.GridColumn col in gridViewMusteriler.Columns)
+                {
+                    string fieldName = col.FieldName;
+                    if (fieldName != "MusteriNo" && fieldName != "TCKN" && 
+                        fieldName != "Ad" && fieldName != "Soyad")
+                    {
+                        col.Visible = false;
+                    }
+                }
             }
             catch { }
         }
@@ -95,7 +106,14 @@ namespace MetinBank.Desktop
                     HesapModel yeniHesap;
                     _sHesap.HesapGetir(hesapID, out yeniHesap);
                     XtraMessageBox.Show($"Vadesiz Hesap Açıldı!\nIBAN: {yeniHesap?.IBAN}");
-                    this.Close();
+                    
+                    // Formu sıfırla, kapatma
+                    _seciliMusteriID = 0;
+                    _seciliMusteriAd = "";
+                    lblSeciliMusteri.Text = "Seçili: -";
+                    txtMusteriArama.Text = "";
+                    gridMusteriler.DataSource = null;
+                    cmbParaBirimi.SelectedIndex = 0;
                 }
             }
             catch (Exception ex)

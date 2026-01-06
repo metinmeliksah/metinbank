@@ -254,7 +254,7 @@ namespace MetinBank.Business
             {
                 string query = @"SELECT HesapID, HesapNo, IBAN, HesapTipi, HesapCinsi, Bakiye, 
                                 KullanilabilirBakiye, Durum, AcilisTarihi
-                                FROM Hesap WHERE MusteriID = @musteriID ORDER BY AcilisTarihi DESC";
+                                FROM Hesap WHERE MusteriID = @musteriID AND Durum = 'Aktif' ORDER BY AcilisTarihi DESC";
 
                 MySqlParameter[] parameters = new MySqlParameter[] { new MySqlParameter("@musteriID", musteriID) };
 
@@ -275,6 +275,8 @@ namespace MetinBank.Business
         {
             try
             {
+                // KullanilabilirBakiye = Bakiye - BlokeBakiye (computed column)
+                // Bu nedenle sadece Bakiye'yi güncellemek yeterli
                 string query = "UPDATE Hesap SET Bakiye = Bakiye + @tutar WHERE HesapID = @hesapID";
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {

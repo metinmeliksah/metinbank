@@ -183,7 +183,7 @@ namespace MetinBank.Desktop
 
         private void OpenMdiChild(Form childForm)
         {
-            // Check if form is already open
+            // Check if same form is already open - just activate it
             foreach (Form existingForm in this.MdiChildren)
             {
                 if (existingForm.GetType() == childForm.GetType())
@@ -194,13 +194,17 @@ namespace MetinBank.Desktop
                 }
             }
 
-            // Open new form as MDI child - prevent visible animation
+            // Close all other MDI children for smooth transition
             this.SuspendLayout();
+            foreach (Form existingForm in this.MdiChildren)
+            {
+                existingForm.Close();
+            }
+
+            // Open new form as MDI child - prevent visible animation
             childForm.MdiParent = this;
             childForm.WindowState = FormWindowState.Maximized;
-            childForm.Opacity = 0;
             childForm.Show();
-            childForm.Opacity = 1;
             this.ResumeLayout(true);
         }
 

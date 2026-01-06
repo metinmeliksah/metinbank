@@ -102,7 +102,7 @@ namespace MetinBank.Desktop
                 gridViewMusteriler.BestFitColumns();
                 
                 // ID sütunlarını gizle
-                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
+                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID", "KayitSubeID");
             }
             catch
             {

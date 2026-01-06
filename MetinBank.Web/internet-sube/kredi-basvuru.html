@@ -51,25 +51,23 @@
                     <h2 class="card-title" style="margin-bottom: 2rem;">Kredi Hesaplama</h2>
 
                     <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label>Kredi Türü</label>
-                        <select id="krediTuru" onchange="calculateKredi()"
+                        <label>Kredi Tutarı (TL)</label>
+                        <input type="number" id="tutar" value="10000" min="1000" max="1000000" step="500"
+                            oninput="updateOptionsAndCalculate()"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1.1rem; font-weight: bold;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label>Müsait Kredi Oranları</label>
+                        <select id="krediTuru" onchange="updateVadeLimits(); calculateKredi();"
                             style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                            <option value="Ihtiyac">İhtiyaç Kredisi (%1.99)</option>
-                            <option value="Tasit">Taşıt Kredisi (%1.79)</option>
-                            <option value="Konut">Konut Kredisi (%1.49)</option>
+                            <option value="">Lütfen önce tutar giriniz</option>
                         </select>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label>Kredi Tutarı (TL)</label>
-                        <input type="number" id="tutar" value="10000" min="1000" max="1000000"
-                            oninput="calculateKredi()"
-                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
                         <label>Vade (Ay)</label>
-                        <input type="range" id="vade" min="3" max="120" value="12"
+                        <input type="range" id="vade" min="3" max="36" value="12"
                             oninput="document.getElementById('vadeVal').textContent = this.value; calculateKredi()"
                             style="width: 100%;">
                         <div style="text-align: right; font-weight: bold;"><span id="vadeVal">12</span> Ay</div>
@@ -144,40 +142,244 @@
     <script>
         checkAuth();
 
+        let allRates = [];
+
         // Initialize
-        calculateKredi();
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadCreditRates();
+        });
+
+        async function loadCreditRates() {
+            try {
+                const response = await apiGet('/kredi/oranlar');
+                if (response && Array.isArray(response)) {
+                    allRates = response; // allRates global değişkenini kullan (krediOranlari yerine)
+                    // İlk yüklemede varsayılan tutara göre filtrele
+                    updateOptionsAndCalculate();
+                }
+            } catch (error) {
+                console.error('Kredi oranları yüklenemedi:', error);
+            }
+        }
+
+        function updateOptionsAndCalculate() {
+            const amountInput = document.getElementById('tutar');
+            const amount = parseFloat(amountInput.value) || 0;
+            const select = document.getElementById('krediTuru');
+            const currentSelection = select.value;
+
+            // Tutara uygun oranları bul
+            // Backend'de: BaslangicTutar <= Tutar <= BitisTutar
+            // BKredi.cs'den gelen veride field isimleri PascalCase olabilir mi? api.js response'u lowerCamelCase'e çeviriyor mu?
+            // Genelde JSON serialize edilirken camelCase olur. Kontrol etmekte fayda var.
+            // Helper for case-insensitive access
+            const getVal = (item, key) => item[key] !== undefined ? item[key] : item[key.charAt(0).toUpperCase() + key.slice(1)];
+
+            const validRates = allRates.filter(r => {
+                const baslangic = getVal(r, 'baslangicTutar') || 0;
+                const bitis = getVal(r, 'bitisTutar') || Number.MAX_VALUE;
+                return amount >= baslangic && amount <= bitis;
+            });
+
+            select.innerHTML = '';
+
+            if (validRates.length === 0) {
+                const option = document.createElement('option');
+                option.text = 'Bu tutar için uygun kredi bulunamadı';
+                select.appendChild(option);
+                select.disabled = true;
+                resetCalculation();
+                return;
+            }
+
+            select.disabled = false;
+            let foundPrevious = false;
+
+            validRates.forEach(oran => {
+                const getVal = (item, key) => item[key] !== undefined ? item[key] : item[key.charAt(0).toUpperCase() + key.slice(1)];
+
+                const option = document.createElement('option');
+                option.value = getVal(oran, 'krediTipi');
+
+                // Business Rule: 50k->36, 100k->24, >100k->12
+                let displayMaxVade = getVal(oran, 'maxVade');
+                if (amount <= 50000) displayMaxVade = Math.min(displayMaxVade, 36);
+                else if (amount <= 100000) displayMaxVade = Math.min(displayMaxVade, 24);
+                else displayMaxVade = Math.min(displayMaxVade, 12);
+
+                option.text = `${getVal(oran, 'krediTipi')} Kredisi (%${getVal(oran, 'faizOrani')} - Max ${displayMaxVade} Ay)`;
+                select.appendChild(option);
+
+                if (getVal(oran, 'krediTipi') === currentSelection) foundPrevious = true;
+            });
+
+            if (foundPrevious) {
+                select.value = currentSelection;
+            } else {
+                select.selectedIndex = 0;
+            }
+
+            updateVadeLimits();
+            calculateKredi();
+        }
+
+        function updateVadeLimits() {
+            const amount = parseFloat(document.getElementById('tutar').value) || 0;
+            const selectedType = document.getElementById('krediTuru').value;
+
+            // Helper
+            const getVal = (item, key) => item[key] !== undefined ? item[key] : item[key.charAt(0).toUpperCase() + key.slice(1)];
+
+            const oranData = allRates.find(r => {
+                const typeMatcher = getVal(r, 'krediTipi') === selectedType;
+                const baslangic = getVal(r, 'baslangicTutar') || 0;
+                const bitis = getVal(r, 'bitisTutar') || Number.MAX_VALUE;
+                return typeMatcher && amount >= baslangic && amount <= bitis;
+            });
+
+            if (oranData) {
+                const vadeInput = document.getElementById('vade');
+                const vadeVal = document.getElementById('vadeVal');
+
+                let minVade = getVal(oranData, 'minVade');
+                let maxVade = getVal(oranData, 'maxVade');
+
+                // Business Rules enforcement
+                if (amount <= 50000) {
+                    maxVade = Math.min(maxVade, 36);
+                } else if (amount <= 100000) {
+                    maxVade = Math.min(maxVade, 24);
+                } else {
+                    maxVade = Math.min(maxVade, 12);
+                }
+
+                vadeInput.min = minVade;
+                vadeInput.max = maxVade;
+
+                if (parseInt(vadeInput.value) > maxVade) vadeInput.value = maxVade;
+                if (parseInt(vadeInput.value) < minVade) vadeInput.value = minVade;
+
+                vadeVal.textContent = vadeInput.value;
+            }
+        }
+
+        function resetCalculation() {
+            document.getElementById('aylikTaksit').textContent = '-';
+            document.getElementById('toplamOdeme').textContent = '-';
+            document.getElementById('selectedInfo').innerHTML = 'Lütfen geçerli bir tutar giriniz.';
+            document.getElementById('paymentPlanContainer').innerHTML = '';
+        }
 
         function calculateKredi() {
             const P = parseFloat(document.getElementById('tutar').value);
             const vade = parseInt(document.getElementById('vade').value);
-            const type = document.getElementById('krediTuru').value;
+            const selectedType = document.getElementById('krediTuru').value;
 
-            let rate = 1.99;
-            if (type === 'Tasit') rate = 1.79;
-            if (type === 'Konut') rate = 1.49;
+            // Seçili orana ait veriyi bul (En uygun oranı bulma mantığı - Basitçe tiple eşleşen ilkini alıyoruz şimdilik)
+            // Backend'de tutar aralığına göre oran değişiyor olabilir, burada basit filtreleme:
+            // Helper
+            const getVal = (item, key) => item[key] !== undefined ? item[key] : item[key.charAt(0).toUpperCase() + key.slice(1)];
 
-            // Monthly interest rate (r)
-            const r = rate / 100;
+            // Seçili orana ait veriyi bul
+            const oranData = allRates.find(r => {
+                const typeMatcher = getVal(r, 'krediTipi') === selectedType;
+                // CalculateKredi'de de tutar kontrolü ekleyelim ki yanlış hesaplamasın
+                const baslangic = getVal(r, 'baslangicTutar') || 0;
+                const bitis = getVal(r, 'bitisTutar') || Number.MAX_VALUE;
+                return typeMatcher && P >= baslangic && P <= bitis;
+            });
 
-            // Monthly Payment Formula: M = P * (r * (1+r)^n) / ((1+r)^n - 1)
+            if (!oranData) return; // Veri henüz yüklenmediyse
+
+            const netFaizOrani = getVal(oranData, 'faizOrani'); // Aylık Yüzde (Örn: 1.99)
+
+            // Vergiler (Bireysel Kredi varsayımı ile)
+            const KKDF = 0.15;
+            const BSMV = 0.15;
+            const vergiCarpani = 1 + KKDF + BSMV; // 1.30
+
+            // Brüt Faiz Oranı (Aylık Ondalık)
+            // Örn: 1.99% -> 0.0199 * 1.30 -> ~0.02587
+            const brutAylikOran = (netFaizOrani / 100) * vergiCarpani;
+
+            // Taksit Formülü (Fransız Amortisman)
+            // Taksit = P * [r(1+r)^n] / [(1+r)^n - 1]
             const n = vade;
-            const numerator = r * Math.pow(1 + r, n);
-            const denominator = Math.pow(1 + r, n) - 1;
+            const faizCarpan = Math.pow(1 + brutAylikOran, n);
+            const aylikTaksit = P * (brutAylikOran * faizCarpan) / (faizCarpan - 1);
+            const toplamOdeme = aylikTaksit * n;
 
-            const monthlyPayment = P * (numerator / denominator);
-            const totalRepayment = monthlyPayment * n;
-
-            document.getElementById('aylikTaksit').textContent = monthlyPayment.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
-            document.getElementById('toplamOdeme').textContent = totalRepayment.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+            document.getElementById('aylikTaksit').textContent = aylikTaksit.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+            document.getElementById('toplamOdeme').textContent = toplamOdeme.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
 
             // Update Summary
-            const typeName = document.getElementById('krediTuru').options[document.getElementById('krediTuru').selectedIndex].text.split('(')[0];
             document.getElementById('selectedInfo').innerHTML = `
-                <strong>${typeName}</strong><br>
-                Tutar: ${P.toLocaleString('tr-TR')} TL<br>
-                Vade: ${vade} Ay<br>
-                Oran: %${rate}
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>${selectedType} Kredisi</strong>
+                    <span class="badge" style="background:var(--primary); color:white; padding:2px 8px; border-radius:4px;">%${netFaizOrani} Faiz</span>
+                </div>
+                <div style="margin-top:8px; font-size: 0.85rem; color:#666;">
+                    Tutar: <b>${P.toLocaleString('tr-TR')} TL</b><br>
+                    Vade: <b>${vade} Ay</b><br>
+                    Aylık Maliyet (Vergiler Dahil): <b>%${(brutAylikOran * 100).toFixed(4)}</b>
+                </div>
             `;
+
+            generateAmortizationSchedule(P, vade, aylikTaksit, brutAylikOran, vergiCarpani);
+        }
+
+        function generateAmortizationSchedule(principal, months, monthlyPayment, monthlyRate, taxMultiplier) {
+            let balance = principal;
+            let html = `
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Ödeme Planı</h3>
+                <div style="max-height: 300px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px;">
+                    <table class="payment-plan-table" style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                        <thead style="background: #f8fafc; position: sticky; top: 0;">
+                            <tr>
+                                <th style="padding: 10px; text-align: left;">Taksit</th>
+                                <th style="padding: 10px; text-align: right;">Anapara</th>
+                                <th style="padding: 10px; text-align: right;">Faiz+Vergi</th>
+                                <th style="padding: 10px; text-align: right;">Taksit Tutarı</th>
+                                <th style="padding: 10px; text-align: right;">Kalan Borç</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            for (let i = 1; i <= months; i++) {
+                const interestPayment = balance * monthlyRate;
+                let principalPayment = monthlyPayment - interestPayment;
+
+                // Son taksit ayarlaması (Kuruş farklarını gidermek için)
+                if (i === months || principalPayment > balance) {
+                    principalPayment = balance;
+                    // Son taksitte tutar biraz değişebilir
+                }
+
+                balance -= principalPayment;
+                if (balance < 0) balance = 0;
+
+                html += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 8px 10px;">${i}. Taksit</td>
+                        <td style="padding: 8px 10px; text-align: right;">${principalPayment.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                        <td style="padding: 8px 10px; text-align: right;">${interestPayment.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                        <td style="padding: 8px 10px; text-align: right; font-weight: 600;">${(principalPayment + interestPayment).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                        <td style="padding: 8px 10px; text-align: right; color: #666;">${balance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                    </tr>
+                `;
+            }
+
+            html += `</tbody></table></div>`;
+
+            // Eğer plan containerı yoksa oluştur
+            let planContainer = document.getElementById('paymentPlanContainer');
+            if (!planContainer) {
+                planContainer = document.createElement('div');
+                planContainer.id = 'paymentPlanContainer';
+                document.querySelector('.calculator-card').appendChild(planContainer);
+            }
+            planContainer.innerHTML = html;
         }
 
         async function submitApplication() {
@@ -201,8 +403,32 @@
                 const user = getUser();
                 const tutar = parseFloat(document.getElementById('tutar').value);
                 const vade = parseInt(document.getElementById('vade').value);
-                const turKod = document.getElementById('krediTuru').value === 'Ihtiyac' ? 1 :
-                    (document.getElementById('krediTuru').value === 'Tasit' ? 2 : 3);
+
+                // Kredi Türü seçimine göre backend'deki ID'yi bulmak lazım
+                const selectedType = document.getElementById('krediTuru').value;
+
+                // Tutara ve tipe göre doğru oranı bul (ID'si orada)
+                // Helper
+                const getVal = (item, key) => item[key] !== undefined ? item[key] : item[key.charAt(0).toUpperCase() + key.slice(1)];
+
+                // Tutara ve tipe göre doğru oranı bul (ID'si orada)
+                const oranData = allRates.find(r => getVal(r, 'krediTipi') === selectedType && tutar >= (getVal(r, 'baslangicTutar') || 0) && tutar <= (getVal(r, 'bitisTutar') || Number.MAX_VALUE));
+
+                if (!oranData) {
+                    alert('Seçilen tutar için uygun kredi türü bulunamadı.');
+                    btn.disabled = false;
+                    btn.textContent = 'Bilgilerimle Başvuruyu Tamamla';
+                    return;
+                }
+
+                // OranID veya mapped ID kullanılabilir. BKredi.cs'de türler 'krediTipi' string olarak tutuluyor ama basvuruda ID isteniyor.
+                // Genelde: 1-İhtiyaç, 2-Taşıt, 3-Konut
+                // Ancak en sağlıklısı oranData.OranID veya varsa KrediTurID kullanmak.
+                // Şimdilik string mappinge devam ediyoruz ama oranData varlığını garanti ettik.
+                let turKod = 1;
+                if (selectedType === 'Tasit' || selectedType === 'Taşıt') turKod = 2;
+                if (selectedType === 'Konut') turKod = 3;
+                if (selectedType.includes('İhtiyaç') || selectedType.includes('Ihtiyac')) turKod = 1;
 
                 const payload = {
                     musteriID: user.musteriID,
@@ -214,17 +440,26 @@
 
                 const response = await apiPost('/kredi/basvuru', payload);
 
-                if (response.success) {
+                if (response.success || response.durum) { // Backend durum dönüyor olabilir
+                    // Response yapısı: { Durum: "ONAYLANDI", Mesaj: "..." }
+                    // apiPost success:true bekler ama backend özel format dönebilir.
+                    // api.js checkAuth kullandığı için standart response.json() döner.
+
                     document.getElementById('basvuruForm').style.display = 'none';
                     document.getElementById('successMessage').style.display = 'block';
+
+                    // Durum mesajını göster
+                    const durumMesaj = response.Mesaj || response.message || 'Başvurunuz alındı.';
+                    document.querySelector('#successMessage p').textContent = durumMesaj;
+
                 } else {
-                    alert('Başvuru sırasında bir hata oluştu: ' + (response.message || 'Bilinmeyen hata'));
+                    alert('Başvuru sonucu: ' + (response.message || response.Mesaj || 'Hata oluştu'));
                     btn.disabled = false;
                     btn.textContent = 'Bilgilerimle Başvuruyu Tamamla';
                 }
             } catch (error) {
                 console.error(error);
-                alert('Bir bağlantı hatası oluştu.');
+                alert('Bir bağlantı hatası oluştu veya başvuru kriterlerini sağlamıyor.');
                 btn.disabled = false;
                 btn.textContent = 'Bilgilerimle Başvuruyu Tamamla';
             }

@@ -46,7 +46,7 @@ namespace MetinBank.Desktop
 
             // Spilt
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerControl1.SplitterPosition = 350;
+            this.splitContainerControl1.SplitterPosition = 450;
             this.splitContainerControl1.Panel1.Controls.Add(this.groupMusteri);
             this.splitContainerControl1.Panel2.Controls.Add(this.groupIslem);
 
@@ -92,7 +92,8 @@ namespace MetinBank.Desktop
             this.labelControl2.Location = new System.Drawing.Point(50, 60);
 
             this.cmbParaBirimi.Location = new System.Drawing.Point(150, 57);
-            this.cmbParaBirimi.Properties.Items.AddRange(new object[] { "TL", "USD", "EUR", "GAU" });
+            this.cmbParaBirimi.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbParaBirimi.Properties.Items.AddRange(new object[] { "TL", "USD", "EUR", "GBP" });
             this.cmbParaBirimi.SelectedIndex = 0;
             this.cmbParaBirimi.Size = new System.Drawing.Size(200, 20);
 

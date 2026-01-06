@@ -134,8 +134,16 @@ namespace MetinBank.Desktop
                 gridMusteriler.DataSource = sonuclar;
                 gridViewMusteriler.BestFitColumns();
                 
-                // ID sütunlarını gizle
-                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID");
+                // Sadece MusteriNo, TCKN, AdSoyad görünsün
+                foreach (DevExpress.XtraGrid.Columns.GridColumn col in gridViewMusteriler.Columns)
+                {
+                    string fieldName = col.FieldName;
+                    if (fieldName != "MusteriNo" && fieldName != "TCKN" && fieldName != "AdSoyad" && 
+                        fieldName != "Ad" && fieldName != "Soyad")
+                    {
+                        col.Visible = false;
+                    }
+                }
             }
             catch
             {

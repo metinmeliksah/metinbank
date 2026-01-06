@@ -254,7 +254,7 @@ namespace MetinBank.Desktop
             this.layoutControlItem4.Location = new System.Drawing.Point(0, 606);
             this.layoutControlItem4.Name = "layoutControlItem4";
             this.layoutControlItem4.Size = new System.Drawing.Size(288, 24);
-            this.layoutControlItem4.Text = "Hesap ID:";
+            this.layoutControlItem4.Text = "Hesap No:";
             this.layoutControlItem4.TextSize = new System.Drawing.Size(77, 13);
             // 
             // layoutControlItem5

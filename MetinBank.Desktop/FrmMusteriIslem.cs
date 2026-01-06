@@ -66,6 +66,14 @@ namespace MetinBank.Desktop
             {
                 gridViewMusteriler.Columns["KayitSubeID"].Visible = false;
             }
+            
+            // Header görünürlüğünü runtime'da ayarla (okunaklı renkler)
+            gridViewMusteriler.Appearance.HeaderPanel.BackColor = System.Drawing.Color.FromArgb(21, 101, 192);
+            gridViewMusteriler.Appearance.HeaderPanel.ForeColor = System.Drawing.Color.White;
+            gridViewMusteriler.Appearance.HeaderPanel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            gridViewMusteriler.Appearance.HeaderPanel.Options.UseBackColor = true;
+            gridViewMusteriler.Appearance.HeaderPanel.Options.UseForeColor = true;
+            gridViewMusteriler.Appearance.HeaderPanel.Options.UseFont = true;
         }
 
         private void MusterileriYukle()

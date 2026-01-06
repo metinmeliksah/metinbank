@@ -164,7 +164,8 @@ namespace MetinBank.Desktop
             this.gridMusteriler.Location = new System.Drawing.Point(10, 60);
             this.gridMusteriler.MainView = this.gridViewMusteriler;
             this.gridMusteriler.Name = "gridMusteriler";
-            this.gridMusteriler.Size = new System.Drawing.Size(556, 280);
+            this.gridMusteriler.Size = new System.Drawing.Size(556, 260);
+            this.gridMusteriler.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridMusteriler.TabIndex = 1;
             this.gridMusteriler.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridViewMusteriler });
             // 
@@ -189,7 +190,8 @@ namespace MetinBank.Desktop
             this.gridHesaplar.Location = new System.Drawing.Point(10, 30);
             this.gridHesaplar.MainView = this.gridViewHesaplar;
             this.gridHesaplar.Name = "gridHesaplar";
-            this.gridHesaplar.Size = new System.Drawing.Size(576, 310);
+            this.gridHesaplar.Size = new System.Drawing.Size(576, 290);
+            this.gridHesaplar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridHesaplar.TabIndex = 0;
             this.gridHesaplar.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridViewHesaplar });
             // 
@@ -233,35 +235,35 @@ namespace MetinBank.Desktop
             // 
             // rgIslemTipi
             // 
-            this.rgIslemTipi.Location = new System.Drawing.Point(20, 100);
+            this.rgIslemTipi.Location = new System.Drawing.Point(20, 90);
             this.rgIslemTipi.Name = "rgIslemTipi";
             this.rgIslemTipi.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
             new DevExpress.XtraEditors.Controls.RadioGroupItem(0, "💰 Döviz Al (TRY → Döviz)"),
             new DevExpress.XtraEditors.Controls.RadioGroupItem(1, "💵 Döviz Sat (Döviz → TRY)")});
-            this.rgIslemTipi.Size = new System.Drawing.Size(400, 60);
+            this.rgIslemTipi.Size = new System.Drawing.Size(350, 60);
             this.rgIslemTipi.TabIndex = 2;
             this.rgIslemTipi.SelectedIndexChanged += new System.EventHandler(this.RgIslemTipi_SelectedIndexChanged);
             // 
             // cmbDovizCinsi
             // 
-            this.cmbDovizCinsi.Location = new System.Drawing.Point(450, 110);
+            this.cmbDovizCinsi.Location = new System.Drawing.Point(480, 100);
             this.cmbDovizCinsi.Name = "cmbDovizCinsi";
             this.cmbDovizCinsi.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbDovizCinsi.Size = new System.Drawing.Size(150, 20);
+            this.cmbDovizCinsi.Size = new System.Drawing.Size(180, 20);
             this.cmbDovizCinsi.TabIndex = 3;
             this.cmbDovizCinsi.SelectedIndexChanged += new System.EventHandler(this.CmbDovizCinsi_SelectedIndexChanged);
             // 
             // numTutar
             // 
             this.numTutar.EditValue = new decimal(new int[] { 0, 0, 0, 0 });
-            this.numTutar.Location = new System.Drawing.Point(450, 140);
+            this.numTutar.Location = new System.Drawing.Point(480, 130);
             this.numTutar.Name = "numTutar";
             this.numTutar.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.numTutar.Properties.DisplayFormat.FormatString = "N2";
             this.numTutar.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.numTutar.Properties.MaxValue = new decimal(new int[] { 100000000, 0, 0, 0 });
-            this.numTutar.Size = new System.Drawing.Size(200, 20);
+            this.numTutar.Size = new System.Drawing.Size(250, 20);
             this.numTutar.TabIndex = 4;
             this.numTutar.EditValueChanged += new System.EventHandler(this.NumTutar_EditValueChanged);
             // 
@@ -271,9 +273,10 @@ namespace MetinBank.Desktop
             this.lblOzet.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.lblOzet.Appearance.Options.UseFont = true;
             this.lblOzet.Appearance.Options.UseForeColor = true;
-            this.lblOzet.Location = new System.Drawing.Point(20, 190);
+            this.lblOzet.Location = new System.Drawing.Point(20, 180);
             this.lblOzet.Name = "lblOzet";
-            this.lblOzet.Size = new System.Drawing.Size(1136, 40);
+            this.lblOzet.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblOzet.Size = new System.Drawing.Size(1130, 60);
             this.lblOzet.TabIndex = 5;
             this.lblOzet.Text = "";
             // 

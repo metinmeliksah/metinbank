@@ -338,7 +338,7 @@ namespace MetinBank.Business
 
             // 4. Parayı Hesaba Yatır
             object hesapIDObj;
-            string qHesap = "SELECT HesapID FROM Hesaplar WHERE MusteriID = @mID AND HesapTurID = 1 LIMIT 1";
+            string qHesap = "SELECT HesapID FROM Hesap WHERE MusteriID = @mID AND HesapTipi = 'TL' AND HesapCinsi = 'Vadesiz' AND Durum = 'Aktif' LIMIT 1";
             MySqlParameter[] pHesap = { new MySqlParameter("@mID", musteriID) };
             _dataAccess.ExecuteScalar(qHesap, pHesap, out hesapIDObj);
             
@@ -346,7 +346,7 @@ namespace MetinBank.Business
             {
                 int hesapID = Convert.ToInt32(hesapIDObj);
                 
-                string updateHesap = "UPDATE Hesaplar SET Bakiye = Bakiye + @tutar WHERE HesapID=@hID";
+                string updateHesap = "UPDATE Hesap SET Bakiye = Bakiye + @tutar WHERE HesapID = @hID";
                 MySqlParameter[] pUpdate = { 
                     new MySqlParameter("@tutar", tutar), 
                     new MySqlParameter("@hID", hesapID) 
@@ -354,11 +354,16 @@ namespace MetinBank.Business
                 int aff2;
                 _dataAccess.ExecuteNonQuery(updateHesap, pUpdate, out aff2);
                 
-                string insertIslem = @"INSERT INTO Islem (HesapID, IslemTuru, Tutar, Aciklama, Tarih) 
-                                      VALUES (@hID, 'KrediKullandirim', @tutar, 'Kredi Kullandırımı', NOW())";
+                string refNo = "KRD" + DateTime.Now.ToString("yyyyMMddHHmmss") + krediID.ToString();
+                string insertIslem = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefHesapID, IslemTipi, IslemAltTipi, 
+                                      Tutar, ParaBirimi, IslemUcreti, Aciklama, KullaniciID, SubeID, OnayDurumu, KanalTipi, BasariliMi) 
+                                      VALUES (@refNo, NULL, @hID, 'Yatırma', 'KrediKullandirim', @tutar, 'TL', 0, 
+                                      @aciklama, 1, 1, 'Tamamlandı', 'Sistem', 1)";
                 MySqlParameter[] pIslem = { 
+                    new MySqlParameter("@refNo", refNo),
                     new MySqlParameter("@hID", hesapID),
-                    new MySqlParameter("@tutar", tutar)
+                    new MySqlParameter("@tutar", tutar),
+                    new MySqlParameter("@aciklama", $"Kredi Kullandırımı - Başvuru No: {basvuruID}")
                 };
                 int aff3;
                 _dataAccess.ExecuteNonQuery(insertIslem, pIslem, out aff3);

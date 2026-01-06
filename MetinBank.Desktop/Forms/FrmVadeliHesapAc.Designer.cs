@@ -36,6 +36,11 @@ namespace MetinBank.Desktop
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
+            
+            // Ödeme Yöntemi
+            this.rgOdemeYontemi = new DevExpress.XtraEditors.RadioGroup();
+            this.lblKaynakHesap = new DevExpress.XtraEditors.LabelControl();
+            this.cmbKaynakHesap = new DevExpress.XtraEditors.ComboBoxEdit();
 
             // Sonuc Detaylari
             this.lblFaiz = new DevExpress.XtraEditors.LabelControl();
@@ -61,12 +66,14 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.txtTutar.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtGun.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbParaBirimi.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rgOdemeYontemi.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbKaynakHesap.Properties)).BeginInit();
             this.SuspendLayout();
 
             // Split Container
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             // Splittable property removed
-            this.splitContainerControl1.SplitterPosition = 350;
+            this.splitContainerControl1.SplitterPosition = 450;
             this.splitContainerControl1.Panel1.Controls.Add(this.groupMusteri);
             this.splitContainerControl1.Panel2.Controls.Add(this.tablePanelRight);
             
@@ -105,7 +112,7 @@ namespace MetinBank.Desktop
             this.tablePanelRight.Columns.AddRange(new DevExpress.Utils.Layout.TablePanelColumn[] {
                 new DevExpress.Utils.Layout.TablePanelColumn(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 100F) });
             this.tablePanelRight.Rows.AddRange(new DevExpress.Utils.Layout.TablePanelRow[] {
-                new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Absolute, 250F),
+                new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Absolute, 320F),
                 new DevExpress.Utils.Layout.TablePanelRow(DevExpress.Utils.Layout.TablePanelEntityStyle.Relative, 100F) });
             
             this.tablePanelRight.Controls.Add(this.groupHesap);
@@ -125,6 +132,9 @@ namespace MetinBank.Desktop
             this.groupHesap.Controls.Add(this.labelControl3);
             this.groupHesap.Controls.Add(this.cmbParaBirimi);
             this.groupHesap.Controls.Add(this.labelControl4);
+            this.groupHesap.Controls.Add(this.rgOdemeYontemi);
+            this.groupHesap.Controls.Add(this.lblKaynakHesap);
+            this.groupHesap.Controls.Add(this.cmbKaynakHesap);
             this.groupHesap.Controls.Add(this.btnHesapla);
 
             this.labelControl2.Text = "Yatırılacak Tutar:";
@@ -144,14 +154,34 @@ namespace MetinBank.Desktop
             this.labelControl4.Text = "Para Birimi:";
             this.labelControl4.Location = new System.Drawing.Point(30, 120);
             this.cmbParaBirimi.Location = new System.Drawing.Point(150, 117);
-            this.cmbParaBirimi.Properties.Items.AddRange(new object[] { "TL", "USD", "EUR" });
+            this.cmbParaBirimi.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbParaBirimi.Properties.Items.AddRange(new object[] { "TL", "USD", "EUR", "GBP" });
             this.cmbParaBirimi.SelectedIndex = 0;
             this.cmbParaBirimi.Size = new System.Drawing.Size(200, 20);
 
             this.btnHesapla.Text = "Getiri Hesapla";
-            this.btnHesapla.Location = new System.Drawing.Point(150, 160);
+            this.btnHesapla.Location = new System.Drawing.Point(150, 240);
             this.btnHesapla.Size = new System.Drawing.Size(200, 40);
             this.btnHesapla.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+
+            // Ödeme Yöntemi RadioGroup
+            this.rgOdemeYontemi.Location = new System.Drawing.Point(30, 160);
+            this.rgOdemeYontemi.Name = "rgOdemeYontemi";
+            this.rgOdemeYontemi.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
+                new DevExpress.XtraEditors.Controls.RadioGroupItem(0, "💵 Nakit Yatırma"),
+                new DevExpress.XtraEditors.Controls.RadioGroupItem(1, "🔄 Vadesiz Hesaptan Virman")});
+            this.rgOdemeYontemi.Size = new System.Drawing.Size(320, 30);
+            this.rgOdemeYontemi.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Near;
+
+            // Kaynak Hesap Label ve ComboBox
+            this.lblKaynakHesap.Text = "Kaynak Hesap:";
+            this.lblKaynakHesap.Location = new System.Drawing.Point(30, 200);
+            this.lblKaynakHesap.Visible = false;
+            
+            this.cmbKaynakHesap.Location = new System.Drawing.Point(150, 197);
+            this.cmbKaynakHesap.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbKaynakHesap.Size = new System.Drawing.Size(350, 20);
+            this.cmbKaynakHesap.Visible = false;
 
             // Group Sonuc (Alt)
             this.groupSonuc.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -212,6 +242,8 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.txtTutar.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtGun.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbParaBirimi.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rgOdemeYontemi.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmbKaynakHesap.Properties)).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -239,5 +271,9 @@ namespace MetinBank.Desktop
         private DevExpress.XtraEditors.LabelControl lblFaiz;
         private DevExpress.XtraEditors.LabelControl lblToplam;
         private DevExpress.XtraEditors.SimpleButton btnHesapAc;
+        
+        private DevExpress.XtraEditors.RadioGroup rgOdemeYontemi;
+        private DevExpress.XtraEditors.LabelControl lblKaynakHesap;
+        private DevExpress.XtraEditors.ComboBoxEdit cmbKaynakHesap;
     }
 }

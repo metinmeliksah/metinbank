@@ -98,8 +98,18 @@ namespace MetinBank.Desktop
                 gridMusteriler.DataSource = sonuclar;
                 gridViewMusteriler.BestFitColumns();
                 
-                // ID sütunlarını gizle
-                GizliSutunlariAyarla(gridViewMusteriler, "MusteriID", "KayitSubeID");
+                // Para yatır/çek için gösterilecek sütunlar: MusteriNo, TCKN, AdSoyad, CepTelefon, Email, MusteriTipi, MusteriSegmenti
+                foreach (DevExpress.XtraGrid.Columns.GridColumn col in gridViewMusteriler.Columns)
+                {
+                    string fieldName = col.FieldName;
+                    if (fieldName != "MusteriNo" && fieldName != "TCKN" && fieldName != "AdSoyad" && 
+                        fieldName != "Ad" && fieldName != "Soyad" &&
+                        fieldName != "CepTelefon" && fieldName != "Email" && 
+                        fieldName != "MusteriTipi" && fieldName != "MusteriSegmenti")
+                    {
+                        col.Visible = false;
+                    }
+                }
             }
             catch
             {
@@ -161,13 +171,15 @@ namespace MetinBank.Desktop
                 _seciliHesapID = CommonFunctions.DbNullToInt(hesapIDObj);
                 if (_seciliHesapID == 0) return;
                 
+                object hesapNoObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "HesapNo");
                 object ibanObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "IBAN");
                 object bakiyeObj = gridViewHesaplar.GetRowCellValue(e.RowHandle, "Bakiye");
 
+                string hesapNo = CommonFunctions.DbNullToString(hesapNoObj);
                 string iban = CommonFunctions.DbNullToString(ibanObj);
                 decimal bakiye = CommonFunctions.DbNullToDecimal(bakiyeObj);
 
-                txtHesapID.Text = _seciliHesapID.ToString();
+                txtHesapID.Text = hesapNo;
                 txtIBAN.Text = iban;
                 txtBakiye.Text = bakiye.ToString("N2") + " TL";
             }
@@ -202,6 +214,10 @@ namespace MetinBank.Desktop
                     return;
                 }
 
+                // UI'ı kilitlenmesini önle
+                this.Cursor = Cursors.WaitCursor;
+                Application.DoEvents();
+
                 // SubeID null ise varsayılan değer kullan
                 int subeID = _kullanici.SubeID ?? 1;
 
@@ -214,6 +230,8 @@ namespace MetinBank.Desktop
                     subeID,
                     out islemID
                 );
+
+                this.Cursor = Cursors.Default;
 
                 if (hata != null)
                 {
@@ -232,12 +250,14 @@ namespace MetinBank.Desktop
                         "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
+                Application.DoEvents();
                 HesaplariYukle();
                 numTutar.Value = 0;
                 txtAciklama.Text = "";
             }
             catch (Exception ex)
             {
+                this.Cursor = Cursors.Default;
                 MessageBox.Show($"Beklenmeyen hata: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
