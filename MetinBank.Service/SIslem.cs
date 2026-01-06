@@ -75,13 +75,13 @@ namespace MetinBank.Service
         }
 
         public string Havale(int kaynakHesapID, string hedefIBAN, decimal tutar, string aciklama, string aliciAdi, 
-                            int kullaniciID, int subeID, out long islemID)
+                            int kullaniciID, int subeID, decimal islemUcreti, out long islemID)
         {
             islemID = 0;
 
             try
             {
-                string hata = _bIslem.Havale(kaynakHesapID, hedefIBAN, tutar, aciklama, aliciAdi, kullaniciID, subeID, out islemID);
+                string hata = _bIslem.Havale(kaynakHesapID, hedefIBAN, tutar, aciklama, aliciAdi, kullaniciID, subeID, islemUcreti, out islemID);
 
                 _bLog.IslemLoguKaydet(
                     kullaniciID,
@@ -116,13 +116,13 @@ namespace MetinBank.Service
         }
 
         public string EFT(int kaynakHesapID, string hedefIBAN, decimal tutar, string aciklama, string aliciAdi, 
-                         int kullaniciID, int subeID, out long islemID)
+                         int kullaniciID, int subeID, decimal islemUcreti, out long islemID)
         {
             islemID = 0;
 
             try
             {
-                string hata = _bIslem.EFT(kaynakHesapID, hedefIBAN, tutar, aciklama, aliciAdi, kullaniciID, subeID, out islemID);
+                string hata = _bIslem.EFT(kaynakHesapID, hedefIBAN, tutar, aciklama, aliciAdi, kullaniciID, subeID, islemUcreti, out islemID);
 
                 _bLog.IslemLoguKaydet(
                     kullaniciID,

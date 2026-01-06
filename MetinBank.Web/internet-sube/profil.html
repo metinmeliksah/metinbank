@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metin Bank - Profil</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="assets/images/logo.png" alt="MetinBank">
+            </div>
+            <nav class="header-nav">
+                <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
+                <a href="hesaplar.html" class="nav-link">Hesaplarım</a>
+                <div class="nav-dropdown">
+                    <div class="nav-link nav-dropdown-toggle">Para Transferi</div>
+                    <div class="nav-dropdown-menu">
+                        <a href="havale.html">Havale</a>
+                        <a href="eft.html">EFT</a>
+                        <a href="virman.html">Virman</a>
+                    </div>
+                </div>
+                <a href="ekstre.html" class="nav-link">Ekstre</a>
+                <a href="kartlar.html" class="nav-link">Kartlarım</a>
+                <a href="kredi-basvuru.html" class="nav-link">Kredi Başvurusu</a>
+                <a href="profil.html" class="nav-link active">Profil</a>
+                <a href="#" class="nav-link" onclick="logout(); return false;">Çıkış</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="profile-modern-container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <div class="profile-header-content">
+                    <h1 id="profileName">Yükleniyor...</h1>
+                    <p id="profileRole">Müşteri Bilgileri</p>
+                </div>
+            </div>
+
+            <!-- Profile Grid -->
+            <div class="profile-grid">
+                <!-- Personal Information Section -->
+                <div class="profile-section">
+                    <div class="profile-section-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <h2>Kişisel Bilgiler</h2>
+                    </div>
+                    <div class="profile-info-grid" id="profileInfo">
+                        <!-- Profile info will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Password Change Section -->
+                <div class="profile-section">
+                    <div class="profile-section-header">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <h2>Şifre Değiştir</h2>
+                    </div>
+                    
+                    <div class="password-requirements">
+                        <strong>Şifre Gereksinimleri:</strong>
+                        <ul id="passwordReqs">
+                            <li id="req-length">En az 6 karakter</li>
+                            <li id="req-match">Şifreler eşleşmeli</li>
+                        </ul>
+                    </div>
+                    
+                    <form id="passwordForm" class="password-form-modern">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern" for="oldPassword">🔐 Mevcut Şifre</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" class="form-input-modern" id="oldPassword" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('oldPassword')" tabindex="-1">👁️</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group-modern">
+                            <label class="form-label-modern" for="newPassword">🔑 Yeni Şifre</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" class="form-input-modern" id="newPassword" required minlength="6">
+                                <button type="button" class="password-toggle" onclick="togglePassword('newPassword')" tabindex="-1">👁️</button>
+                            </div>
+                            <div class="password-strength" id="passwordStrength">
+                                <div class="password-strength-bar"></div>
+                                <div class="password-strength-bar"></div>
+                                <div class="password-strength-bar"></div>
+                                <div class="password-strength-bar"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group-modern">
+                            <label class="form-label-modern" for="confirmPassword">✓ Yeni Şifre (Tekrar)</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" class="form-input-modern" id="confirmPassword" required>
+                                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')" tabindex="-1">👁️</button>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-modern btn-primary-modern" style="width: 100%;">
+                            <span>✓</span> Şifreyi Güncelle
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        Copyright © 2026 MetinBank - Güven, Birikim, Gelecek
+    </footer>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>
+        checkAuth();
+
+        window.addEventListener('DOMContentLoaded', loadProfile);
+
+        async function loadProfile() {
+            try {
+                const user = getUser();
+                const response = await apiGet(`/auth/profil/${user.musteriID}`);
+
+                if (response.success && response.data) {
+                    const profile = response.data;
+                    
+                    // Update header
+                    document.getElementById('profileName').textContent = `${profile.ad} ${profile.soyad}`;
+                    document.getElementById('profileRole').textContent = `${profile.musteriTipi} - Müşteri No: ${profile.musteriNo}`;
+                    
+                    // Set avatar initial
+                    const initial = profile.ad.charAt(0).toUpperCase();
+                    document.getElementById('profileAvatar').textContent = initial;
+
+                    const profileHTML = `
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">🆔 Müşteri No</span>
+                            <span class="profile-info-value">${profile.musteriNo}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">👤 Ad Soyad</span>
+                            <span class="profile-info-value">${profile.ad} ${profile.soyad}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">🆔 TC Kimlik No</span>
+                            <span class="profile-info-value">${profile.tckn}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">📧 E-posta</span>
+                            <span class="profile-info-value">${profile.email || '-'}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">📱 Telefon</span>
+                            <span class="profile-info-value">${profile.cepTelefon || '-'}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">📍 Adres</span>
+                            <span class="profile-info-value">${profile.adres || '-'}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">👥 Müşteri Tipi</span>
+                            <span class="profile-info-value">${profile.musteriTipi}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="profile-info-label">📅 Kayıt Tarihi</span>
+                            <span class="profile-info-value">${formatDate(profile.kayitTarihi)}</span>
+                        </div>
+                    `;
+
+                    document.getElementById('profileInfo').innerHTML = profileHTML;
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                document.getElementById('profileInfo').innerHTML = '<div class="empty-state"><p>Profil bilgileri yüklenemedi.</p></div>';
+            }
+        }
+        
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+        
+        // Password strength indicator
+        document.getElementById('newPassword').addEventListener('input', (e) => {
+            const password = e.target.value;
+            const strength = calculatePasswordStrength(password);
+            updatePasswordStrength(strength);
+            updatePasswordRequirements(password);
+        });
+        
+        document.getElementById('confirmPassword').addEventListener('input', (e) => {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = e.target.value;
+            const matchReq = document.getElementById('req-match');
+            
+            if (confirmPassword && newPassword === confirmPassword) {
+                matchReq.classList.add('valid');
+            } else {
+                matchReq.classList.remove('valid');
+            }
+        });
+        
+        function calculatePasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            return strength;
+        }
+        
+        function updatePasswordStrength(strength) {
+            const bars = document.querySelectorAll('.password-strength-bar');
+            bars.forEach((bar, index) => {
+                bar.classList.remove('active', 'weak', 'medium');
+                if (index < strength) {
+                    if (strength <= 1) bar.classList.add('weak');
+                    else if (strength <= 2) bar.classList.add('medium');
+                    else bar.classList.add('active');
+                }
+            });
+        }
+        
+        function updatePasswordRequirements(password) {
+            const lengthReq = document.getElementById('req-length');
+            
+            if (password.length >= 6) {
+                lengthReq.classList.add('valid');
+            } else {
+                lengthReq.classList.remove('valid');
+            }
+        }
+
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validation
+            if (!oldPassword) {
+                alert('❌ Lütfen mevcut şifrenizi giriniz.');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                alert('❌ Yeni şifre en az 6 karakter olmalıdır!');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert('❌ Yeni şifreler eşleşmiyor!');
+                return;
+            }
+            
+            if (oldPassword === newPassword) {
+                alert('❌ Yeni şifre mevcut şifre ile aynı olamaz!');
+                return;
+            }
+
+            if (!confirm('Şifrenizi değiştirmek istediğinizden emin misiniz?')) {
+                return;
+            }
+
+            try {
+                const user = getUser();
+                const response = await apiPost('/auth/sifre-degistir', {
+                    musteriID: user.musteriID,
+                    eskiSifre: oldPassword,
+                    yeniSifre: newPassword
+                });
+
+                if (response.success) {
+                    alert('✅ Şifreniz başarıyla değiştirildi!\n\nYeni şifreniz ile giriş yapabilirsiniz.');
+                    document.getElementById('passwordForm').reset();
+                    updatePasswordStrength(0);
+                    document.querySelectorAll('.password-requirements li').forEach(li => li.classList.remove('valid'));
+                } else {
+                    alert('❌ Hata: ' + (response.message || 'Şifre değiştirilemedi.'));
+                }
+            } catch (error) {
+                console.error('Password change error:', error);
+                alert('❌ İşlem sırasında bir hata oluştu: ' + error.message);
+            }
+        });
+    </script>
+</body>
+
+</html>

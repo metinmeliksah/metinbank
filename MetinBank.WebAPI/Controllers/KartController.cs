@@ -40,20 +40,21 @@ namespace MetinBank.WebAPI.Controllers
                 var kartListesi = new List<object>();
                 foreach (DataRow row in kartlar.Rows)
                 {
-                    string kartNo = row["KartNo"].ToString() ?? "";
-                    string maskedKartNo = kartNo.Length >= 16 
-                        ? $"{kartNo.Substring(0, 4)} **** **** {kartNo.Substring(12, 4)}" 
-                        : kartNo;
-
                     kartListesi.Add(new
                     {
-                        KartID = Convert.ToInt32(row["KartID"]),
-                        KartNo = maskedKartNo,  // Used in frontend as kartNo (camelCase)
-                        KartTipi = row["KartTipi"].ToString(),
-                        KartSahibiAdi = row["KartSahibiAdi"].ToString(),
-                        SonKullanimTarihi = Convert.ToDateTime(row["SonKullanmaTarihi"]),
-                        Durum = row["Durum"].ToString(),
-                        HesapID = Convert.ToInt32(row["HesapID"])  // From JOIN with Hesap
+                        kartID = Convert.ToInt32(row["KartID"]),
+                        kartNo = row["KartNo"].ToString(),
+                        kartTipi = row["KartTipi"].ToString(),
+                        kartSahibiAdi = row["KartSahibiAdi"].ToString(),
+                        sonKullanimTarihi = row["SonKullanmaTarihi"] != DBNull.Value ? Convert.ToDateTime(row["SonKullanmaTarihi"]) : DateTime.MinValue,
+                        durum = row["Durum"].ToString(),
+                        hesapID = row["HesapID"] != DBNull.Value ? Convert.ToInt32(row["HesapID"]) : 0,
+                        iban = row["IBAN"] != DBNull.Value ? row["IBAN"].ToString() : "",
+                        hesapTipi = row["HesapTipi"] != DBNull.Value ? row["HesapTipi"].ToString() : "",
+                        bakiye = row["Bakiye"] != DBNull.Value ? Convert.ToDecimal(row["Bakiye"]) : 0m,
+                        gunlukHarcamaLimiti = row["GunlukHarcamaLimiti"] != DBNull.Value ? Convert.ToDecimal(row["GunlukHarcamaLimiti"]) : 0m,
+                        aylikHarcamaLimiti = row["AylikHarcamaLimiti"] != DBNull.Value ? Convert.ToDecimal(row["AylikHarcamaLimiti"]) : 0m,
+                        gunlukCekimLimiti = row["GunlukCekimLimiti"] != DBNull.Value ? Convert.ToDecimal(row["GunlukCekimLimiti"]) : 0m
                     });
                 }
 
@@ -162,7 +163,7 @@ namespace MetinBank.WebAPI.Controllers
         /// <summary>
         /// Blokeli kartı aktifleştirir
         /// </summary>
-        [HttpPost("{kartID}/aktiflestir")]
+        [HttpPost("{kartID}/aktif")]
         public IActionResult Aktiflestir(int kartID, [FromQuery] int kullaniciID = 1)
         {
             try
@@ -193,5 +194,105 @@ namespace MetinBank.WebAPI.Controllers
                 });
             }
         }
+
+        /// <summary>
+        /// Kart ayarlarını günceller (limitler)
+        /// </summary>
+        [HttpPut("{kartID}/ayarlar")]
+        public IActionResult AyarlariGuncelle(int kartID, [FromBody] KartAyarlarRequest request)
+        {
+            try
+            {
+                string hata = _sKart.UpdateCardLimits(
+                    kartID,
+                    request.GunlukHarcamaLimiti,
+                    request.AylikHarcamaLimiti,
+                    request.GunlukCekimLimiti
+                );
+
+                if (hata != null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = hata
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Kart ayarları başarıyla güncellendi."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse
+                {
+                    Success = false,
+                    Message = $"Sunucu hatası: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
+        /// Yeni kart başvurusu
+        /// </summary>
+        [HttpPost("basvuru")]
+        public IActionResult KartBasvurusu([FromBody] KartBasvuruRequest request, [FromQuery] int kullaniciID = 1)
+        {
+            try
+            {
+                int kartID;
+                long kartNo;
+                string hata = _sKart.CreateCard(
+                    request.HesapID,
+                    request.KartMarkasi,
+                    request.KartSahibiAdi,
+                    kullaniciID,
+                    out kartID,
+                    out kartNo
+                );
+
+                if (hata != null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = hata
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Kart başvurunuz başarıyla alındı. Kartınız hazırlanıyor.",
+                    Data = new { kartID, kartNo = kartNo.ToString() }
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse
+                {
+                    Success = false,
+                    Message = $"Sunucu hatası: {ex.Message}"
+                });
+            }
+        }
+    }
+
+    // DTOs
+    public class KartAyarlarRequest
+    {
+        public decimal GunlukHarcamaLimiti { get; set; }
+        public decimal AylikHarcamaLimiti { get; set; }
+        public decimal GunlukCekimLimiti { get; set; }
+    }
+
+    public class KartBasvuruRequest
+    {
+        public int HesapID { get; set; }
+        public string KartMarkasi { get; set; } = "Troy"; // Troy veya Mastercard
+        public string KartSahibiAdi { get; set; } = string.Empty;
     }
 }

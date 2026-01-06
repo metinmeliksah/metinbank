@@ -190,6 +190,7 @@ namespace MetinBank.Desktop
                         txtAliciAdi.Text,
                         _kullanici.KullaniciID,
                         _kullanici.SubeID.Value,
+                        0m,
                         out islemID
                     );
                 }
@@ -203,6 +204,7 @@ namespace MetinBank.Desktop
                         txtAliciAdi.Text,
                         _kullanici.KullaniciID,
                         _kullanici.SubeID.Value,
+                        0m,
                         out islemID
                     );
                 }

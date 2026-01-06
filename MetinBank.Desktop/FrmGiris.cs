@@ -189,7 +189,13 @@ namespace MetinBank.Desktop
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Beklenmeyen hata: {ex.Message}", "Hata", 
+                // Detaylı hata göster - debug için
+                string hataMesaji = $"Beklenmeyen hata: {ex.Message}\n\nDetay:\n{ex.StackTrace}";
+                if (ex.InnerException != null)
+                {
+                    hataMesaji += $"\n\nİç Hata: {ex.InnerException.Message}\n{ex.InnerException.StackTrace}";
+                }
+                MessageBox.Show(hataMesaji, "Hata", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 
                 btnGiris.Enabled = true;

@@ -18,6 +18,30 @@ namespace MetinBank.Desktop
             InitializeComponent();
             _kullanici = kullanici;
             _sMusteri = new SMusteri();
+
+            // Rol kontrolü - Sadece Müdür ve Genel Merkez erişebilir
+            if (!IsMudurOrGenelMerkez())
+            {
+                XtraMessageBox.Show("Bu sayfaya erişim yetkiniz bulunmamaktadır.\nSadece Müdür ve Genel Merkez yetkilileri müşteri listesini görüntüleyebilir.",
+                    "Erişim Engellendi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                this.Load += (s, e) => this.Close();
+            }
+        }
+
+        private bool IsMudurOrGenelMerkez()
+        {
+            string rol = _kullanici.RolAdi;
+            return rol.IndexOf("Müdür", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   rol.IndexOf("Mudur", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   rol.IndexOf("Genel Merkez", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   rol.IndexOf("Merkez", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private bool IsGenelMerkez()
+        {
+            string rol = _kullanici.RolAdi;
+            return rol.IndexOf("Genel Merkez", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   rol.IndexOf("Genel", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private void FrmMusteriIslem_Load(object sender, EventArgs e)
@@ -31,12 +55,40 @@ namespace MetinBank.Desktop
             // Configure column headers
             gridViewMusteriler.OptionsView.ColumnAutoWidth = true;
             gridViewMusteriler.BestFitColumns();
+            
+            // MusteriID kolonunu gizle
+            if (gridViewMusteriler.Columns["MusteriID"] != null)
+            {
+                gridViewMusteriler.Columns["MusteriID"].Visible = false;
+            }
+            
+            if (gridViewMusteriler.Columns["KayitSubeID"] != null)
+            {
+                gridViewMusteriler.Columns["KayitSubeID"].Visible = false;
+            }
         }
 
         private void MusterileriYukle()
         {
             DataTable dt;
-            string hata = _sMusteri.MusterileriGetir(out dt);
+            string hata;
+
+            // Genel Merkez tüm müşterileri görebilir, Müdür sadece kendi şubesini
+            if (IsGenelMerkez())
+            {
+                hata = _sMusteri.MusterileriGetir(out dt);
+            }
+            else
+            {
+                // Müdür - Sadece kendi şubesindeki müşteriler
+                if (!_kullanici.SubeID.HasValue)
+                {
+                    XtraMessageBox.Show("Kullanıcı şube bilgisi bulunamadı.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                hata = _sMusteri.SubeninMusterileri(_kullanici.SubeID.Value, out dt);
+            }
+
             if (hata != null)
             {
                 XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -56,7 +108,25 @@ namespace MetinBank.Desktop
             }
 
             DataTable dt;
-            string hata = _sMusteri.MusteriAra(txtArama.Text, out dt);
+            string hata;
+
+            // Şube bazlı arama
+            if (IsGenelMerkez())
+            {
+                // Genel Merkez - Tüm müşterilerde ara
+                hata = _sMusteri.MusteriAra(txtArama.Text, null, true, out dt);
+            }
+            else
+            {
+                // Müdür - Sadece kendi şubesinde ara
+                if (!_kullanici.SubeID.HasValue)
+                {
+                    XtraMessageBox.Show("Kullanıcı şube bilgisi bulunamadı.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                hata = _sMusteri.MusteriAra(txtArama.Text, _kullanici.SubeID.Value, false, out dt);
+            }
+
             if (hata != null)
             {
                 XtraMessageBox.Show(hata, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);

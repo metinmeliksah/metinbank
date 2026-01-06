@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mevduat Ürünleri - MetinBank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+    <div id="header-placeholder"></div>
+
+    <div class="bg-white border-b border-gray-200 py-12">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Mevduat Hesapları</h1>
+            <p class="text-gray-600 text-lg">Birikimlerinizi güvenle değerlendirin.</p>
+        </div>
+    </div>
+
+    <main class="flex-grow container mx-auto px-4 py-12">
+        <div class="border border-gray-200 rounded-xl bg-white overflow-hidden mb-8">
+            <div class="p-8 md:flex items-center justify-between">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2 text-blue-800">E-Mevduat Hesabı</h3>
+                    <p class="text-gray-600 mb-4 md:mb-0">Şubeye gitmeden, internete özel yüksek faiz oranlarıyla
+                        tanışın.</p>
+                </div>
+                <div class="text-right">
+                    <span class="block text-sm text-gray-500 mb-1">Hoş Geldin Faizi</span>
+                    <span class="block text-4xl font-bold text-green-600 mb-4">%45,00</span>
+                    <a href="#"
+                        class="inline-block bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700 transition">Hesap
+                        Aç</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-lg mb-2">Vadeli Mevduat</h3>
+                <p class="text-gray-600 text-sm mb-4">Risk almadan, belirlenen vadede garantili getiri sağlayın.</p>
+                <a href="#" class="text-blue-600 font-semibold text-sm hover:underline">Oranları Gör →</a>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-lg mb-2">Altın Hesabı</h3>
+                <p class="text-gray-600 text-sm mb-4">Altınlarınızı çalınma riski olmadan güvenle bankamızda saklayın.
+                </p>
+                <a href="#" class="text-blue-600 font-semibold text-sm hover:underline">Detaylı Bilgi →</a>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <script src="assets/js/components.js"></script>
+</body>
+
+</html>

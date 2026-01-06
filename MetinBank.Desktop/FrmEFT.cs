@@ -329,6 +329,7 @@ namespace MetinBank.Desktop
                     aliciAdi,
                     _kullanici.KullaniciID,
                     subeID,
+                    0m,
                     out islemID
                 );
 

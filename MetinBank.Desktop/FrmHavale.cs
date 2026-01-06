@@ -16,6 +16,7 @@ namespace MetinBank.Desktop
         private SIslem _sIslem;
         private SMusteri _sMusteri;
         private SHesap _sHesap;
+        private SIslemUcreti _sIslemUcreti;
         
         // Gönderen
         private int _gonderenMusteriID;
@@ -40,6 +41,7 @@ namespace MetinBank.Desktop
             _sIslem = new SIslem();
             _sMusteri = new SMusteri();
             _sHesap = new SHesap();
+            _sIslemUcreti = new SIslemUcreti();
             
             // Arama timer'ları
             _gonderenAramaTimer = new System.Windows.Forms.Timer();
@@ -471,6 +473,7 @@ namespace MetinBank.Desktop
                     aliciAdi,
                     _kullanici.KullaniciID,
                     subeID,
+                    0m, 
                     out islemID
                 );
 

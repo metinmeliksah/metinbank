@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetinBank | Ürün ve Hizmet Ücretleri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-section {
+            background: linear-gradient(90deg, #1f2937 0%, #374151 50%, #111827 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <div id="header-placeholder"></div>
+
+    <!-- Page Title -->
+    <div class="bg-white border-b border-gray-200 py-12">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4">Ürün ve Hizmet Ücretleri</h1>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto">Şeffaf bankacılık anlayışımızla tüm işlem ücretlerini ve
+                komisyon oranlarını aşağıda bulabilirsiniz.</p>
+        </div>
+    </div>
+
+    <!-- Tables -->
+    <main class="flex-grow container mx-auto px-4 py-12 max-w-6xl">
+
+        <div class="space-y-12">
+
+            <!-- Para Transferleri -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="bg-blue-600 text-white p-4">
+                    <h2 class="text-xl font-bold">Para Transferleri (EFT / Havale)</h2>
+                </div>
+                <div class="p-6 overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="py-3 px-4 font-semibold text-gray-700">İşlem</th>
+                                <th class="py-3 px-4 font-semibold text-gray-700">Kanal</th>
+                                <th class="py-3 px-4 font-semibold text-gray-700">Tutar Aralığı</th>
+                                <th class="py-3 px-4 font-semibold text-gray-700 text-right">Ücret</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Havale (İsme/Hesaba)</td>
+                                <td class="py-3 px-4">İnternet / Mobil</td>
+                                <td class="py-3 px-4">0 - 50.000 TL</td>
+                                <td class="py-3 px-4 text-right font-bold text-gray-900">Ücretsiz</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">Havale (İsme/Hesaba)</td>
+                                <td class="py-3 px-4">Şube</td>
+                                <td class="py-3 px-4">0 - 50.000 TL</td>
+                                <td class="py-3 px-4 text-right font-bold text-gray-900">50.00 TL</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">EFT (Başka Banka)</td>
+                                <td class="py-3 px-4">Mobil</td>
+                                <td class="py-3 px-4">0 - 1.000 TL</td>
+                                <td class="py-3 px-4 text-right font-bold text-gray-900">4.22 TL</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">EFT (Başka Banka)</td>
+                                <td class="py-3 px-4">Mobil</td>
+                                <td class="py-3 px-4">1.000 - 50.000 TL</td>
+                                <td class="py-3 px-4 text-right font-bold text-gray-900">8.44 TL</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Kart Ücretleri -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="bg-gray-800 text-white p-4">
+                    <h2 class="text-xl font-bold">Kart Ücretleri</h2>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">Müşterilerimizden kart aidatı talep edilmemektedir.</p>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li><strong>MetinBank Mastercard:</strong> 0 TL / Yıl</li>
+                        <li><strong>MetinBank Troy:</strong> 0 TL / Yıl</li>
+                        <li><strong>Kart Yenileme (Kayıp/Çalıntı):</strong> 50 TL</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 border-t border-gray-800">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm">
+            <p>&copy; 2025 MetinBank. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

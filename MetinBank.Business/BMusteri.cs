@@ -341,7 +341,7 @@ namespace MetinBank.Business
                     // Genel Merkez - Tüm aktif müşterilerde arama
                     query = @"SELECT m.MusteriID, m.MusteriNo, m.TCKN, 
                             CONCAT(m.Ad, ' ', m.Soyad) as AdSoyad,
-                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, 
+                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, m.GelirDurumu, 
                             m.AktifMi, s.SubeAdi, m.KayitSubeID
                             FROM Musteri m
                             LEFT JOIN Sube s ON m.KayitSubeID = s.SubeID
@@ -360,7 +360,7 @@ namespace MetinBank.Business
                     // TCKN ile tam arama - Cross-branch erişim
                     query = @"SELECT m.MusteriID, m.MusteriNo, m.TCKN, 
                             CONCAT(m.Ad, ' ', m.Soyad) as AdSoyad,
-                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, 
+                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, m.GelirDurumu, 
                             m.AktifMi, s.SubeAdi, m.KayitSubeID
                             FROM Musteri m
                             LEFT JOIN Sube s ON m.KayitSubeID = s.SubeID
@@ -378,7 +378,7 @@ namespace MetinBank.Business
                     // Normal arama - Sadece kendi şube müşterileri
                     query = @"SELECT m.MusteriID, m.MusteriNo, m.TCKN, 
                             CONCAT(m.Ad, ' ', m.Soyad) as AdSoyad,
-                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, 
+                            m.Ad, m.Soyad, m.CepTelefon, m.Email, m.MusteriTipi, m.MusteriSegmenti, m.GelirDurumu, 
                             m.AktifMi, s.SubeAdi, m.KayitSubeID
                             FROM Musteri m
                             LEFT JOIN Sube s ON m.KayitSubeID = s.SubeID

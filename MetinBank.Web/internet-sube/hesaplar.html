@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetinBank - Hesaplarım</title>
+    <link rel="stylesheet" href="../assets/styles.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="assets/images/logo.png" alt="MetinBank">
+            </div>
+            <nav class="header-nav">
+                <a href="dashboard.html" class="nav-link">Ana Sayfa</a>
+                <a href="hesaplar.html" class="nav-link active">Hesaplarım</a>
+                <div class="nav-dropdown">
+                    <div class="nav-link nav-dropdown-toggle">Para Transferi</div>
+                    <div class="nav-dropdown-menu">
+                        <a href="havale.html">Havale</a>
+                        <a href="eft.html">EFT</a>
+                        <a href="virman.html">Virman</a>
+                    </div>
+                </div>
+                <a href="ekstre.html" class="nav-link">Ekstre</a>
+                <a href="kartlar.html" class="nav-link">Kartlarım</a>
+                <a href="kredi-basvuru.html" class="nav-link">Kredi Başvurusu</a>
+                <a href="profil.html" class="nav-link">Profil</a>
+                <a href="#" class="nav-link" onclick="logout(); return false;">Çıkış</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="accounts-modern-container">
+            <!-- Page Header -->
+            <div class="accounts-page-header">
+                <div class="page-header-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                <div>
+                    <h1>Hesaplarım</h1>
+                    <p>Tüm banka hesaplarınızı görüntüleyin ve yönetin</p>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="accounts-summary" id="accountsSummary">
+                <!-- Will be filled by JS -->
+            </div>
+
+            <!-- Accounts Grid -->
+            <div class="accounts-modern-grid" id="accountsGrid">
+                <!-- Will be filled by JS -->
+            </div>
+            
+            <div id="noAccountsMessage" style="display: none;">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🏦</div>
+                    <h3>Kayıtlı Hesabınız Bulunmuyor</h3>
+                    <p>Yeni bir hesap açmak için şubeye başvurabilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Account Details Modal -->
+    <div class="modal-modern" id="detailsModal">
+        <div class="modal-content-modern">
+            <div class="modal-header-modern">
+                <h2 class="modal-title-modern">Hesap Detayları</h2>
+                <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body-modern account-details-modal" id="modalBody">
+                <!-- Will be filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        Copyright © 2026 MetinBank - Güven, Birikim, Gelecek
+    </footer>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/components.js"></script>
+    <script>
+        checkAuth();
+
+        let allAccounts = [];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAccounts();
+        });
+
+        async function loadAccounts() {
+            try {
+                const user = getUser();
+                const response = await apiGet(`/hesap/musteri/${user.musteriID}`);
+
+                if (response.success && response.data) {
+                    allAccounts = response.data;
+                    displayAccounts(allAccounts);
+                } else {
+                    document.getElementById('accountsGrid').innerHTML =
+                        '<p class="text-muted text-center">Hesap bulunamadı.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+                document.getElementById('accountsGrid').innerHTML =
+                    '<p class="text-muted text-center">Hesaplar yüklenirken hata oluştu.</p>';
+            }
+        }
+
+        function displayAccounts(accounts) {
+            const grid = document.getElementById('accountsGrid');
+            const summary = document.getElementById('accountsSummary');
+            const noAccountsMsg = document.getElementById('noAccountsMessage');
+
+            if (!accounts || accounts.length === 0) {
+                grid.style.display = 'none';
+                summary.style.display = 'none';
+                noAccountsMsg.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            summary.style.display = 'grid';
+            noAccountsMsg.style.display = 'none';
+            
+            // Calculate summary
+            const totalBalance = accounts.reduce((sum, acc) => sum + parseFloat(acc.bakiye || 0), 0);
+            const availableBalance = accounts.reduce((sum, acc) => sum + parseFloat(acc.kullanilabilirBakiye || 0), 0);
+            const activeAccounts = accounts.filter(acc => acc.durum === 'Aktif').length;
+            
+            // Display summary cards
+            summary.innerHTML = `
+                <div class="accounts-summary-card">
+                    <div class="summary-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    <div class="summary-label">Toplam Bakiye</div>
+                    <div class="summary-value">${formatCurrency(totalBalance, 'TL')}</div>
+                </div>
+                <div class="accounts-summary-card">
+                    <div class="summary-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <div class="summary-label">Kullanılabilir</div>
+                    <div class="summary-value">${formatCurrency(availableBalance, 'TL')}</div>
+                </div>
+                <div class="accounts-summary-card">
+                    <div class="summary-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                    <div class="summary-label">Aktif Hesap</div>
+                    <div class="summary-value">${activeAccounts}/${accounts.length}</div>
+                </div>
+            `;
+
+            const html = accounts.map(account => {
+                const accountIconSvg = account.hesapCinsi === 'Vadesiz' 
+                    ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>'
+                    : account.hesapCinsi === 'Vadeli' 
+                    ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'
+                    : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+                
+                return `
+                <div class="account-modern-card">
+                    <div class="account-card-top">
+                        <div class="account-type-modern">
+                            <span style="display: inline-flex;">${accountIconSvg}</span> ${account.hesapTipi} ${account.hesapCinsi}
+                        </div>
+                        <div class="account-iban-modern">${formatIBAN(account.iban)}</div>
+                    </div>
+                    
+                    <div class="account-balance-section">
+                        <div class="balance-main">
+                            <div class="balance-main-label">Toplam Bakiye</div>
+                            <div class="balance-main-value">${formatCurrency(account.bakiye, account.hesapTipi)}</div>
+                        </div>
+                        <div class="balance-secondary">
+                            <div class="balance-secondary-item">
+                                <div class="balance-secondary-label">Kullanılabilir</div>
+                                <div class="balance-secondary-value">${formatCurrency(account.kullanilabilirBakiye, account.hesapTipi)}</div>
+                            </div>
+                            ${account.blokeBakiye > 0 ? `
+                            <div class="balance-secondary-item">
+                                <div class="balance-secondary-label">Bloke</div>
+                                <div class="balance-secondary-value">${formatCurrency(account.blokeBakiye, account.hesapTipi)}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="account-info-section">
+                        <div class="account-details-grid">
+                            <div class="account-detail-item">
+                                <span class="account-detail-label">Hesap No</span>
+                                <span class="account-detail-value">${account.hesapNo}</span>
+                            </div>
+                            <div class="account-detail-item">
+                                <span class="account-detail-label">Durum</span>
+                                <span class="account-detail-value">
+                                    <span class="account-status-badge account-status-${account.durum.toLowerCase()}">
+                                        ${account.durum === 'Aktif' ? '✓' : '⊘'} ${account.durum}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="account-detail-item">
+                                <span class="account-detail-label">Açılış Tarihi</span>
+                                <span class="account-detail-value">${formatDate(account.acilisTarihi)}</span>
+                            </div>
+                            ${account.faizOrani > 0 ? `
+                            <div class="account-detail-item">
+                                <span class="account-detail-label">Faiz Oranı</span>
+                                <span class="account-detail-value">%${account.faizOrani}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="account-actions-modern">
+                            <button class="account-action-btn account-action-primary" onclick="showDetails(${account.hesapID})">
+                                Detaylar
+                            </button>
+                            <a href="ekstre.html?hesapID=${account.hesapID}" class="account-action-btn account-action-secondary">
+                                Ekstre
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+
+            grid.innerHTML = html;
+        }
+
+        function showDetails(hesapID) {
+            const account = allAccounts.find(acc => acc.hesapID === hesapID);
+            if (!account) return;
+
+            const modalHTML = `
+                <div class="modal-detail-section">
+                    <h3>Genel Bilgiler</h3>
+                    <div class="modal-detail-grid">
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Hesap Tipi</span>
+                            <span class="modal-info-value">${account.hesapTipi}</span>
+                        </div>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Hesap Cinsi</span>
+                            <span class="modal-info-value">${account.hesapCinsi}</span>
+                        </div>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Hesap No</span>
+                            <span class="modal-info-value">${account.hesapNo}</span>
+                        </div>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">IBAN</span>
+                            <span class="modal-info-value">${formatIBAN(account.iban)}</span>
+                        </div>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Durum</span>
+                            <span class="modal-info-value">
+                                <span class="account-status-badge account-status-${account.durum.toLowerCase()}">
+                                    ${account.durum === 'Aktif' ? '✓' : '⊘'} ${account.durum}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Açılış Tarihi</span>
+                            <span class="modal-info-value">${formatDate(account.acilisTarihi)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-detail-section">
+                    <h3>Bakiye Bilgileri</h3>
+                    <div class="modal-detail-grid">
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Toplam Bakiye</span>
+                            <span class="modal-info-value" style="font-size: 1.25rem; color: var(--primary);">
+                                ${formatCurrency(account.bakiye, account.hesapTipi)}
+                            </span>
+                        </div>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Kullanılabilir Bakiye</span>
+                            <span class="modal-info-value" style="font-size: 1.25rem; color: var(--success);">
+                                ${formatCurrency(account.kullanilabilirBakiye, account.hesapTipi)}
+                            </span>
+                        </div>
+                        ${account.blokeBakiye > 0 ? `
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Bloke Bakiye</span>
+                            <span class="modal-info-value" style="color: var(--danger);">${formatCurrency(account.blokeBakiye, account.hesapTipi)}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                ${account.gunlukTransferLimiti || account.aylikTransferLimiti ? `
+                <div class="modal-detail-section">
+                    <h3>Transfer Limitleri</h3>
+                    <div class="modal-detail-grid">
+                        ${account.gunlukTransferLimiti ? `
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Günlük Limit</span>
+                            <span class="modal-info-value">${formatCurrency(account.gunlukTransferLimiti, account.hesapTipi)}</span>
+                        </div>
+                        ` : ''}
+                        ${account.aylikTransferLimiti ? `
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Aylık Limit</span>
+                            <span class="modal-info-value">${formatCurrency(account.aylikTransferLimiti, account.hesapTipi)}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${account.faizOrani > 0 || account.vadeTarihi ? `
+                <div class="modal-detail-section">
+                    <h3>Faiz Bilgileri</h3>
+                    <div class="modal-detail-grid">
+                        ${account.faizOrani > 0 ? `
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Faiz Oranı</span>
+                            <span class="modal-info-value" style="color: var(--success);">%${account.faizOrani}</span>
+                        </div>
+                        ` : ''}
+                        ${account.vadeTarihi ? `
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Vade Tarihi</span>
+                            <span class="modal-info-value">${formatDate(account.vadeTarihi)}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                ` : ''}
+            `;
+
+            document.getElementById('modalBody').innerHTML = modalHTML;
+            document.getElementById('detailsModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('detailsModal').classList.remove('active');
+        }
+
+        // Close modal on background click
+        document.getElementById('detailsModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailsModal') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

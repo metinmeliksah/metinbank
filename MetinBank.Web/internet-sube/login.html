@@ -7,7 +7,7 @@
     <title>İnternet Şube - MetinBank</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="../assets/styles.css">
     <style>
         body {
             font-family: 'Inter', sans-serif
@@ -15,25 +15,32 @@
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 flex flex-col min-h-screen">
     <!-- Site-wide warning (injected) -->
-    <script src="assets/warning.js" defer></script>
+    <!-- Removed components.js to avoid double header issue reported by user -->
+    <!-- <script src="../assets/js/components.js"></script> -->
 
-    <!-- MetinBank mavi Header -->
-    <div class="bg-blue-700 text-white internet-header">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <a href="index.html" class="logo-wrapper" aria-label="MetinBank">
-                    <img src="assets/images/metinbanklogo.png" alt="MetinBank" class="header-logo h-8" />
-                    <span class="sr-only">MetinBank</span>
+    <!-- Top Header (Login Specific) -->
+    <header class="bg-white border-b border-gray-200 py-4 shadow-sm relative z-50">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <img src="../assets/images/logo.png" alt="MetinBank"
+                    class="h-10 w-auto group-hover:scale-105 transition-transform" />
+                <span class="text-xl font-bold text-blue-900 tracking-tight">İnternet Şubesi</span>
+            </a>
+            <div class="hidden md:flex items-center gap-4 text-sm">
+                <a href="guvenlik.html" class="text-gray-600 hover:text-blue-600 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    Güvenlik
                 </a>
-            </div>
-            <div class="flex items-center gap-3">
-                <a href="#" class="px-4 py-2 border border-white/30 rounded text-sm">Bireysel</a>
-                <a href="#" class="px-4 py-2 text-sm">Kurumsal</a>
+                <a href="iletisim.html" class="text-gray-600 hover:text-blue-600">İletişim</a>
             </div>
         </div>
-    </div>
+    </header>
 
     <main class="py-10">
         <div class="container mx-auto px-4">
@@ -142,6 +149,7 @@
                             </div>
 
                             <!-- NEW PASSWORD FORM -->
+                            <!-- <div id="header-placeholder"></div> -->
                             <div id="newpassword-view" class="hidden">
                                 <h1 class="text-3xl font-extrabold text-blue-700 mb-2">Yeni Parola Oluştur</h1>
                                 <p class="text-gray-600 mb-6">Lütfen yeni parolanızı belirleyin.</p>
@@ -229,14 +237,26 @@
         </div>
     </main>
 
-    <footer class="text-center text-sm text-gray-500 py-8">
-        <div class="container mx-auto px-4">Copyright © 2025 MetinBank</div>
+    <!-- Simple Footer (Login Specific) -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-6 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-500 text-sm mb-2">&copy; 2026 MetinBank A.Ş.</p>
+            <div class="flex justify-center gap-4 text-xs text-gray-400">
+                <a href="gizlilik-politikasi.html" class="hover:text-gray-600">Gizlilik</a>
+                <a href="guvenlik.html" class="hover:text-gray-600">Güvenlik</a>
+            </div>
+        </div>
     </footer>
 
+    <!-- Link to API.JS for Base URL -->
+    <script src="../assets/js/api.js"></script>
+
     <script>
-        const API_BASE_URL = 'http://localhost:5000/api';
-        let verifiedCustomer = null; // Doğrulanan müşteri bilgileri
-        let isPasswordReset = false; // true: şifre s\u0131f\u0131rlama, false: ilk kez oluşturma
+        // FIXED: Use the centralized API Base URL from api.js if available
+        const API_URL = (typeof API_BASE_URL !== 'undefined') ? API_BASE_URL : 'http://localhost:5000/api';
+
+        let verifiedCustomer = null;
+        let isPasswordReset = false;
 
         // View switching
         function showView(viewName) {
@@ -267,7 +287,6 @@
         setupPasswordToggle('new-pass-1', 'toggle-new-pass-1');
         setupPasswordToggle('new-pass-2', 'toggle-new-pass-2');
 
-        // Şifre unuttum linki
         document.getElementById('forgot-password-link').addEventListener('click', (e) => {
             e.preventDefault();
             isPasswordReset = true;
@@ -275,7 +294,6 @@
             showView('verification');
         });
 
-        // İlk kez parola linki
         document.getElementById('first-time-link').addEventListener('click', (e) => {
             e.preventDefault();
             isPasswordReset = false;
@@ -283,7 +301,6 @@
             showView('verification');
         });
 
-        // Geri dön butonları
         document.getElementById('back-to-login').addEventListener('click', () => {
             showView('login');
         });
@@ -300,7 +317,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/musteri-login`, {
+                const response = await fetch(`${API_URL}/auth/musteri-login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -313,14 +330,11 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Token'ı kaydet
                     localStorage.setItem('authToken', data.token);
                     localStorage.setItem('kullanici', JSON.stringify(data.kullanici));
-
-                    // Dashboard'a yönlendir
                     window.location.href = 'dashboard.html';
                 } else {
-                    alert('Hata: ' + data.message);
+                    alert('Hata: ' + (data.message || 'Giriş başarısız.'));
                 }
             } catch (error) {
                 console.error('Login error:', error);
@@ -338,7 +352,7 @@
             const phone = document.getElementById('verify-phone').value.trim();
 
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/musteri-dogrula`, {
+                const response = await fetch(`${API_URL}/auth/musteri-dogrula`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -385,7 +399,7 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/sifre-sifirla`, {
+                const response = await fetch(`${API_URL}/auth/sifre-sifirla`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -399,7 +413,6 @@
 
                 if (data.success) {
                     alert(data.message);
-                    // Login sayfasına dön
                     verifiedCustomer = null;
                     document.getElementById('newpassword-form').reset();
                     showView('login');
