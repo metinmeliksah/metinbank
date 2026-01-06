@@ -66,22 +66,26 @@ namespace MetinBank.Business
                 // Onay durumu belirle
                 string onayDurumu = BelirleIlkOnayDurumu(tutar);
 
-                // İşlem kaydı
+                // İşlem kaydı - ParaBirimi hesaptan alınıyor
                 string refNo = CommonFunctions.GenerateTransactionReference();
                 string query = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefHesapID, IslemTipi, IslemAltTipi, 
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, KullaniciID, SubeID, OnayDurumu, KanalTipi, BasariliMi)
-                                VALUES (@refNo, NULL, @hesapID, 'Yatırma', 'Nakit', @tutar, 'TL', 0, @aciklama, @kullaniciID, 
-                                @subeID, @onayDurumu, 'Sube', 1)";
+                                VALUES (@refNo, NULL, @hesapID, @islemTipi, @islemAltTipi, @tutar, @paraBirimi, 0, @aciklama, @kullaniciID, 
+                                @subeID, @onayDurumu, @kanalTipi, 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
                     new MySqlParameter("@refNo", refNo),
                     new MySqlParameter("@hesapID", hesapID),
+                    new MySqlParameter("@islemTipi", "Yatirma"),  // Türkçe karakter olmadan
+                    new MySqlParameter("@islemAltTipi", "Nakit"),
                     new MySqlParameter("@tutar", tutar),
-                    new MySqlParameter("@aciklama", aciklama ?? "Para yatırma"),
+                    new MySqlParameter("@paraBirimi", hesap.HesapTipi),  // Hesaptan alınıyor (TL/USD/EUR/GBP)
+                    new MySqlParameter("@aciklama", aciklama ?? "Para yatirma"),
                     new MySqlParameter("@kullaniciID", kullaniciID),
                     new MySqlParameter("@subeID", subeID),
-                    new MySqlParameter("@onayDurumu", onayDurumu)
+                    new MySqlParameter("@onayDurumu", onayDurumu),
+                    new MySqlParameter("@kanalTipi", "Sube")
                 };
 
                 int affectedRows;
@@ -92,9 +96,16 @@ namespace MetinBank.Business
 
                 if (onayDurumu == "Tamamlandı")
                 {
-                    // Normal bakiye güncelleme
-                    hata = _bHesap.BakiyeGuncelle(hesapID, tutar);
+                    // Normal bakiye güncelleme - AYNI TRANSACTION İÇİNDE OLMALI
+                    string queryUpdate = "UPDATE Hesap SET Bakiye = Bakiye + @tutar WHERE HesapID = @hesapID";
+                    MySqlParameter[] paramsUpdate = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tutar", tutar),
+                        new MySqlParameter("@hesapID", hesapID)
+                    };
+                    hata = _dataAccess.ExecuteNonQuery(queryUpdate, paramsUpdate, out affectedRows);
                     if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                    if (affectedRows == 0) { _dataAccess.RollbackTransaction(); return "Hesap güncellenemedi."; }
                 }
                 else
                 {
@@ -154,22 +165,26 @@ namespace MetinBank.Business
                 // Onay durumu
                 string onayDurumu = BelirleIlkOnayDurumu(tutar);
 
-                // İşlem kaydı
+                // İşlem kaydı - ParaBirimi hesaptan alınıyor
                 string refNo = CommonFunctions.GenerateTransactionReference();
                 string query = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefHesapID, IslemTipi, IslemAltTipi, 
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, KullaniciID, SubeID, OnayDurumu, KanalTipi, BasariliMi)
-                                VALUES (@refNo, @hesapID, NULL, 'Çekme', 'Nakit', @tutar, 'TL', 0, @aciklama, @kullaniciID, 
-                                @subeID, @onayDurumu, 'Sube', 1)";
+                                VALUES (@refNo, @hesapID, NULL, @islemTipi, @islemAltTipi, @tutar, @paraBirimi, 0, @aciklama, @kullaniciID, 
+                                @subeID, @onayDurumu, @kanalTipi, 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
                     new MySqlParameter("@refNo", refNo),
                     new MySqlParameter("@hesapID", hesapID),
+                    new MySqlParameter("@islemTipi", "Cekme"),  // Türkçe karakter olmadan
+                    new MySqlParameter("@islemAltTipi", "Nakit"),
                     new MySqlParameter("@tutar", tutar),
-                    new MySqlParameter("@aciklama", aciklama ?? "Para çekme"),
+                    new MySqlParameter("@paraBirimi", hesap.HesapTipi),  // Hesaptan alınıyor (TL/USD/EUR/GBP)
+                    new MySqlParameter("@aciklama", aciklama ?? "Para cekme"),
                     new MySqlParameter("@kullaniciID", kullaniciID),
                     new MySqlParameter("@subeID", subeID),
-                    new MySqlParameter("@onayDurumu", onayDurumu)
+                    new MySqlParameter("@onayDurumu", onayDurumu),
+                    new MySqlParameter("@kanalTipi", "Sube")
                 };
 
                 int affectedRows;
@@ -180,9 +195,16 @@ namespace MetinBank.Business
 
                 if (onayDurumu == "Tamamlandı")
                 {
-                    // Bakiye güncelle
-                    hata = _bHesap.BakiyeGuncelle(hesapID, -tutar);
+                    // Bakiye güncelle - AYNI TRANSACTION İÇİNDE
+                    string queryUpdate = "UPDATE Hesap SET Bakiye = Bakiye - @tutar WHERE HesapID = @hesapID";
+                    MySqlParameter[] paramsUpdate = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tutar", tutar),
+                        new MySqlParameter("@hesapID", hesapID)
+                    };
+                    hata = _dataAccess.ExecuteNonQuery(queryUpdate, paramsUpdate, out affectedRows);
                     if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                    if (affectedRows == 0) { _dataAccess.RollbackTransaction(); return "Hesap güncellenemedi."; }
                 }
                 else
                 {
@@ -263,8 +285,8 @@ namespace MetinBank.Business
                 string query = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefHesapID, HedefIBAN, IslemTipi, 
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, AliciAdi, KullaniciID, SubeID, OnayDurumu, 
                                 KanalTipi, IPAdresi, BasariliMi)
-                                VALUES (@refNo, @kaynakID, @hedefID, @hedefIBAN, 'Havale', @tutar, 'TL', @islemUcreti, @aciklama, 
-                                @aliciAdi, @kullaniciID, @subeID, @onayDurumu, 'Internet', @ip, 1)";
+                                VALUES (@refNo, @kaynakID, @hedefID, @hedefIBAN, @islemTipi, @tutar, @paraBirimi, @islemUcreti, @aciklama, 
+                                @aliciAdi, @kullaniciID, @subeID, @onayDurumu, @kanalTipi, @ip, 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
@@ -272,13 +294,16 @@ namespace MetinBank.Business
                     new MySqlParameter("@kaynakID", kaynakHesapID),
                     new MySqlParameter("@hedefID", (object)hedefHesapID ?? DBNull.Value),
                     new MySqlParameter("@hedefIBAN", hedefIBAN),
+                    new MySqlParameter("@islemTipi", "Havale"),
                     new MySqlParameter("@tutar", tutar),
+                    new MySqlParameter("@paraBirimi", kaynakHesap.HesapTipi), // Hesaptan al
                     new MySqlParameter("@islemUcreti", islemUcreti),
                     new MySqlParameter("@aciklama", aciklama ?? "Havale"),
                     new MySqlParameter("@aliciAdi", aliciAdi ?? ""),
                     new MySqlParameter("@kullaniciID", kullaniciID),
                     new MySqlParameter("@subeID", subeID),
                     new MySqlParameter("@onayDurumu", onayDurumu),
+                    new MySqlParameter("@kanalTipi", "Internet"), // Varsayılan Internet, metod imzasına eklenebilir
                     new MySqlParameter("@ip", CommonFunctions.GetLocalIPAddress())
                 };
 
@@ -290,12 +315,26 @@ namespace MetinBank.Business
 
                 if (onayDurumu == "Tamamlandı")
                 {
-                    hata = _bHesap.BakiyeGuncelle(kaynakHesapID, -toplamTutar);
+                    // Kaynak hesap güncelle
+                    string queryUpdateKaynak = "UPDATE Hesap SET Bakiye = Bakiye - @tutar WHERE HesapID = @hesapID";
+                    MySqlParameter[] paramsUpdateKaynak = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tutar", toplamTutar),
+                        new MySqlParameter("@hesapID", kaynakHesapID)
+                    };
+                    hata = _dataAccess.ExecuteNonQuery(queryUpdateKaynak, paramsUpdateKaynak, out affectedRows);
                     if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
                     if (hedefHesapID.HasValue)
                     {
-                        hata = _bHesap.BakiyeGuncelle(hedefHesapID.Value, tutar);
+                        // Hedef hesap güncelle
+                        string queryUpdateHedef = "UPDATE Hesap SET Bakiye = Bakiye + @tutar WHERE HesapID = @hesapID";
+                        MySqlParameter[] paramsUpdateHedef = new MySqlParameter[]
+                        {
+                            new MySqlParameter("@tutar", tutar),
+                            new MySqlParameter("@hesapID", hedefHesapID.Value)
+                        };
+                        hata = _dataAccess.ExecuteNonQuery(queryUpdateHedef, paramsUpdateHedef, out affectedRows);
                         if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
                     }
                 }
@@ -359,21 +398,24 @@ namespace MetinBank.Business
                 string query = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefIBAN, IslemTipi, 
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, AliciAdi, KullaniciID, SubeID, OnayDurumu, 
                                 KanalTipi, IPAdresi, BasariliMi)
-                                VALUES (@refNo, @kaynakID, @hedefIBAN, 'EFT', @tutar, 'TL', @ucret, @aciklama, 
-                                @aliciAdi, @kullaniciID, @subeID, @onayDurumu, 'Internet', @ip, 1)";
+                                VALUES (@refNo, @kaynakID, @hedefIBAN, @islemTipi, @tutar, @paraBirimi, @ucret, @aciklama, 
+                                @aliciAdi, @kullaniciID, @subeID, @onayDurumu, @kanalTipi, @ip, 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
                     new MySqlParameter("@refNo", refNo),
                     new MySqlParameter("@kaynakID", kaynakHesapID),
                     new MySqlParameter("@hedefIBAN", hedefIBAN),
+                    new MySqlParameter("@islemTipi", "EFT"),
                     new MySqlParameter("@tutar", tutar),
+                    new MySqlParameter("@paraBirimi", kaynakHesap.HesapTipi), // Hesaptan al
                     new MySqlParameter("@ucret", islemUcreti),
                     new MySqlParameter("@aciklama", aciklama ?? "EFT"),
                     new MySqlParameter("@aliciAdi", aliciAdi ?? ""),
                     new MySqlParameter("@kullaniciID", kullaniciID),
                     new MySqlParameter("@subeID", subeID),
                     new MySqlParameter("@onayDurumu", onayDurumu),
+                    new MySqlParameter("@kanalTipi", "Internet"), // Varsayılan Internet
                     new MySqlParameter("@ip", CommonFunctions.GetLocalIPAddress())
                 };
 
@@ -385,7 +427,14 @@ namespace MetinBank.Business
 
                 if (onayDurumu == "Tamamlandı")
                 {
-                    hata = _bHesap.BakiyeGuncelle(kaynakHesapID, -toplamTutar);
+                    // Kaynak hesap güncelle
+                    string queryUpdate = "UPDATE Hesap SET Bakiye = Bakiye - @tutar WHERE HesapID = @hesapID";
+                    MySqlParameter[] paramsUpdate = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tutar", toplamTutar),
+                        new MySqlParameter("@hesapID", kaynakHesapID)
+                    };
+                    hata = _dataAccess.ExecuteNonQuery(queryUpdate, paramsUpdate, out affectedRows);
                     if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
                 }
                 else
@@ -455,19 +504,22 @@ namespace MetinBank.Business
                 string query = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefHesapID, IslemTipi, 
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, KullaniciID, SubeID, OnayDurumu, 
                                 KanalTipi, BasariliMi)
-                                VALUES (@refNo, @kaynakID, @hedefID, 'Virman', @tutar, 'TL', 0, @aciklama, 
-                                @kullaniciID, @subeID, @onayDurumu, 'Sube', 1)";
+                                VALUES (@refNo, @kaynakID, @hedefID, @islemTipi, @tutar, @paraBirimi, 0, @aciklama, 
+                                @kullaniciID, @subeID, @onayDurumu, @kanalTipi, 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
                     new MySqlParameter("@refNo", refNo),
                     new MySqlParameter("@kaynakID", kaynakHesapID),
                     new MySqlParameter("@hedefID", hedefHesapID),
+                    new MySqlParameter("@islemTipi", "Virman"),
                     new MySqlParameter("@tutar", tutar),
+                    new MySqlParameter("@paraBirimi", kaynakHesap.HesapTipi), // Hesaptan al
                     new MySqlParameter("@aciklama", aciklama ?? "Virman"),
                     new MySqlParameter("@kullaniciID", kullaniciID),
                     new MySqlParameter("@subeID", subeID),
-                    new MySqlParameter("@onayDurumu", onayDurumu)
+                    new MySqlParameter("@onayDurumu", onayDurumu),
+                    new MySqlParameter("@kanalTipi", "Sube") // Varsayılan Şube, virman genelde şubeden veya mobilden yapılır ama burası desktop
                 };
 
                 int affectedRows;
@@ -478,10 +530,24 @@ namespace MetinBank.Business
 
                 if (onayDurumu == "Tamamlandı")
                 {
-                    hata = _bHesap.BakiyeGuncelle(kaynakHesapID, -tutar);
+                    // Kaynak hesap güncelle
+                    string queryUpdateKaynak = "UPDATE Hesap SET Bakiye = Bakiye - @tutar WHERE HesapID = @hesapID";
+                    MySqlParameter[] paramsUpdateKaynak = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tutar", tutar),
+                        new MySqlParameter("@hesapID", kaynakHesapID)
+                    };
+                    hata = _dataAccess.ExecuteNonQuery(queryUpdateKaynak, paramsUpdateKaynak, out affectedRows);
                     if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
-                    hata = _bHesap.BakiyeGuncelle(hedefHesapID, tutar);
+                    // Hedef hesap güncelle
+                    string queryUpdateHedef = "UPDATE Hesap SET Bakiye = Bakiye + @tutar WHERE HesapID = @hesapID";
+                    MySqlParameter[] paramsUpdateHedef = new MySqlParameter[]
+                    {
+                        new MySqlParameter("@tutar", tutar),
+                        new MySqlParameter("@hesapID", hedefHesapID)
+                    };
+                    hata = _dataAccess.ExecuteNonQuery(queryUpdateHedef, paramsUpdateHedef, out affectedRows);
                     if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
                 }
                 else
@@ -648,8 +714,15 @@ namespace MetinBank.Business
                         // Hedef hesaba ekle (Sadece Havale ve Virman için, Çekme/EFT için hedef hesap bizde değil veya NULL)
                         if (hedefHesapID.HasValue && (islemTipi == "Havale" || islemTipi == "Virman"))
                         {
-                            hata = _bHesap.BakiyeGuncelle(hedefHesapID.Value, tutar);
-                             if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
+                             // Hedef hesap güncelle
+                            string queryUpdateHedef = "UPDATE Hesap SET Bakiye = Bakiye + @tutar WHERE HesapID = @hesapID";
+                            MySqlParameter[] paramsUpdateHedef = new MySqlParameter[]
+                            {
+                                new MySqlParameter("@tutar", tutar),
+                                new MySqlParameter("@hesapID", hedefHesapID.Value)
+                            };
+                            hata = _dataAccess.ExecuteNonQuery(queryUpdateHedef, paramsUpdateHedef, out affected);
+                            if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
                         }
                     }
                 }
