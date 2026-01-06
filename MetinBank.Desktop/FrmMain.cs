@@ -55,8 +55,10 @@ namespace MetinBank.Desktop
 
         private void ConfigureUI()
         {
-            // Set user information in header
-            barStaticItemKullanici.Caption = $"👤 {_kullanici.TamAd} ({_kullanici.RolAdi})";
+            // Set user information in header - null check eklendi
+            string tamAd = _kullanici?.TamAd ?? "Kullanıcı";
+            string rolAdi = _kullanici?.RolAdi ?? "Bilinmiyor";
+            barStaticItemKullanici.Caption = $"👤 {tamAd} ({rolAdi})";
             
             // Set current date/time
             barStaticItemTarih.Caption = $"📅 {DateTime.Now:dd.MM.yyyy HH:mm}";
@@ -67,35 +69,26 @@ namespace MetinBank.Desktop
 
         private void LoadNavBarIcons()
         {
-            // Disable code-behind icon loading to allow Designer-set images to show
-            try
-            {
-                // Detach the global collection so individual Item.Image / Item.SmallImage properties work
-                navBarControl1.SmallImages = null;
-                navBarControl1.LargeImages = null;
-                
-                // Optional: Clear any programmatically set indices if they exist, 
-                // though setting the collection to null usually suffices.
-                // We leave the rest to the Designer configuration.
-            }
-            catch
-            {
-                // generic error handling
-            }
-
-            // Yetki kontrolü - Onay Bekleyenler menüsünü sadece yetkili kişilere göster
-            string rol = _kullanici.RolAdi;
-            if (rol.IndexOf("Mudur", StringComparison.OrdinalIgnoreCase) >= 0 || 
+            // Vector iconları Designer'da zaten tanımlı
+            // Sadece yetki kontrollerini yap
+            
+            string rol = _kullanici?.RolAdi ?? "";
+            bool isMudurOrMerkez = rol.IndexOf("Mudur", StringComparison.OrdinalIgnoreCase) >= 0 || 
                 rol.IndexOf("Müdür", StringComparison.OrdinalIgnoreCase) >= 0 ||
                 rol.IndexOf("Genel", StringComparison.OrdinalIgnoreCase) >= 0 || 
-                rol.IndexOf("Merkez", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                navBarItemOnayBekleyenler.Visible = true;
-            }
-            else
-            {
-                navBarItemOnayBekleyenler.Visible = false;
-            }
+                rol.IndexOf("Merkez", StringComparison.OrdinalIgnoreCase) >= 0;
+
+            // Null check ekleyerek crash'i önle
+            if (navBarItemOnayBekleyenler != null)
+                navBarItemOnayBekleyenler.Visible = isMudurOrMerkez;
+            
+            if (navBarItemMusteriIslem != null)
+                navBarItemMusteriIslem.Visible = isMudurOrMerkez;
+            
+            // Şube Değişikliği sadece şubesi olan kullanıcılara gösterilir
+            // Genel Merkez çalışanları (SubeID == null) için gizlenir
+            if (navBarItemSubeDegisiklik != null)
+                navBarItemSubeDegisiklik.Visible = _kullanici?.SubeID.HasValue == true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -166,6 +159,11 @@ namespace MetinBank.Desktop
         private void navBarItemDovizAlSat_LinkClicked(object sender, NavBarLinkEventArgs e)
         {
             OpenMdiChild(new FrmDovizAlSat(_kullanici));
+        }
+
+        private void navBarItemSubeDegisiklik_LinkClicked(object sender, NavBarLinkEventArgs e)
+        {
+            OpenMdiChild(new FrmSubeDegisiklik(_kullanici));
         }
 
         private void navBarItemKrediBasvuru_LinkClicked(object sender, NavBarLinkEventArgs e)

@@ -5,8 +5,10 @@ namespace MetinBank.WebAPI.DTOs
         public int KaynakHesapID { get; set; }
         public string HedefIBAN { get; set; } = string.Empty;
         public decimal Tutar { get; set; }
+        public decimal IslemUcreti { get; set; }
         public string Aciklama { get; set; } = string.Empty;
         public string AliciAdi { get; set; } = string.Empty;
+        public string ParaBirimi { get; set; } = "TL";
     }
 
     public class EFTRequest
@@ -14,8 +16,10 @@ namespace MetinBank.WebAPI.DTOs
         public int KaynakHesapID { get; set; }
         public string HedefIBAN { get; set; } = string.Empty;
         public decimal Tutar { get; set; }
+        public decimal IslemUcreti { get; set; }
         public string Aciklama { get; set; } = string.Empty;
         public string AliciAdi { get; set; } = string.Empty;
+        public string ParaBirimi { get; set; } = "TL";
     }
 
     public class VirmanRequest
@@ -24,6 +28,7 @@ namespace MetinBank.WebAPI.DTOs
         public int HedefHesapID { get; set; }
         public decimal Tutar { get; set; }
         public string Aciklama { get; set; } = string.Empty;
+        public string ParaBirimi { get; set; } = "TL";
     }
 
     public class IslemResponse
@@ -32,5 +37,6 @@ namespace MetinBank.WebAPI.DTOs
         public string Message { get; set; } = string.Empty;
         public long? IslemID { get; set; }
         public string? IslemReferansNo { get; set; }
+        public object? Data { get; set; }
     }
 }

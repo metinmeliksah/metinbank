@@ -218,12 +218,14 @@ namespace MetinBank.Business
         }
 
         public string Havale(int kaynakHesapID, string hedefIBAN, decimal tutar, string aciklama, string aliciAdi, 
-                            int kullaniciID, int subeID, out long islemID)
+                            int kullaniciID, int subeID, decimal islemUcreti, out long islemID)
         {
             islemID = 0;
 
             try
             {
+                decimal toplamTutar = tutar + islemUcreti;
+
                 string hata = ValidationHelper.ValidateTutar(tutar, 1, 1000000);
                 if (hata != null) return hata;
 
@@ -240,7 +242,7 @@ namespace MetinBank.Business
                 hata = _bHesap.HesapGetir(kaynakHesapID, out kaynakHesap);
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
-                hata = ValidationHelper.ValidateBakiye(kaynakHesap.KullanilabilirBakiye, tutar);
+                hata = ValidationHelper.ValidateBakiye(kaynakHesap.KullanilabilirBakiye, toplamTutar);
                 if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
                 // Hedef hesap kontrolü (Metin Bank içi ise)
@@ -261,8 +263,8 @@ namespace MetinBank.Business
                 string query = @"INSERT INTO Islem (IslemReferansNo, KaynakHesapID, HedefHesapID, HedefIBAN, IslemTipi, 
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, AliciAdi, KullaniciID, SubeID, OnayDurumu, 
                                 KanalTipi, IPAdresi, BasariliMi)
-                                VALUES (@refNo, @kaynakID, @hedefID, @hedefIBAN, 'Havale', @tutar, 'TL', 0, @aciklama, 
-                                @aliciAdi, @kullaniciID, @subeID, @onayDurumu, 'Sube', @ip, 1)";
+                                VALUES (@refNo, @kaynakID, @hedefID, @hedefIBAN, 'Havale', @tutar, 'TL', @islemUcreti, @aciklama, 
+                                @aliciAdi, @kullaniciID, @subeID, @onayDurumu, 'Internet', @ip, 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
@@ -271,6 +273,7 @@ namespace MetinBank.Business
                     new MySqlParameter("@hedefID", (object)hedefHesapID ?? DBNull.Value),
                     new MySqlParameter("@hedefIBAN", hedefIBAN),
                     new MySqlParameter("@tutar", tutar),
+                    new MySqlParameter("@islemUcreti", islemUcreti),
                     new MySqlParameter("@aciklama", aciklama ?? "Havale"),
                     new MySqlParameter("@aliciAdi", aliciAdi ?? ""),
                     new MySqlParameter("@kullaniciID", kullaniciID),
@@ -287,7 +290,7 @@ namespace MetinBank.Business
 
                 if (onayDurumu == "Tamamlandı")
                 {
-                    hata = _bHesap.BakiyeGuncelle(kaynakHesapID, -tutar);
+                    hata = _bHesap.BakiyeGuncelle(kaynakHesapID, -toplamTutar);
                     if (hata != null) { _dataAccess.RollbackTransaction(); return hata; }
 
                     if (hedefHesapID.HasValue)
@@ -302,7 +305,7 @@ namespace MetinBank.Business
                     string queryBloke = "UPDATE Hesap SET BlokeBakiye = BlokeBakiye + @tutar WHERE HesapID = @hesapID";
                     MySqlParameter[] paramsBloke = new MySqlParameter[]
                     {
-                        new MySqlParameter("@tutar", tutar),
+                        new MySqlParameter("@tutar", toplamTutar),
                         new MySqlParameter("@hesapID", kaynakHesapID)
                     };
                     hata = _dataAccess.ExecuteNonQuery(queryBloke, paramsBloke, out affectedRows);
@@ -328,15 +331,13 @@ namespace MetinBank.Business
         }
 
         public string EFT(int kaynakHesapID, string hedefIBAN, decimal tutar, string aciklama, string aliciAdi, 
-                         int kullaniciID, int subeID, out long islemID)
+                         int kullaniciID, int subeID, decimal islemUcreti, out long islemID)
         {
             islemID = 0;
 
             try
             {
-                // EFT ücreti
-                decimal eftUcreti = 5.00m;
-                decimal toplamTutar = tutar + eftUcreti;
+                decimal toplamTutar = tutar + islemUcreti;
 
                 string hata = ValidationHelper.ValidateTutar(tutar, 1, 1000000);
                 if (hata != null) return hata;
@@ -359,7 +360,7 @@ namespace MetinBank.Business
                                 Tutar, ParaBirimi, IslemUcreti, Aciklama, AliciAdi, KullaniciID, SubeID, OnayDurumu, 
                                 KanalTipi, IPAdresi, BasariliMi)
                                 VALUES (@refNo, @kaynakID, @hedefIBAN, 'EFT', @tutar, 'TL', @ucret, @aciklama, 
-                                @aliciAdi, @kullaniciID, @subeID, @onayDurumu, 'Sube', @ip, 1)";
+                                @aliciAdi, @kullaniciID, @subeID, @onayDurumu, 'Internet', @ip, 1)";
 
                 MySqlParameter[] parameters = new MySqlParameter[]
                 {
@@ -367,7 +368,7 @@ namespace MetinBank.Business
                     new MySqlParameter("@kaynakID", kaynakHesapID),
                     new MySqlParameter("@hedefIBAN", hedefIBAN),
                     new MySqlParameter("@tutar", tutar),
-                    new MySqlParameter("@ucret", eftUcreti),
+                    new MySqlParameter("@ucret", islemUcreti),
                     new MySqlParameter("@aciklama", aciklama ?? "EFT"),
                     new MySqlParameter("@aliciAdi", aliciAdi ?? ""),
                     new MySqlParameter("@kullaniciID", kullaniciID),
@@ -826,7 +827,7 @@ namespace MetinBank.Business
             islemler = null;
             string durum = "";
             
-            // Rol kontrolünü esnek yap
+            // Rol kontrolü
             if (rol.IndexOf("Mudur", StringComparison.OrdinalIgnoreCase) >= 0 || 
                 rol.IndexOf("Müdür", StringComparison.OrdinalIgnoreCase) >= 0) 
             {
@@ -839,31 +840,48 @@ namespace MetinBank.Business
             }
             else 
             {
-                // Yetkisiz kullanıcılar için boş tablo döndür veya hata ver
-                // Hata yerine boş liste dönmek UI için daha güvenli olabilir ama kullanıcı "hata veriyor" demiş.
                 return "Bu işlem için yetkiniz bulunmamaktadır.";
             }
 
-            // Basit select
-             string query = @"SELECT i.*, 
-                            CASE 
-                                WHEN i.IslemTipi = 'Havale' THEN CONCAT('Havale - ', i.AliciAdi)
-                                WHEN i.IslemTipi = 'EFT' THEN CONCAT('EFT - ', i.AliciAdi)
-                                WHEN i.IslemTipi = 'Yatırma' THEN 'Para Yatırma'
-                                WHEN i.IslemTipi = 'Çekme' THEN 'Para Çekme'
-                                ELSE i.IslemTipi 
-                            END as IslemTanimi,
-                            h.HesapNo, CONCAT(m.Ad, ' ', m.Soyad) as MusteriAdSoyad
+            // Gelişmiş sorgu - Çift kayıt sorununu çözer ve detayları getirir
+            string query = @"SELECT 
+                                i.IslemID,
+                                i.IslemReferansNo,
+                                i.IslemTipi,
+                                i.Tutar,
+                                i.ParaBirimi,
+                                i.IslemTarihi,
+                                i.OnayDurumu,
+                                i.Aciklama,
+                                i.IslemUcreti,
+                                
+                                -- Gönderen Bilgileri
+                                h_kaynak.IBAN as GonderenIBAN,
+                                CONCAT(m_kaynak.Ad, ' ', m_kaynak.Soyad) as GonderenAdSoyad,
+
+                                -- Alıcı Bilgileri (Eğer iç transfer ise HedefHesap'tan, dış ise Islem tablosundan)
+                                CASE 
+                                    WHEN i.HedefIBAN IS NOT NULL AND i.HedefIBAN != '' THEN i.HedefIBAN 
+                                    ELSE h_hedef.IBAN 
+                                END as AliciIBAN,
+                                
+                                CASE 
+                                    WHEN i.AliciAdi IS NOT NULL AND i.AliciAdi != '' THEN i.AliciAdi
+                                    ELSE CONCAT(m_hedef.Ad, ' ', m_hedef.Soyad)
+                                END as AliciAdSoyad,
+
+                                -- Oluşturan Personel
+                                CONCAT(k.Ad, ' ', k.Soyad) as OlusturanPersonel
+
                             FROM Islem i
-                            JOIN Hesap h ON i.KaynakHesapID = h.HesapID OR i.HedefHesapID = h.HesapID
-                            JOIN Musteri m ON h.MusteriID = m.MusteriID
+                            LEFT JOIN Hesap h_kaynak ON i.KaynakHesapID = h_kaynak.HesapID
+                            LEFT JOIN Musteri m_kaynak ON h_kaynak.MusteriID = m_kaynak.MusteriID
+                            LEFT JOIN Hesap h_hedef ON i.HedefHesapID = h_hedef.HesapID
+                            LEFT JOIN Musteri m_hedef ON h_hedef.MusteriID = m_hedef.MusteriID
+                            LEFT JOIN Kullanici k ON i.KullaniciID = k.KullaniciID
                             WHERE i.OnayDurumu = @durum
                             ORDER BY i.IslemTarihi ASC";
-            
-            // NOT: Yatırma işleminde KaynakHesapID NULL, HedefHesapID dolu.
-            // Bu yüzden JOIN'i OR ile güncelledim: i.KaynakHesapID = h.HesapID OR i.HedefHesapID = h.HesapID
-            // Bu sayede hem çekme (kaynak) hem yatırma (hedef) işlemleri listelenir.
-            
+
             MySqlParameter[] parameters = new MySqlParameter[]
             {
                 new MySqlParameter("@durum", durum)

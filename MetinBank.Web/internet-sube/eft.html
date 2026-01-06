@@ -39,65 +39,257 @@
     <!-- Main Content -->
     <main>
         <div class="container">
-            <div class="transfer-container">
-                <h1 style="margin-bottom: var(--spacing-xl);">EFT İşlemi</h1>
+            <div class="transfer-modern-container">
+                <!-- Header -->
+                <div class="transfer-header">
+                    <div class="transfer-header-content">
+                        <div class="transfer-icon-large">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M16 8l-4 8-4-4"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="transfer-title">EFT İşlemi</h1>
+                            <p class="transfer-subtitle">Diğer bankalara elektronik fon transferi</p>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Two Column Layout -->
-                <div class="transfer-grid">
-                    <!-- Left Panel - Sender -->
-                    <div class="transfer-panel">
-                        <div class="panel-header">
-                            <div class="panel-icon">🏦</div>
-                            <div class="panel-title">Gönderen Hesap</div>
+                <!-- Progress Steps -->
+                <div class="transfer-steps">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Gönderen</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Banka</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Alıcı</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Tutar</div>
+                    </div>
+                </div>
+
+                <!-- Form Card -->
+                <div class="transfer-card">
+                    <!-- Sender Section -->
+                    <div class="transfer-section">
+                        <div class="section-header-modern">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3h18v18H3zM3 9h18M9 21V9"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="section-title-modern">Gönderen Hesap</h3>
+                                <p class="section-desc">EFT yapacağınız hesabı seçin</p>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Hesap Seçin</label>
-                            <select class="form-select" id="senderAccount" onchange="updateSenderBalance()">
-                                <option value="">Hesap seçiniz...</option>
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                <span class="label-text">Hesabınızı Seçin</span>
+                                <span class="label-required">*</span>
+                            </label>
+                            <select class="form-input-modern" id="senderAccount" onchange="updateSenderBalance()">
+                                <option value="">Bir hesap seçin...</option>
                             </select>
-                            <div class="selected-account" id="senderDetails" style="display: none;">
-                                <div id="senderIBAN"></div>
-                                <div class="account-balance">
-                                    <span class="balance-label">Kullanılabilir Bakiye:</span>
-                                    <span class="balance-amount" id="senderBalance">0,00 TL</span>
-                                </div>
+                        </div>
+
+                        <div class="account-preview" id="senderDetails" style="display: none;">
+                            <div class="account-preview-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                                </svg>
+                                <span class="account-preview-label">Seçili Hesap</span>
+                            </div>
+                            <div class="account-preview-iban" id="senderIBAN"></div>
+                            <div class="account-preview-balance">
+                                <span class="balance-label-modern">Kullanılabilir Bakiye</span>
+                                <span class="balance-value-modern" id="senderBalance">0,00 TL</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Panel - Recipient -->
-                    <div class="transfer-panel">
-                        <div class="panel-header">
-                            <div class="panel-icon">🏧</div>
-                            <div class="panel-title">Alıcı Bilgileri</div>
+                    <div class="section-divider"></div>
+
+                    <!-- Bank Selection -->
+                    <div class="transfer-section">
+                        <div class="section-header-modern">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                                    <path d="M9 22V12h6v10"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="section-title-modern">Alıcı Bankası</h3>
+                                <p class="section-desc">EFT yapılacak bankayı seçin</p>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Alıcı Bankası</label>
-                            <select class="form-select" id="recipientBank">
-                                <option value="">Banka seçiniz...</option>
-                                <option value="Ziraat Bankası">Ziraat Bankası</option>
-                                <option value="Vakıfbank">Vakıfbank</option>
-                                <option value="Halkbank">Halkbank</option>
-                                <option value="İş Bankası">İş Bankası</option>
-                                <option value="Akbank">Akbank</option>
-                                <option value="Garanti BBVA">Garanti BBVA</option>
-                                <option value="Yapı Kredi">Yapı Kredi</option>
-                                <option value="QNB Finansbank">QNB Finansbank</option>
-                                <option value="DenizBank">DenizBank</option>
-                                <option value="TEB">TEB</option>
-                            </select>
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                <span class="label-text">Banka Seçin</span>
+                                <span class="label-required">*</span>
+                            </label>
+                            <div class="bank-grid" id="bankGrid">
+                                <!-- Banks will be loaded here -->
+                            </div>
+                            <input type="hidden" id="recipientBank">
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- Recipient Section -->
+                    <div class="transfer-section">
+                        <div class="section-header-modern">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="section-title-modern">Alıcı Bilgileri</h3>
+                                <p class="section-desc">IBAN numarasını girin</p>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Alıcı IBAN</label>
-                            <input type="text" class="form-input" id="recipientIBAN"
-                                placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32"
-                                oninput="formatIBANInput(this)">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                <span class="label-text">Alıcı IBAN</span>
+                                <span class="label-required">*</span>
+                            </label>
+                            <div class="iban-input-wrapper">
+                                <input type="text" 
+                                       class="form-input-modern iban-input" 
+                                       id="recipientIBAN"
+                                       placeholder="TR00 0000 0000 0000 0000 0000 00" 
+                                       maxlength="32"
+                                       oninput="formatIBANInput(this)">
+                            </div>
+                            <div class="input-hint">Alıcının diğer bankadaki IBAN numarası</div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                <span class="label-text">Alıcı Adı Soyadı</span>
+                                <span class="label-required">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-input-modern" 
+                                   id="recipientName"
+                                   placeholder="Ad Soyad"
+                                   maxlength="100">
+                            <div class="input-hint">Alıcının tam adını yazın</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <span class="label-text">Tutar</span>
+                                    <span class="label-required">*</span>
+                                </label>
+                                <div class="amount-input-wrapper">
+                                    <input type="text" 
+                                           class="form-input-modern amount-input" 
+                                           id="amount" 
+                                           placeholder="0,00"
+                                           oninput="handleAmountInput(this)">
+                                    <span class="amount-currency">TL</span>
+                                </div>
+                                <div class="quick-amounts">
+                                    <button class="quick-amount-btn" onclick="setAmount(100)">100 TL</button>
+                                    <button class="quick-amount-btn" onclick="setAmount(500)">500 TL</button>
+                                    <button class="quick-amount-btn" onclick="setAmount(1000)">1.000 TL</button>
+                                    <button class="quick-amount-btn" onclick="setAmount(5000)">5.000 TL</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <span class="label-text">Açıklama</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-input-modern" 
+                                       id="description"
+                                       placeholder="İşlem açıklaması (isteğe bağlı)" 
+                                       maxlength="200">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Card -->
+                <div class="transfer-summary-modern" id="summaryCard" style="display: none;">
+                    <div class="summary-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                        </svg>
+                        <span>İşlem Özeti</span>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-item">
+                            <span class="summary-label">Gönderen</span>
+                            <span class="summary-value" id="summaryFrom">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Alıcı Bankası</span>
+                            <span class="summary-value" id="summaryBank">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Alıcı</span>
+                            <span class="summary-value" id="summaryTo">-</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-item">
+                            <span class="summary-label">Tutar</span>
+                            <span class="summary-value" id="summaryAmount">0,00 TL</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">EFT Ücreti</span>
+                            <span class="summary-value" id="feeAmount">5,00 TL</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-item summary-total">
+                            <span class="summary-label">Toplam</span>
+                            <span class="summary-value" id="summaryTotal">0,00 TL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="transfer-actions">
+                    <button class="btn-modern btn-secondary-modern" onclick="window.history.back()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                        Geri
+                    </button>
+                    <button class="btn-modern btn-primary-modern" onclick="processTransfer()" id="submitBtn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                        EFT Gönder
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
                             <label class="form-label">Alıcı Adı</label>
                             <input type="text" class="form-input" id="recipientName" placeholder="Alıcı adı soyadı">
                         </div>
@@ -158,11 +350,47 @@
         checkAuth();
 
         let accounts = [];
-        const EFT_FEE = 2.50;
+        let selectedBank = null;
+        let currentFee = 2.50;
+        let ibanLookupTimeout = null;
+
+        const banks = [
+            { code: 'AKBANK', name: 'Akbank', logo: '🏦' },
+            { code: 'GARANTI', name: 'Garanti BBVA', logo: '🏦' },
+            { code: 'ISBANK', name: 'İş Bankası', logo: '🏦' },
+            { code: 'YAPI_KREDI', name: 'Yapı Kredi', logo: '🏦' },
+            { code: 'ZIRAAT', name: 'Ziraat Bankası', logo: '🏦' },
+            { code: 'HALKBANK', name: 'Halk Bankası', logo: '🏦' },
+            { code: 'VAKIFBANK', name: 'Vakıfbank', logo: '🏦' },
+            { code: 'TEB', name: 'TEB', logo: '🏦' },
+            { code: 'DENIZBANK', name: 'Denizbank', logo: '🏦' },
+            { code: 'QNB', name: 'QNB Finansbank', logo: '🏦' },
+            { code: 'ING', name: 'ING', logo: '🏦' },
+            { code: 'KUVEYT_TURK', name: 'Kuveyt Türk', logo: '🏦' }
+        ];
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadAccounts();
+            renderBankGrid();
         });
+
+        function renderBankGrid() {
+            const grid = document.getElementById('bankGrid');
+            grid.innerHTML = banks.map(bank => `
+                <div class="bank-card" onclick="selectBank('${bank.code}', '${bank.name}')">
+                    <div class="bank-logo">${bank.logo}</div>
+                    <div class="bank-name">${bank.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectBank(code, name) {
+            selectedBank = { code, name };
+            document.querySelectorAll('.bank-card').forEach(card => card.classList.remove('selected'));
+            event.target.closest('.bank-card').classList.add('selected');
+            document.getElementById('summaryBank').textContent = name;
+            updateStep(2);
+        }
 
         async function loadAccounts() {
             try {
@@ -198,29 +426,92 @@
                 document.getElementById('senderBalance').textContent =
                     formatCurrency(parseFloat(option.dataset.balance), option.dataset.type);
                 document.getElementById('summaryFrom').textContent = formatIBAN(option.dataset.iban);
+                updateStep(1);
             } else {
                 document.getElementById('senderDetails').style.display = 'none';
                 document.getElementById('summaryFrom').textContent = '-';
             }
-            updateTotal();
         }
 
-        function formatIBANInput(input) {
+        function updateStep(step) {
+            document.querySelectorAll('.step').forEach((el, idx) => {
+                if (idx < step) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
+        async function handleIBANInput(event) {
+            const input = event.target;
             let value = input.value.replace(/\s/g, '').toUpperCase();
+            
+            // Format with spaces
             let formatted = '';
-            for (let i = 0; i < value.length; i += 4) {
+            for (let i = 0; i < value.length && i < 26; i += 4) {
                 if (i > 0) formatted += ' ';
                 formatted += value.substring(i, i + 4);
             }
             input.value = formatted;
+
+            const recipientInfo = document.getElementById('recipientInfo');
+            const lookupStatus = document.getElementById('lookupStatus');
+
+            // Clear previous timeout
+            if (ibanLookupTimeout) {
+                clearTimeout(ibanLookupTimeout);
+            }
+
+            // Hide recipient info while typing
+            recipientInfo.style.display = 'none';
+            
+            const cleanIBAN = value.replace(/\s/g, '');
+            
+            if (cleanIBAN.length === 26) {
+                lookupStatus.textContent = 'Hesap bilgisi alınıyor...';
+                lookupStatus.className = 'lookup-status loading';
+                lookupStatus.style.display = 'block';
+
+                // Debounce lookup
+                ibanLookupTimeout = setTimeout(async () => {
+                    try {
+                        const response = await apiGet(`/hesap/iban/${cleanIBAN}`);
+                        
+                        if (response.success && response.data) {
+                            const account = response.data;
+                            lookupStatus.style.display = 'none';
+                            recipientInfo.style.display = 'flex';
+                            
+                            const fullName = `${account.musteri.ad} ${account.musteri.soyad}`;
+                            document.getElementById('recipientNameDisplay').textContent = fullName;
+                            document.getElementById('recipientBankDisplay').textContent = 'MetinBank';
+                            document.getElementById('summaryTo').textContent = fullName;
+                            
+                            updateStep(3);
+                        } else {
+                            lookupStatus.textContent = '⚠️ Hesap bulunamadı';
+                            lookupStatus.className = 'lookup-status error';
+                        }
+                    } catch (error) {
+                        console.error('IBAN lookup error:', error);
+                        lookupStatus.textContent = '⚠️ Hesap bilgisi alınamadı';
+                        lookupStatus.className = 'lookup-status error';
+                    }
+                }, 500);
+            } else {
+                lookupStatus.style.display = 'none';
+            }
         }
 
-        let currentFee = 0;
+        function setAmount(value) {
+            document.getElementById('amount').value = value;
+            updateTotal();
+            updateStep(4);
+        }
 
         async function calculateFee() {
             const amount = parseFloat(document.getElementById('amount').value);
             if (!amount || amount <= 0) {
-                currentFee = 0;
+                currentFee = 2.50;
                 return;
             }
 
@@ -231,36 +522,27 @@
                 }
             } catch (error) {
                 console.error('Fee calculation error:', error);
-                currentFee = 0;
+                currentFee = 2.50;
             }
         }
 
         function updateTotal() {
             const amount = parseFloat(document.getElementById('amount').value) || 0;
-            const total = amount + currentFee;
-            const feeDisplay = document.querySelector('.summary-row:nth-child(4) span:last-child');
-            if (feeDisplay) {
-                feeDisplay.textContent = formatCurrency(currentFee, 'TL');
-            }
-            document.getElementById('summaryTotal').textContent = formatCurrency(total, 'TL');
+            calculateFee().then(() => {
+                const total = amount + currentFee;
+                const feeDisplay = document.querySelector('.summary-row:nth-child(4) span:last-child');
+                if (feeDisplay) {
+                    feeDisplay.textContent = formatCurrency(currentFee, 'TL');
+                }
+                document.getElementById('summaryTotal').textContent = formatCurrency(total, 'TL');
+            });
         }
 
-        document.getElementById('amount').addEventListener('input', async () => {
-            await calculateFee();
-            updateTotal();
-        });
-        document.getElementById('recipientBank').addEventListener('change', (e) => {
-            document.getElementById('summaryBank').textContent = e.target.value || '-';
-        });
-        document.getElementById('recipientName').addEventListener('input', (e) => {
-            document.getElementById('summaryTo').textContent = e.target.value || '-';
-        });
+        document.getElementById('amount').addEventListener('input', updateTotal);
 
         async function processTransfer() {
             const senderID = document.getElementById('senderAccount').value;
-            const bank = document.getElementById('recipientBank').value;
             const recipientIBAN = document.getElementById('recipientIBAN').value.replace(/\s/g, '');
-            const recipientName = document.getElementById('recipientName').value.trim();
             const amount = parseFloat(document.getElementById('amount').value);
             const description = document.getElementById('description').value;
 
@@ -270,18 +552,13 @@
                 return;
             }
 
-            if (!bank) {
+            if (!selectedBank) {
                 alert('Lütfen alıcı bankası seçiniz.');
                 return;
             }
 
-            if (!recipientIBAN || recipientIBAN.length < 26) {
-                alert('Lütfen geçerli bir IBAN giriniz.');
-                return;
-            }
-
-            if (!recipientName) {
-                alert('Lütfen alıcı adını giriniz.');
+            if (!recipientIBAN || recipientIBAN.length !== 26) {
+                alert('Lütfen geçerli bir IBAN giriniz (26 karakter).');
                 return;
             }
 
@@ -291,14 +568,17 @@
             }
 
             const senderAccount = accounts.find(acc => acc.hesapID == senderID);
-            const totalAmount = amount + EFT_FEE;
+            const totalAmount = amount + currentFee;
 
             if (totalAmount > senderAccount.kullanilabilirBakiye) {
-                alert(`Yetersiz bakiye! (İşlem ücreti dahil: ${formatCurrency(totalAmount, 'TL')})`);
+                alert(`Yetersiz bakiye!\n\nGönderilecek: ${formatCurrency(amount, 'TL')}\nİşlem Ücreti: ${formatCurrency(currentFee, 'TL')}\nToplam: ${formatCurrency(totalAmount, 'TL')}\n\nMevcut Bakiye: ${formatCurrency(senderAccount.kullanilabilirBakiye, 'TL')}`);
                 return;
             }
 
-            if (!confirm(`${formatCurrency(amount, 'TL')} + ${formatCurrency(EFT_FEE, 'TL')} ücret = ${formatCurrency(totalAmount, 'TL')} tutarında EFT yapmak istediğinizden emin misiniz?`)) {
+            const recipientNameEl = document.getElementById('recipientNameDisplay');
+            const recipientName = recipientNameEl ? recipientNameEl.textContent : '';
+
+            if (!confirm(`EFT Onayı\n\nGönderen: ${formatIBAN(senderAccount.iban)}\nAlıcı: ${selectedBank.name}\nIBAN: ${formatIBAN(recipientIBAN)}\n${recipientName ? 'Alıcı Adı: ' + recipientName + '\n' : ''}\nTutar: ${formatCurrency(amount, 'TL')}\nÜcret: ${formatCurrency(currentFee, 'TL')}\nToplam: ${formatCurrency(totalAmount, 'TL')}\n\nOnaylıyor musunuz?`)) {
                 return;
             }
 
@@ -306,23 +586,22 @@
                 const response = await apiPost('/islem/eft', {
                     kaynakHesapID: parseInt(senderID),
                     hedefIBAN: recipientIBAN,
-                    aliciBanka: bank,
-                    aliciAdi: recipientName,
+                    aliciAdi: recipientName || selectedBank.name,
                     tutar: amount,
-                    islemUcreti: EFT_FEE,
-                    aciklama: description || 'EFT',
+                    islemUcreti: currentFee,
+                    aciklama: description || 'EFT İşlemi',
                     paraBirimi: 'TL'
                 });
 
                 if (response.success) {
-                    alert('✓ EFT işleminiz başarıyla gerçekleştirildi!');
+                    alert('EFT işleminiz başarıyla gerçekleştirildi!\n\nİşlem numaranız: ' + (response.data?.islemID || 'N/A'));
                     window.location.href = 'dashboard.html';
                 } else {
-                    alert('Hata: ' + (response.message || 'İşlem başarısız.'));
+                    alert('İşlem başarısız: ' + (response.message || 'Bilinmeyen hata'));
                 }
             } catch (error) {
                 console.error('Transfer error:', error);
-                alert('İşlem sırasında hata oluştu.');
+                alert('İşlem sırasında hata oluştu: ' + error.message);
             }
         }
     </script>

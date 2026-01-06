@@ -38,74 +38,89 @@
 
     <!-- Main Content -->
     <main>
-        <div class="container">
-            <!-- Welcome Section -->
-            <div class="welcome-section">
-                <h1>Hoş Geldiniz, <span id="userName">...</span></h1>
-                <p>Son giriş: <span id="lastLogin">...</span></p>
+        <div class="dashboard-modern-container">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="welcome-content">
+                    <h1>Hoş Geldiniz, <span id="userName">...</span></h1>
+                    <p>Son giriş: <span id="lastLogin">...</span></p>
+                </div>
             </div>
 
             <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Toplam Bakiye</div>
-                    <div class="stat-value" id="totalBalance">0,00 TL</div>
+            <div class="stats-modern-grid">
+                <div class="stat-card-modern">
+                    <div class="stat-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    <div class="stat-label-modern">Toplam Bakiye</div>
+                    <div class="stat-value-modern" id="totalBalance">0,00 TL</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Toplam Hesap</div>
-                    <div class="stat-value" id="accountCount">0</div>
+                <div class="stat-card-modern">
+                    <div class="stat-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+                    <div class="stat-label-modern">Toplam Hesap</div>
+                    <div class="stat-value-modern" id="accountCount">0</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Bu Ay İşlem</div>
-                    <div class="stat-value" id="monthlyTx">0</div>
-                </div>
-            </div>
-
-            <!-- Account Preview (Collapsible) -->
-            <div class="account-preview" id="accountPreview">
-                <div class="account-header" onclick="toggleAccount()">
-                    <div>
-                        <h2 class="card-title">Hesaplarım</h2>
-                        <p class="text-muted" style="font-size: 0.875rem;">1 hesap gösteriliyor</p>
-                    </div>
-                    <span class="account-toggle" id="accountToggle">▼</span>
-                </div>
-                <div class="account-details" id="accountDetails">
-                    <div class="account-content" id="accountContent">
-                        <!-- Will be filled by JS -->
-                    </div>
-                </div>
-                <div style="padding: 0 var(--spacing-lg) var(--spacing-lg);">
-                    <a href="hesaplar.html" class="btn btn-secondary" style="width: 100%;">Tümünü Gör</a>
+                <div class="stat-card-modern">
+                    <div class="stat-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                    <div class="stat-label-modern">Bu Ay İşlem</div>
+                    <div class="stat-value-modern" id="monthlyTx">0</div>
                 </div>
             </div>
 
-            <!-- Card Preview -->
-            <div class="card-preview-container">
-                <div class="section-header">
-                    <h2 class="card-title">Kartlarım</h2>
-                    <a href="kartlar.html" class="btn btn-sm btn-primary">Kartlarımı Yönet</a>
+            <!-- Account Preview Section -->
+            <div class="dashboard-section">
+                <div class="section-header-modern">
+                    <h2 class="section-title-modern">
+                        <span class="section-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span> Hesaplarım
+                    </h2>
+                    <a href="hesaplar.html" class="btn-modern btn-primary-modern">Tümünü Gör</a>
+                </div>
+                <div id="accountPreview">
+                    <div class="account-card-preview" id="accountCard" style="display: none;">
+                        <div class="account-preview-grid" id="accountContent">
+                            <!-- Will be filled by JS -->
+                        </div>
+                    </div>
+                    <div class="empty-state" id="noAccount" style="display: none;">
+                        <div class="empty-state-icon-corporate"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+                        <p>Hesap bilgisi yükleniyor...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Preview Section -->
+            <div class="dashboard-section">
+                <div class="section-header-modern">
+                    <h2 class="section-title-modern">
+                        <span class="section-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg></span> Kartlarım
+                    </h2>
+                    <a href="kartlar.html" class="btn-modern btn-primary-modern">Kartlarımı Yönet</a>
                 </div>
                 <div id="cardPreview">
                     <!-- Will be filled by JS -->
                 </div>
             </div>
 
-            <!-- Transactions -->
-            <div class="transactions-section">
-                <div class="section-header">
-                    <h2 class="card-title">Son İşlemler</h2>
-                    <a href="ekstre.html" class="btn btn-sm btn-primary">Tüm İşlemleri Gör</a>
+            <!-- Transactions Section -->
+            <div class="dashboard-section">
+                <div class="section-header-modern">
+                    <h2 class="section-title-modern">
+                        <span class="section-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Son İşlemler
+                    </h2>
+                    <a href="ekstre.html" class="btn-modern btn-primary-modern">Tüm İşlemleri Gör</a>
                 </div>
                 <div id="transactionsContainer">
                     <!-- Will be filled by JS -->
                 </div>
             </div>
 
-            <!-- Currency Rates -->
-            <div class="card">
-                <h2 class="card-title mb-2">Döviz Kurları</h2>
-                <div class="currency-grid" id="currencyRates">
+            <!-- Currency Rates Section -->
+            <div class="dashboard-section">
+                <div class="section-header-modern">
+                    <h2 class="section-title-modern">
+                        <span class="section-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span> Döviz Kurları
+                    </h2>
+                </div>
+                <div class="currency-modern-grid" id="currencyRates">
                     <!-- Will be filled by JS -->
                 </div>
             </div>
@@ -142,14 +157,6 @@
             ]);
         });
 
-        // Toggle account details
-        function toggleAccount() {
-            const details = document.getElementById('accountDetails');
-            const toggle = document.getElementById('accountToggle');
-            details.classList.toggle('open');
-            toggle.classList.toggle('open');
-        }
-
         // Load single account preview
         async function loadAccountPreview() {
             try {
@@ -167,27 +174,35 @@
 
                     // Display first account details
                     const accountHTML = `
-                        <div class="account-info">
-                            <span class="account-label">Hesap Tipi</span>
-                            <span class="account-value">${account.hesapTipi} ${account.hesapCinsi}</span>
+                        <div class="account-preview-item">
+                            <span class="account-preview-label">Hesap Tipi</span>
+                            <span class="account-preview-value">${account.hesapTipi} ${account.hesapCinsi}</span>
                         </div>
-                        <div class="account-info">
-                            <span class="account-label">IBAN</span>
-                            <span class="account-value">${formatIBAN(account.iban)}</span>
+                        <div class="account-preview-item">
+                            <span class="account-preview-label">IBAN</span>
+                            <span class="account-preview-value">${formatIBAN(account.iban)}</span>
                         </div>
-                        <div class="account-info">
-                            <span class="account-label">Bakiye</span>
-                            <span class="account-value balance-primary">${formatCurrency(account.bakiye, account.hesapTipi)}</span>
+                        <div class="account-preview-item">
+                            <span class="account-preview-label">Bakiye</span>
+                            <span class="account-preview-value" style="color: var(--success); font-weight: 700;">${formatCurrency(account.bakiye, account.hesapTipi)}</span>
                         </div>
-                        <div class="account-info">
-                            <span class="account-label">Kullanılabilir</span>
-                            <span class="account-value">${formatCurrency(account.kullanilabilirBakiye, account.hesapTipi)}</span>
+                        <div class="account-preview-item">
+                            <span class="account-preview-label">Kullanılabilir</span>
+                            <span class="account-preview-value">${formatCurrency(account.kullanilabilirBakiye, account.hesapTipi)}</span>
                         </div>
                     `;
                     document.getElementById('accountContent').innerHTML = accountHTML;
+                    document.getElementById('accountCard').style.display = 'block';
+                    document.getElementById('noAccount').style.display = 'none';
+                } else {
+                    document.getElementById('accountCard').style.display = 'none';
+                    document.getElementById('noAccount').style.display = 'block';
+                    document.getElementById('noAccount').innerHTML = '<div class="empty-state"><div class="empty-state-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><p>Kayıtlı hesabınız bulunmamaktadır.</p></div>';
                 }
             } catch (error) {
                 console.error('Error loading accounts:', error);
+                document.getElementById('accountCard').style.display = 'none';
+                document.getElementById('noAccount').style.display = 'block';
             }
         }
 
@@ -207,34 +222,22 @@
                     const expiryDate = formatExpiry(card.sonKullanimTarihi);
 
                     const cardHTML = `
-                        <div class="card-visual-wrapper">
-                            <div class="card-visual">
-                                <img src="${cardTemplate}" alt="Kart" class="card-background">
-                                <div class="card-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%;">
-                                    <!-- Number -->
-                                    <div class="card-text-emboss" style="position: absolute; top: 52%; width: 100%; text-align: center; font-size: 1.2rem; letter-spacing: 0px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
-                                        ${maskedNumber}
-                                    </div>
-
-                                    <!-- Expiry -->
-                                    <div class="card-text-emboss" style="position: absolute; top: 68%; width: 100%; text-align: center; font-size: 1.1rem;">
-                                        ${expiryDate}
-                                    </div>
-
-                                    <!-- Name -->
-                                    <div class="card-text-emboss" style="position: absolute; bottom: 5%; left: 8%; font-size: 1rem; text-transform:uppercase;">
-                                        ${card.kartSahibiAdi || user.ad + ' ' + user.soyad}
-                                    </div>
-                                </div>
+                        <div class="card-mini-display">
+                            <div class="card-mini-chip"></div>
+                            <div class="card-mini-number">${maskedNumber}</div>
+                            <div class="card-mini-footer">
+                                <div class="card-mini-expiry">${expiryDate}</div>
+                                <div class="card-mini-name">${card.kartSahibiAdi || user.ad + ' ' + user.soyad}</div>
                             </div>
                         </div>
                     `;
                     document.getElementById('cardPreview').innerHTML = cardHTML;
                 } else {
-                    document.getElementById('cardPreview').innerHTML = '<p class="text-muted text-center">Kayıtlı kartınız bulunmamaktadır.</p>';
+                    document.getElementById('cardPreview').innerHTML = '<div class="empty-state"><div class="empty-state-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg></div><p>Kayıtlı kartınız bulunmamaktadır.</p></div>';
                 }
             } catch (error) {
                 console.error('Error loading cards:', error);
+                document.getElementById('cardPreview').innerHTML = '<div class="empty-state"><p>Kart bilgisi yüklenemedi.</p></div>';
             }
         }
 
@@ -249,22 +252,22 @@
                     document.getElementById('monthlyTx').textContent = response.data.length;
 
                     const tableHTML = `
-                        <table class="transactions-table">
+                        <table class="transactions-table-modern">
                             <thead>
                                 <tr>
                                     <th>Tarih</th>
                                     <th>İşlem Tipi</th>
                                     <th>Açıklama</th>
-                                    <th class="text-right">Tutar</th>
+                                    <th style="text-align: right;">Tutar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${transactions.map(tx => `
                                     <tr>
                                         <td>${formatDate(tx.islemTarihi)}</td>
-                                        <td class="transaction-type">${tx.islemTipi}</td>
+                                        <td><span class="transaction-type-badge">${tx.islemTipi}</span></td>
                                         <td>${tx.aciklama || '-'}</td>
-                                        <td class="transaction-amount ${parseFloat(tx.tutar) > 0 ? 'amount-positive' : 'amount-negative'}">
+                                        <td style="text-align: right; font-weight: 600; color: ${parseFloat(tx.tutar) > 0 ? 'var(--success)' : 'var(--danger)'};">
                                             ${formatCurrency(tx.tutar, tx.paraBirimi)}
                                         </td>
                                     </tr>
@@ -274,10 +277,12 @@
                     `;
                     document.getElementById('transactionsContainer').innerHTML = tableHTML;
                 } else {
-                    document.getElementById('transactionsContainer').innerHTML = '<p class="text-muted text-center">Henüz işlem bulunmamaktadır.</p>';
+                    document.getElementById('transactionsContainer').innerHTML = '<div class="empty-state"><div class="empty-state-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><p>Henüz işlem bulunmamaktadır.</p></div>';
+                    document.getElementById('monthlyTx').textContent = '0';
                 }
             } catch (error) {
                 console.error('Error loading transactions:', error);
+                document.getElementById('transactionsContainer').innerHTML = '<div class="empty-state"><p>İşlemler yüklenemedi.</p></div>';
             }
         }
 
@@ -288,18 +293,27 @@
 
                 if (response.success && response.data) {
                     const ratesHTML = response.data.map(rate => `
-                        <div class="currency-card">
-                            <div class="currency-name">${rate.paraBirimi}</div>
-                            <div class="currency-rates">
-                                <span>Alış: ${rate.alisFiyati.toFixed(4)}</span>
-                                <span>Satış: ${rate.satisFiyati.toFixed(4)}</span>
+                        <div class="currency-card-modern">
+                            <div class="currency-name-modern">${rate.paraBirimi}</div>
+                            <div class="currency-rates-modern">
+                                <span>
+                                    <div class="currency-rate-label">Alış</div>
+                                    <div class="currency-rate-value">${rate.alisFiyati.toFixed(4)}</div>
+                                </span>
+                                <span>
+                                    <div class="currency-rate-label">Satış</div>
+                                    <div class="currency-rate-value">${rate.satisFiyati.toFixed(4)}</div>
+                                </span>
                             </div>
                         </div>
                     `).join('');
                     document.getElementById('currencyRates').innerHTML = ratesHTML;
+                } else {
+                    document.getElementById('currencyRates').innerHTML = '<div class="empty-state"><p>Döviz kurları yüklenemedi.</p></div>';
                 }
             } catch (error) {
                 console.error('Error loading currency rates:', error);
+                document.getElementById('currencyRates').innerHTML = '<div class="empty-state"><p>Döviz kurları yüklenemedi.</p></div>';
             }
         }
 

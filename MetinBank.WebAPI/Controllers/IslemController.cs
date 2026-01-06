@@ -34,6 +34,7 @@ namespace MetinBank.WebAPI.Controllers
                     request.AliciAdi,
                     kullaniciID,
                     subeID,
+                    request.IslemUcreti,
                     out islemID
                 );
 
@@ -51,7 +52,8 @@ namespace MetinBank.WebAPI.Controllers
                     Success = true,
                     Message = "Havale işlemi başarılı.",
                     IslemID = islemID,
-                    IslemReferansNo = $"HVL{DateTime.Now:yyyyMMdd}{islemID}"
+                    IslemReferansNo = $"HVL{DateTime.Now:yyyyMMdd}{islemID}",
+                    Data = new { islemID, islemReferansNo = $"HVL{DateTime.Now:yyyyMMdd}{islemID}" }
                 });
             }
             catch (Exception ex)
@@ -81,6 +83,7 @@ namespace MetinBank.WebAPI.Controllers
                     request.AliciAdi,
                     kullaniciID,
                     subeID,
+                    request.IslemUcreti,
                     out islemID
                 );
 
@@ -98,7 +101,8 @@ namespace MetinBank.WebAPI.Controllers
                     Success = true,
                     Message = "EFT işlemi başarılı.",
                     IslemID = islemID,
-                    IslemReferansNo = $"EFT{DateTime.Now:yyyyMMdd}{islemID}"
+                    IslemReferansNo = $"EFT{DateTime.Now:yyyyMMdd}{islemID}",
+                    Data = new { islemID, islemReferansNo = $"EFT{DateTime.Now:yyyyMMdd}{islemID}" }
                 });
             }
             catch (Exception ex)
@@ -144,7 +148,8 @@ namespace MetinBank.WebAPI.Controllers
                     Success = true,
                     Message = "Virman işlemi başarılı.",
                     IslemID = islemID,
-                    IslemReferansNo = $"VRM{DateTime.Now:yyyyMMdd}{islemID}"
+                    IslemReferansNo = $"VRM{DateTime.Now:yyyyMMdd}{islemID}",
+                    Data = new { islemID, islemReferansNo = $"VRM{DateTime.Now:yyyyMMdd}{islemID}" }
                 });
             }
             catch (Exception ex)

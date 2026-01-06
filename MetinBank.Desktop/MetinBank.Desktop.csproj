@@ -175,6 +175,12 @@
     <Compile Include="Forms\FrmVadesizHesapAc.Designer.cs">
       <DependentUpon>FrmVadesizHesapAc.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmSubeDegisiklik.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSubeDegisiklik.Designer.cs">
+      <DependentUpon>FrmSubeDegisiklik.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmBasvurular.resx">
@@ -224,6 +230,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmVadesizHesapAc.resx">
       <DependentUpon>FrmVadesizHesapAc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSubeDegisiklik.resx">
+      <DependentUpon>FrmSubeDegisiklik.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

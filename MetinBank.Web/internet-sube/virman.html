@@ -39,93 +39,172 @@
     <!-- Main Content -->
     <main>
         <div class="container">
-            <div class="transfer-container">
-                <h1 style="margin-bottom: var(--spacing-xl);">Virman İşlemi</h1>
-                <p style="color: var(--gray-600); margin-bottom: var(--spacing-xl);">
-                    Hesaplarınız arasında para transferi yapın. Virman işlemlerinde ücret alınmaz.
-                </p>
+            <div class="transfer-modern-container">
+                <div class="transfer-header">
+                    <h1>💸 Hesaplar Arası Virman</h1>
+                    <p>Kendi hesaplarınız arasında anında ve ücretsiz para transferi yapın</p>
+                </div>
 
-                <!-- Two Column Layout -->
-                <div class="transfer-grid">
-                    <!-- Left Panel - Source -->
-                    <div class="transfer-panel">
-                        <div class="panel-header">
-                            <div class="panel-icon ">↗️</div>
-                            <div class="panel-title">Kaynak Hesap</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Hesap Seçin</label>
-                            <select class="form-select" id="sourceAccount" onchange="updateSourceBalance()">
-                                <option value="">Hesap seçiniz...</option>
-                            </select>
-                            <div class="selected-account" id="sourceDetails" style="display: none;">
-                                <div id="sourceIBAN"></div>
-                                <div class="account-balance">
-                                    <span class="balance-label">Kullanılabilir Bakiye:</span>
-                                    <span class="balance-amount" id="sourceBalance">0,00 TL</span>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Progress Steps -->
+                <div class="transfer-steps">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Kaynak Hesap</div>
                     </div>
-
-                    <!-- Right Panel - Destination -->
-                    <div class="transfer-panel">
-                        <div class="panel-header">
-                            <div class="panel-icon">↘️</div>
-                            <div class="panel-title">Hedef Hesap</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Hesap Seçin</label>
-                            <select class="form-select" id="destAccount" onchange="updateDestBalance()">
-                                <option value="">Hesap seçiniz...</option>
-                            </select>
-                            <div class="selected-account" id="destDetails" style="display: none;">
-                                <div id="destIBAN"></div>
-                                <div class="account-balance">
-                                    <span class="balance-label">Mevcut Bakiye:</span>
-                                    <span class="balance-amount" id="destBalance">0,00 TL</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Tutar</label>
-                            <input type="number" class="form-input" id="amount" placeholder="0,00" step="0.01" min="1">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Açıklama</label>
-                            <input type="text" class="form-input" id="description"
-                                placeholder="İşlem açıklaması (isteğe bağlı)" maxlength="200">
-                        </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Hedef Hesap</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Tutar</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Onay</div>
                     </div>
                 </div>
 
-                <!-- Transfer Summary -->
-                <div class="transfer-summary">
-                    <h3 style="margin-bottom: var(--spacing-md);">İşlem Özeti</h3>
-                    <div class="summary-row">
-                        <span>Kaynak:</span>
-                        <span id="summaryFrom">-</span>
+                <!-- Transfer Form -->
+                <div class="transfer-form-grid">
+                    <div class="transfer-form-main">
+                        <!-- Source Account Card -->
+                        <div class="account-card">
+                            <div class="account-card-header">
+                                <div class="account-card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    📤
+                                </div>
+                                <div>
+                                    <h3>Gönderen Hesap</h3>
+                                    <p>Para çekilecek hesabınızı seçin</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-input-modern" id="sourceAccount" onchange="updateSourceBalance()">
+                                    <option value="">Hesap seçiniz...</option>
+                                </select>
+                            </div>
+                            <div class="account-preview" id="sourceDetails" style="display: none;">
+                                <div class="account-preview-item">
+                                    <span class="preview-label">IBAN</span>
+                                    <span class="preview-value" id="sourceIBAN">-</span>
+                                </div>
+                                <div class="account-preview-item">
+                                    <span class="preview-label">Kullanılabilir Bakiye</span>
+                                    <span class="preview-value balance-highlight" id="sourceBalance">0,00 TL</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Swap Icon -->
+                        <div style="text-align: center; margin: var(--spacing-lg) 0;">
+                            <div style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; 
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; 
+                                color: white; font-size: 24px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                                ⇅
+                            </div>
+                        </div>
+
+                        <!-- Destination Account Card -->
+                        <div class="account-card">
+                            <div class="account-card-header">
+                                <div class="account-card-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                    📥
+                                </div>
+                                <div>
+                                    <h3>Alıcı Hesap</h3>
+                                    <p>Para yatırılacak hesabınızı seçin</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-input-modern" id="destAccount" onchange="updateDestBalance()">
+                                    <option value="">Hesap seçiniz...</option>
+                                </select>
+                            </div>
+                            <div class="account-preview" id="destDetails" style="display: none;">
+                                <div class="account-preview-item">
+                                    <span class="preview-label">IBAN</span>
+                                    <span class="preview-value" id="destIBAN">-</span>
+                                </div>
+                                <div class="account-preview-item">
+                                    <span class="preview-label">Mevcut Bakiye</span>
+                                    <span class="preview-value" id="destBalance">0,00 TL</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Amount Section -->
+                        <div class="form-section">
+                            <label class="form-label-modern">💰 Transfer Tutarı</label>
+                            <div class="amount-input-wrapper">
+                                <input type="number" class="form-input-modern amount-input" id="amount" 
+                                    placeholder="0,00" step="0.01" min="1" oninput="updateTotal()">
+                                <span class="amount-currency">TL</span>
+                            </div>
+                            <div class="quick-amount-buttons">
+                                <button class="quick-amount-btn" onclick="setAmount(100)">100 TL</button>
+                                <button class="quick-amount-btn" onclick="setAmount(500)">500 TL</button>
+                                <button class="quick-amount-btn" onclick="setAmount(1000)">1.000 TL</button>
+                                <button class="quick-amount-btn" onclick="setAmount(5000)">5.000 TL</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label-modern">📝 Açıklama (İsteğe Bağlı)</label>
+                            <input type="text" class="form-input-modern" id="description"
+                                placeholder="Örn: Kira ödemesi, Birikim aktarımı..." maxlength="200">
+                        </div>
                     </div>
-                    <div class="summary-row">
-                        <span>Hedef:</span>
-                        <span id="summaryTo">-</span>
+
+                    <!-- Transfer Summary -->
+                    <div class="transfer-summary-modern">
+                        <h3>📋 İşlem Özeti</h3>
+                        <div class="summary-card">
+                            <div class="summary-item">
+                                <span class="summary-icon">📤</span>
+                                <div class="summary-content">
+                                    <div class="summary-label">Gönderen</div>
+                                    <div class="summary-value" id="summaryFrom">Hesap seçiniz</div>
+                                </div>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-item">
+                                <span class="summary-icon">📥</span>
+                                <div class="summary-content">
+                                    <div class="summary-label">Alıcı</div>
+                                    <div class="summary-value" id="summaryTo">Hesap seçiniz</div>
+                                </div>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-item">
+                                <span class="summary-icon">💵</span>
+                                <div class="summary-content">
+                                    <div class="summary-label">Transfer Tutarı</div>
+                                    <div class="summary-value" id="summaryAmount">0,00 TL</div>
+                                </div>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-icon">🎁</span>
+                                <div class="summary-content">
+                                    <div class="summary-label">İşlem Ücreti</div>
+                                    <div class="summary-value" style="color: var(--success);">Ücretsiz</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary-total">
+                            <span>Toplam</span>
+                            <span id="summaryTotal" class="total-amount">0,00 TL</span>
+                        </div>
+
+                        <button class="btn-modern btn-primary-modern" onclick="processTransfer()">
+                            <span>✓</span> Virman İşlemini Gerçekleştir
+                        </button>
+
+                        <div class="info-box" style="margin-top: var(--spacing-md);">
+                            <strong>ℹ️ Bilgi:</strong> Hesaplar arası virman işlemleri anında ve ücretsizdir.
+                        </div>
                     </div>
-                    <div class="summary-row">
-                        <span>İşlem Ücreti:</span>
-                        <span>0,00 TL</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Toplam:</span>
-                        <span id="summaryTotal">0,00 TL</span>
-                    </div>
-                    <button class="btn btn-success btn-lg" style="width: 100%; margin-top: var(--spacing-md);"
-                        onclick="processTransfer()">
-                        Virman Yap
-                    </button>
                 </div>
             </div>
         </div>
@@ -142,6 +221,7 @@
         checkAuth();
 
         let accounts = [];
+        const VIRMAN_FEE = 0; // Virman işlemlerinde ücret yok
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadAccounts();
@@ -185,14 +265,24 @@
                 document.getElementById('sourceBalance').textContent =
                     formatCurrency(parseFloat(option.dataset.balance), option.dataset.type);
                 document.getElementById('summaryFrom').textContent = formatIBAN(option.dataset.iban);
+                updateStep(1);
             } else {
                 document.getElementById('sourceDetails').style.display = 'none';
-                document.getElementById('summaryFrom').textContent = '-';
+                document.getElementById('summaryFrom').textContent = 'Hesap seçiniz';
             }
         }
 
         function updateDestBalance() {
             const select = document.getElementById('destAccount');
+            const sourceSelect = document.getElementById('sourceAccount');
+            
+            // Aynı hesap kontrolü
+            if (select.value && select.value === sourceSelect.value) {
+                alert('Kaynak ve hedef hesap aynı olamaz!');
+                select.value = '';
+                return;
+            }
+
             const option = select.options[select.selectedIndex];
 
             if (select.value) {
@@ -202,45 +292,49 @@
                 document.getElementById('destBalance').textContent =
                     formatCurrency(parseFloat(account.bakiye), account.hesapTipi);
                 document.getElementById('summaryTo').textContent = formatIBAN(option.dataset.iban);
+                updateStep(2);
             } else {
                 document.getElementById('destDetails').style.display = 'none';
-                document.getElementById('summaryTo').textContent = '-';
+                document.getElementById('summaryTo').textContent = 'Hesap seçiniz';
             }
         }
 
-        let currentFee = 0;
-
-        async function calculateFee() {
-            const amount = parseFloat(document.getElementById('amount').value);
-            if (!amount || amount <= 0) {
-                currentFee = 0;
-                return;
+        function updateAmount() {
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            calculateFee(amount);
+            document.getElementById('summaryAmount').textContent = formatCurrency(amount, 'TL');
+            
+            if (amount > 0) {
+                document.getElementById('summaryCard').style.display = 'block';
+                updateStep(3);
             }
+        }
 
-            try {
-                const response = await apiGet(`/islemUcreti/hesapla?islemTipi=Virman&islemKanali=Internet&tutar=${amount}`);
-                if (response.success && response.data) {
-                    currentFee = response.data.ucret;
+        function updateStep(step) {
+            document.querySelectorAll('.step').forEach((el, idx) => {
+                if (idx < step) {
+                    el.classList.add('active');
                 }
-            } catch (error) {
-                console.error('Fee calculation error:', error);
-                currentFee = 0;
-            }
+            });
+        }
+
+        function setAmount(value) {
+            document.getElementById('amount').value = value;
+            updateTotal();
+            updateStep(3);
         }
 
         function updateTotal() {
             const amount = parseFloat(document.getElementById('amount').value) || 0;
-            const feeDisplay = document.querySelector('.summary-row:nth-child(3) span:last-child');
-            if (feeDisplay) {
-                feeDisplay.textContent = formatCurrency(currentFee, 'TL');
+            document.getElementById('summaryAmount').textContent = formatCurrency(amount, 'TL');
+            document.getElementById('summaryTotal').textContent = formatCurrency(amount, 'TL');
+            
+            if (amount > 0) {
+                updateStep(3);
             }
-            document.getElementById('summaryTotal').textContent = formatCurrency(amount + currentFee, 'TL');
         }
 
-        document.getElementById('amount').addEventListener('input', async () => {
-            await calculateFee();
-            updateTotal();
-        });
+        document.getElementById('amount').addEventListener('input', updateTotal);
 
         async function processTransfer() {
             const sourceID = document.getElementById('sourceAccount').value;
@@ -260,7 +354,7 @@
             }
 
             if (sourceID === destID) {
-                alert('Kaynak ve hedef hesap aynı olamaz!');
+                alert('Kaynak ve hedef hesap aynı olamaz.');
                 return;
             }
 
@@ -270,13 +364,14 @@
             }
 
             const sourceAccount = accounts.find(acc => acc.hesapID == sourceID);
+            const destAccount = accounts.find(acc => acc.hesapID == destID);
 
             if (amount > sourceAccount.kullanilabilirBakiye) {
-                alert('Yetersiz bakiye!');
+                alert(`Yetersiz bakiye!\n\nGönderilecek: ${formatCurrency(amount, 'TL')}\nMevcut Bakiye: ${formatCurrency(sourceAccount.kullanilabilirBakiye, 'TL')}`);
                 return;
             }
 
-            if (!confirm(`${formatCurrency(amount, 'TL')} tutarında virman yapmak istediğinizden emin misiniz?`)) {
+            if (!confirm(`Virman Onayı\n\nGönderen: ${formatIBAN(sourceAccount.iban)}\nAlıcı: ${formatIBAN(destAccount.iban)}\nTutar: ${formatCurrency(amount, 'TL')}\nÜcret: Ücretsiz\n\nOnaylıyor musunuz?`)) {
                 return;
             }
 
@@ -285,19 +380,19 @@
                     kaynakHesapID: parseInt(sourceID),
                     hedefHesapID: parseInt(destID),
                     tutar: amount,
-                    aciklama: description || 'Virman',
-                    paraBirimi: sourceAccount.hesapTipi
+                    aciklama: description || 'Hesaplar Arası Virman',
+                    paraBirimi: 'TL'
                 });
 
                 if (response.success) {
-                    alert('✓ Virman işleminiz başarıyla gerçekleştirildi!');
+                    alert('Virman işleminiz başarıyla gerçekleştirildi!\n\nİşlem numaranız: ' + (response.data?.islemID || 'N/A'));
                     window.location.href = 'dashboard.html';
                 } else {
-                    alert('Hata: ' + (response.message || 'İşlem başarısız.'));
+                    alert('İşlem başarısız: ' + (response.message || 'Bilinmeyen hata'));
                 }
             } catch (error) {
                 console.error('Transfer error:', error);
-                alert('İşlem sırasında hata oluştu.');
+                alert('İşlem sırasında hata oluştu: ' + error.message);
             }
         }
     </script>

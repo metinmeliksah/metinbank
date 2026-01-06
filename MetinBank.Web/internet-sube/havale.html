@@ -39,85 +39,222 @@
     <!-- Main Content -->
     <main>
         <div class="container">
-            <div class="transfer-container">
-                <h1 style="margin-bottom: var(--spacing-xl);">Havale İşlemi</h1>
-
-                <!-- Two Column Layout -->
-                <div class="transfer-grid">
-                    <!-- Left Panel - Sender -->
-                    <div class="transfer-panel">
-                        <div class="panel-header">
-                            <div class="panel-icon">📤</div>
-                            <div class="panel-title">Gönderen Hesap</div>
+            <div class="transfer-modern-container">
+                <!-- Header -->
+                <div class="transfer-header">
+                    <div class="transfer-header-content">
+                        <div class="transfer-icon-large">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                            </svg>
                         </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Hesap Seçin</label>
-                            <select class="form-select" id="senderAccount" onchange="updateSenderBalance()">
-                                <option value="">Hesap seçiniz...</option>
-                            </select>
-                            <div class="selected-account" id="senderDetails" style="display: none;">
-                                <div id="senderIBAN"></div>
-                                <div class="account-balance">
-                                    <span class="balance-label">Kullanılabilir Bakiye:</span>
-                                    <span class="balance-amount" id="senderBalance">0,00 TL</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Panel - Recipient -->
-                    <div class="transfer-panel">
-                        <div class="panel-header">
-                            <div class="panel-icon">📥</div>
-                            <div class="panel-title">Alıcı Bilgileri</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Alıcı IBAN</label>
-                            <div class="iban-lookup">
-                                <input type="text" class="form-input" id="recipientIBAN"
-                                    placeholder="TR00 0000 0000 0000 0000 0000 00" maxlength="32"
-                                    oninput="formatIBANInput(this)">
-                                <button class="btn btn-primary" onclick="lookupIBAN()">🔍</button>
-                            </div>
-                            <div class="recipient-name" id="recipientName" style="display: none;"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Tutar (TL)</label>
-                            <input type="number" class="form-input" id="amount" placeholder="0,00" step="0.01" min="1">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Açıklama</label>
-                            <input type="text" class="form-input" id="description"
-                                placeholder="İşlem açıklaması (isteğe bağlı)" maxlength="200">
+                        <div>
+                            <h1 class="transfer-title">Havale İşlemi</h1>
+                            <p class="transfer-subtitle">MetinBank hesaplarına anlık para transferi</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Transfer Summary -->
-                <div class="transfer-summary">
-                    <h3 style="margin-bottom: var(--spacing-md);">İşlem Özeti</h3>
-                    <div class="summary-row">
-                        <span>Gönderen:</span>
-                        <span id="summaryFrom">-</span>
+                <!-- Progress Steps -->
+                <div class="transfer-steps">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Gönderen</div>
                     </div>
-                    <div class="summary-row">
-                        <span>Alıcı:</span>
-                        <span id="summaryTo">-</span>
+                    <div class="step-line"></div>
+                    <div class="step" id="step2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Alıcı</div>
                     </div>
-                    <div class="summary-row">
-                        <span>İşlem Ücreti:</span>
-                        <span id="feeAmount">0,00 TL</span>
+                    <div class="step-line"></div>
+                    <div class="step" id="step3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Tutar</div>
                     </div>
-                    <div class="summary-row">
-                        <span>Toplam:</span>
-                        <span id="summaryTotal">0,00 TL</span>
+                    <div class="step-line"></div>
+                    <div class="step" id="step4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Onay</div>
                     </div>
-                    <button class="btn btn-success btn-lg" style="width: 100%; margin-top: var(--spacing-md);"
-                        onclick="processTransfer()">
+                </div>
+
+                <!-- Form Card -->
+                <div class="transfer-card">
+                    <!-- Sender Section -->
+                    <div class="transfer-section">
+                        <div class="section-header-modern">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3h18v18H3zM3 9h18M9 21V9"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="section-title-modern">Gönderen Hesap</h3>
+                                <p class="section-desc">Para gönderilecek hesabınızı seçin</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                <span class="label-text">Hesabınızı Seçin</span>
+                                <span class="label-required">*</span>
+                            </label>
+                            <select class="form-input-modern" id="senderAccount" onchange="updateSenderBalance()">
+                                <option value="">Bir hesap seçin...</option>
+                            </select>
+                        </div>
+
+                        <div class="account-preview" id="senderDetails" style="display: none;">
+                            <div class="account-preview-header">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                                </svg>
+                                <span class="account-preview-label">Seçili Hesap</span>
+                            </div>
+                            <div class="account-preview-iban" id="senderIBAN"></div>
+                            <div class="account-preview-balance">
+                                <span class="balance-label-modern">Kullanılabilir Bakiye</span>
+                                <span class="balance-value-modern" id="senderBalance">0,00 TL</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- Recipient Section -->
+                    <div class="transfer-section">
+                        <div class="section-header-modern">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="section-title-modern">Alıcı Bilgileri</h3>
+                                <p class="section-desc">IBAN numarasını girin veya yapıştırın</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group-modern">
+                            <label class="form-label-modern">
+                                <span class="label-text">Alıcı IBAN</span>
+                                <span class="label-required">*</span>
+                            </label>
+                            <div class="iban-input-wrapper">
+                                <input type="text" 
+                                       class="form-input-modern iban-input" 
+                                       id="recipientIBAN"
+                                       placeholder="TR00 0000 0000 0000 0000 0000 00" 
+                                       maxlength="32"
+                                       oninput="handleIBANInput(this)">
+                                <div class="iban-status" id="ibanStatus">
+                                    <svg class="iban-loading" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="input-hint">IBAN'ı yapıştırabilir veya yazabilirsiniz</div>
+                        </div>
+
+                        <div class="recipient-info" id="recipientInfo" style="display: none;">
+                            <div class="recipient-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="recipient-details">
+                                <div class="recipient-verified">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Alıcı Doğrulandı
+                                </div>
+                                <div class="recipient-name" id="recipientName"></div>
+                                <div class="recipient-bank">MetinBank</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <span class="label-text">Tutar</span>
+                                    <span class="label-required">*</span>
+                                </label>
+                                <div class="amount-input-wrapper">
+                                    <input type="text" 
+                                           class="form-input-modern amount-input" 
+                                           id="amount" 
+                                           placeholder="0,00"
+                                           oninput="handleAmountInput(this)">
+                                    <span class="amount-currency">TL</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">
+                                    <span class="label-text">Açıklama</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-input-modern" 
+                                       id="description"
+                                       placeholder="İşlem açıklaması (isteğe bağlı)" 
+                                       maxlength="200">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Card -->
+                <div class="transfer-summary-modern" id="summaryCard" style="display: none;">
+                    <div class="summary-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                        </svg>
+                        <span>İşlem Özeti</span>
+                    </div>
+                    <div class="summary-content">
+                        <div class="summary-item">
+                            <span class="summary-label">Gönderen</span>
+                            <span class="summary-value" id="summaryFrom">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Alıcı</span>
+                            <span class="summary-value" id="summaryTo">-</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-item">
+                            <span class="summary-label">Tutar</span>
+                            <span class="summary-value" id="summaryAmount">0,00 TL</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">İşlem Ücreti</span>
+                            <span class="summary-value" id="feeAmount">0,00 TL</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-item summary-total">
+                            <span class="summary-label">Toplam</span>
+                            <span class="summary-value" id="summaryTotal">0,00 TL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="transfer-actions">
+                    <button class="btn-modern btn-secondary-modern" onclick="window.history.back()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                        Geri
+                    </button>
+                    <button class="btn-modern btn-primary-modern" onclick="processTransfer()" id="submitBtn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+                        </svg>
                         Havale Gönder
                     </button>
                 </div>
@@ -137,6 +274,8 @@
 
         let accounts = [];
         let recipientData = null;
+        let currentFee = 0;
+        let ibanCheckTimeout = null;
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadAccounts();
@@ -154,7 +293,7 @@
                     accounts.forEach(acc => {
                         const option = document.createElement('option');
                         option.value = acc.hesapID;
-                        option.textContent = `${acc.hesapTipi} ${acc.hesapCinsi} - ${formatIBAN(acc.iban)}`;
+                        option.textContent = `${acc.hesapTipi} - ${formatIBAN(acc.iban)} (${formatCurrency(acc.kullanilabilirBakiye, acc.hesapTipi)})`;
                         option.dataset.iban = acc.iban;
                         option.dataset.balance = acc.kullanilabilirBakiye;
                         option.dataset.type = acc.hesapTipi;
@@ -176,14 +315,17 @@
                 document.getElementById('senderBalance').textContent =
                     formatCurrency(parseFloat(option.dataset.balance), option.dataset.type);
                 document.getElementById('summaryFrom').textContent = formatIBAN(option.dataset.iban);
+                document.getElementById('step2').classList.add('active');
             } else {
                 document.getElementById('senderDetails').style.display = 'none';
                 document.getElementById('summaryFrom').textContent = '-';
+                document.getElementById('step2').classList.remove('active');
             }
-            updateTotal();
+            validateForm();
         }
 
-        function formatIBANInput(input) {
+        function handleIBANInput(input) {
+            // Format IBAN
             let value = input.value.replace(/\s/g, '').toUpperCase();
             let formatted = '';
             for (let i = 0; i < value.length; i += 4) {
@@ -191,41 +333,121 @@
                 formatted += value.substring(i, i + 4);
             }
             input.value = formatted;
+
+            // Clear previous timeout
+            if (ibanCheckTimeout) {
+                clearTimeout(ibanCheckTimeout);
+            }
+
+            // Hide recipient info
+            document.getElementById('recipientInfo').style.display = 'none';
+            recipientData = null;
+
+            // If IBAN is complete, auto-lookup
+            const cleanIBAN = value.replace(/\s/g, '');
+            if (cleanIBAN.length === 26 && cleanIBAN.startsWith('TR')) {
+                // Show loading
+                document.getElementById('ibanStatus').innerHTML = `
+                    <svg class="iban-loading spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12a9 9 0 11-6.219-8.56"></path>
+                    </svg>
+                `;
+                
+                // Auto-lookup after 500ms
+                ibanCheckTimeout = setTimeout(() => {
+                    lookupIBAN(cleanIBAN);
+                }, 500);
+            } else {
+                document.getElementById('ibanStatus').innerHTML = '';
+            }
+            
+            validateForm();
         }
 
-        async function lookupIBAN() {
-            const iban = document.getElementById('recipientIBAN').value.replace(/\s/g, '');
+        async function lookupIBAN(iban = null) {
+            const ibanInput = iban || document.getElementById('recipientIBAN').value.replace(/\s/g, '');
 
-            if (iban.length < 26) {
-                alert('Lütfen geçerli bir IBAN giriniz.');
+            if (ibanInput.length < 26) {
+                showToast('Lütfen geçerli bir IBAN giriniz.', 'error');
                 return;
             }
 
             try {
-                const response = await apiPost('/hesap/iban-sorgula', { iban });
+                const response = await apiPost('/hesap/iban-sorgula', { iban: ibanInput });
 
-                if (response.success && response.data) {
-                    recipientData = response.data;
-                    const nameDiv = document.getElementById('recipientName');
-                    nameDiv.textContent = `✓ ${response.data.musteriAdi}`;
-                    nameDiv.style.display = 'block';
-                    document.getElementById('summaryTo').textContent = response.data.musteriAdi;
+                if (response.success) {
+                    recipientData = response;
+                    document.getElementById('recipientName').textContent = response.musteriAdi;
+                    document.getElementById('recipientInfo').style.display = 'flex';
+                    document.getElementById('summaryTo').textContent = response.musteriAdi;
+                    document.getElementById('step3').classList.add('active');
+                    
+                    // Success icon
+                    document.getElementById('ibanStatus').innerHTML = `
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                            <path d="M22 4L12 14.01l-3-3"></path>
+                        </svg>
+                    `;
                 } else {
-                    alert(response.message || 'IBAN bulunamadı.');
                     recipientData = null;
+                    document.getElementById('recipientInfo').style.display = 'none';
+                    document.getElementById('ibanStatus').innerHTML = `
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    `;
+                    showToast(response.message || 'IBAN bulunamadı.', 'error');
                 }
             } catch (error) {
                 console.error('IBAN lookup error:', error);
-                alert('IBAN sorgulanırken hata oluştu.');
+                recipientData = null;
+                document.getElementById('ibanStatus').innerHTML = '';
+                showToast('IBAN sorgulanırken hata oluştu.', 'error');
             }
+            
+            validateForm();
         }
 
-        let currentFee = 0;
+        function handleAmountInput(input) {
+            // Allow only numbers and decimal point
+            let value = input.value.replace(/[^\d.,]/g, '');
+            value = value.replace(',', '.');
+            
+            // Limit to 2 decimal places
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            if (parts[1] && parts[1].length > 2) {
+                value = parts[0] + '.' + parts[1].substring(0, 2);
+            }
+            
+            input.value = value;
+
+            // Format display
+            if (value) {
+                const numValue = parseFloat(value);
+                if (!isNaN(numValue)) {
+                    document.getElementById('summaryAmount').textContent = formatCurrency(numValue, 'TL');
+                    document.getElementById('step4').classList.add('active');
+                    calculateFee();
+                }
+            } else {
+                document.getElementById('summaryAmount').textContent = '0,00 TL';
+                document.getElementById('step4').classList.remove('active');
+            }
+            
+            validateForm();
+        }
 
         async function calculateFee() {
             const amount = parseFloat(document.getElementById('amount').value);
             if (!amount || amount <= 0) {
                 currentFee = 0;
+                updateSummary();
                 return;
             }
 
@@ -233,26 +455,38 @@
                 const response = await apiGet(`/islemUcreti/hesapla?islemTipi=Havale&islemKanali=Internet&tutar=${amount}`);
                 if (response.success && response.data) {
                     currentFee = response.data.ucret;
+                } else {
+                    currentFee = 2.50; // Default fee
                 }
             } catch (error) {
                 console.error('Fee calculation error:', error);
-                currentFee = 0;
+                currentFee = 2.50; // Default fee
             }
+            
+            updateSummary();
         }
 
-        function updateTotal() {
+        function updateSummary() {
             const amount = parseFloat(document.getElementById('amount').value) || 0;
-            const feeDisplay = document.querySelector('.summary-row:nth-child(3) span:last-child');
-            if (feeDisplay) {
-                feeDisplay.textContent = formatCurrency(currentFee, 'TL');
-            }
+            document.getElementById('feeAmount').textContent = formatCurrency(currentFee, 'TL');
             document.getElementById('summaryTotal').textContent = formatCurrency(amount + currentFee, 'TL');
+            
+            if (amount > 0) {
+                document.getElementById('summaryCard').style.display = 'block';
+            }
         }
 
-        document.getElementById('amount').addEventListener('input', async () => {
-            await calculateFee();
-            updateTotal();
-        });
+        function validateForm() {
+            const senderAccount = document.getElementById('senderAccount').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const submitBtn = document.getElementById('submitBtn');
+            
+            const isValid = senderAccount && recipientData && amount > 0;
+            
+            submitBtn.disabled = !isValid;
+            submitBtn.style.opacity = isValid ? '1' : '0.5';
+            submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+        }
 
         async function processTransfer() {
             const senderID = document.getElementById('senderAccount').value;
@@ -277,12 +511,14 @@
             }
 
             const senderAccount = accounts.find(acc => acc.hesapID == senderID);
-            if (amount > senderAccount.kullanilabilirBakiye) {
-                alert('Yetersiz bakiye!');
+            const totalAmount = amount + currentFee;
+
+            if (totalAmount > senderAccount.kullanilabilirBakiye) {
+                alert(`Yetersiz bakiye!\n\nGönderilecek: ${formatCurrency(amount, 'TL')}\nİşlem Ücreti: ${formatCurrency(currentFee, 'TL')}\nToplam: ${formatCurrency(totalAmount, 'TL')}\n\nMevcut Bakiye: ${formatCurrency(senderAccount.kullanilabilirBakiye, 'TL')}`);
                 return;
             }
 
-            if (!confirm(`${formatCurrency(amount, 'TL')} tutarında havale yapmak istediğinizden emin misiniz?`)) {
+            if (!confirm(`Havale Onayı\n\nGönderen: ${formatIBAN(senderAccount.iban)}\nAlıcı: ${recipientData.ad} ${recipientData.soyad}\nIBAN: ${formatIBAN(recipientIBAN)}\nTutar: ${formatCurrency(amount, 'TL')}\nÜcret: ${formatCurrency(currentFee, 'TL')}\nToplam: ${formatCurrency(totalAmount, 'TL')}\n\nOnaylıyor musunuz?`)) {
                 return;
             }
 
@@ -291,12 +527,29 @@
                     kaynakHesapID: parseInt(senderID),
                     hedefIBAN: recipientIBAN,
                     tutar: amount,
+                    islemUcreti: currentFee,
                     aciklama: description || 'Havale',
+                    aliciAdi: `${recipientData.ad} ${recipientData.soyad}`,
+                    paraBirimi: 'TL'
+                });
+
+            if (!confirm(`Havale Onayı\n\nGönderen: ${formatIBAN(senderAccount.iban)}\nAlıcı: ${recipientData.ad} ${recipientData.soyad}\nIBAN: ${formatIBAN(recipientIBAN)}\nTutar: ${formatCurrency(amount, 'TL')}\nÜcret: ${formatCurrency(currentFee, 'TL')}\nToplam: ${formatCurrency(totalAmount, 'TL')}\n\nOnaylıyor musunuz?`)) {
+                return;
+            }
+
+            try {
+                const response = await apiPost('/islem/havale', {
+                    kaynakHesapID: parseInt(senderID),
+                    hedefIBAN: recipientIBAN,
+                    tutar: amount,
+                    islemUcreti: currentFee,
+                    aciklama: description || 'Havale',
+                    aliciAdi: `${recipientData.ad} ${recipientData.soyad}`,
                     paraBirimi: 'TL'
                 });
 
                 if (response.success) {
-                    alert('✓ Havale işleminiz başarıyla gerçekleştirildi!');
+                    alert('Havale işleminiz başarıyla gerçekleştirildi!');
                     window.location.href = 'dashboard.html';
                 } else {
                     alert('Hata: ' + (response.message || 'İşlem başarısız.'));

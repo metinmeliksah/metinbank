@@ -381,6 +381,49 @@ namespace MetinBank.Business
         }
 
         /// <summary>
+        /// Kart limitlerini günceller
+        /// </summary>
+        public string UpdateCardLimits(int kartID, decimal gunlukHarcama, decimal aylikHarcama, decimal gunlukCekim)
+        {
+            try
+            {
+                // Validasyon
+                if (gunlukHarcama < 0 || aylikHarcama < 0 || gunlukCekim < 0)
+                    return "Limitler negatif olamaz.";
+
+                if (gunlukHarcama > aylikHarcama)
+                    return "Günlük limit, aylık limitten büyük olamaz.";
+
+                string query = @"UPDATE BankaKarti 
+                                SET GunlukHarcamaLimiti = @gunlukHarcama,
+                                    AylikHarcamaLimiti = @aylikHarcama,
+                                    GunlukCekimLimiti = @gunlukCekim
+                                WHERE KartID = @kartID";
+
+                MySqlParameter[] parameters = new MySqlParameter[]
+                {
+                    new MySqlParameter("@kartID", kartID),
+                    new MySqlParameter("@gunlukHarcama", gunlukHarcama),
+                    new MySqlParameter("@aylikHarcama", aylikHarcama),
+                    new MySqlParameter("@gunlukCekim", gunlukCekim)
+                };
+
+                int affected;
+                string hata = _dataAccess.ExecuteNonQuery(query, parameters, out affected);
+                _dataAccess.CloseConnection();
+
+                if (hata != null) return hata;
+                if (affected > 0) return null;
+                return "Kart bulunamadı.";
+            }
+            catch (Exception ex)
+            {
+                _dataAccess.CloseConnection();
+                return $"Limit güncelleme hatası: {ex.Message}";
+            }
+        }
+
+        /// <summary>
         /// Müşterinin hesaplarını getirir (kart başvurusu için)
         /// </summary>
         public string GetMusteriHesaplari(int musteriID, out DataTable hesaplar)

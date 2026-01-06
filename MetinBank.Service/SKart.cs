@@ -167,6 +167,14 @@ namespace MetinBank.Service
         }
 
         /// <summary>
+        /// Kart limitlerini günceller
+        /// </summary>
+        public string UpdateCardLimits(int kartID, decimal gunlukHarcama, decimal aylikHarcama, decimal gunlukCekim)
+        {
+            return _bKart.UpdateCardLimits(kartID, gunlukHarcama, aylikHarcama, gunlukCekim);
+        }
+
+        /// <summary>
         /// Müşterinin hesaplarını getirir (kart başvurusu için)
         /// </summary>
         public string GetMusteriHesaplari(int musteriID, out DataTable hesaplar)

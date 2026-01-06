@@ -38,23 +38,44 @@
 
     <!-- Main Content -->
     <main>
-        <div class="container">
-            <h1 style="margin-bottom: var(--spacing-xl);">Hesaplarım</h1>
+        <div class="accounts-modern-container">
+            <!-- Page Header -->
+            <div class="accounts-page-header">
+                <div class="page-header-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                <div>
+                    <h1>Hesaplarım</h1>
+                    <p>Tüm banka hesaplarınızı görüntüleyin ve yönetin</p>
+                </div>
+            </div>
 
-            <div class="accounts-grid" id="accountsGrid">
+            <!-- Summary Cards -->
+            <div class="accounts-summary" id="accountsSummary">
                 <!-- Will be filled by JS -->
+            </div>
+
+            <!-- Accounts Grid -->
+            <div class="accounts-modern-grid" id="accountsGrid">
+                <!-- Will be filled by JS -->
+            </div>
+            
+            <div id="noAccountsMessage" style="display: none;">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🏦</div>
+                    <h3>Kayıtlı Hesabınız Bulunmuyor</h3>
+                    <p>Yeni bir hesap açmak için şubeye başvurabilirsiniz.</p>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- Account Details Modal -->
-    <div class="modal" id="detailsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Hesap Detayları</h2>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-modern" id="detailsModal">
+        <div class="modal-content-modern">
+            <div class="modal-header-modern">
+                <h2 class="modal-title-modern">Hesap Detayları</h2>
+                <button class="modal-close-btn" onclick="closeModal()">&times;</button>
             </div>
-            <div class="modal-body" id="modalBody">
+            <div class="modal-body-modern account-details-modal" id="modalBody">
                 <!-- Will be filled by JS -->
             </div>
         </div>
@@ -98,59 +119,117 @@
 
         function displayAccounts(accounts) {
             const grid = document.getElementById('accountsGrid');
+            const summary = document.getElementById('accountsSummary');
+            const noAccountsMsg = document.getElementById('noAccountsMessage');
 
-            const html = accounts.map(account => `
-                <div class="account-card">
-                    <div class="account-card-header">
-                        <div class="account-type">${account.hesapTipi} ${account.hesapCinsi}</div>
-                        <div class="account-iban">${formatIBAN(account.iban)}</div>
-                    </div>
-                    <div class="account-card-body">
-                        <div class="balance-section">
-                            <div class="balance-row">
-                                <span class="balance-label">Normal Bakiye</span>
-                                <span class="balance-value">${formatCurrency(account.bakiye, account.hesapTipi)}</span>
-                            </div>
-                            <div class="balance-row">
-                                <span class="balance-label">Kullanılabilir Bakiye</span>
-                                <span class="balance-available">${formatCurrency(account.kullanilabilirBakiye, account.hesapTipi)}</span>
-                            </div>
+            if (!accounts || accounts.length === 0) {
+                grid.style.display = 'none';
+                summary.style.display = 'none';
+                noAccountsMsg.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            summary.style.display = 'grid';
+            noAccountsMsg.style.display = 'none';
+            
+            // Calculate summary
+            const totalBalance = accounts.reduce((sum, acc) => sum + parseFloat(acc.bakiye || 0), 0);
+            const availableBalance = accounts.reduce((sum, acc) => sum + parseFloat(acc.kullanilabilirBakiye || 0), 0);
+            const activeAccounts = accounts.filter(acc => acc.durum === 'Aktif').length;
+            
+            // Display summary cards
+            summary.innerHTML = `
+                <div class="accounts-summary-card">
+                    <div class="summary-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    <div class="summary-label">Toplam Bakiye</div>
+                    <div class="summary-value">${formatCurrency(totalBalance, 'TL')}</div>
+                </div>
+                <div class="accounts-summary-card">
+                    <div class="summary-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+                    <div class="summary-label">Kullanılabilir</div>
+                    <div class="summary-value">${formatCurrency(availableBalance, 'TL')}</div>
+                </div>
+                <div class="accounts-summary-card">
+                    <div class="summary-icon-corporate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                    <div class="summary-label">Aktif Hesap</div>
+                    <div class="summary-value">${activeAccounts}/${accounts.length}</div>
+                </div>
+            `;
+
+            const html = accounts.map(account => {
+                const accountIconSvg = account.hesapCinsi === 'Vadesiz' 
+                    ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>'
+                    : account.hesapCinsi === 'Vadeli' 
+                    ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'
+                    : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+                
+                return `
+                <div class="account-modern-card">
+                    <div class="account-card-top">
+                        <div class="account-type-modern">
+                            <span style="display: inline-flex;">${accountIconSvg}</span> ${account.hesapTipi} ${account.hesapCinsi}
                         </div>
-                        
-                        <div class="account-info-grid">
-                            <div class="info-item">
-                                <span class="info-label">Hesap No</span>
-                                <span class="info-value">${account.hesapNo}</span>
+                        <div class="account-iban-modern">${formatIBAN(account.iban)}</div>
+                    </div>
+                    
+                    <div class="account-balance-section">
+                        <div class="balance-main">
+                            <div class="balance-main-label">Toplam Bakiye</div>
+                            <div class="balance-main-value">${formatCurrency(account.bakiye, account.hesapTipi)}</div>
+                        </div>
+                        <div class="balance-secondary">
+                            <div class="balance-secondary-item">
+                                <div class="balance-secondary-label">Kullanılabilir</div>
+                                <div class="balance-secondary-value">${formatCurrency(account.kullanilabilirBakiye, account.hesapTipi)}</div>
                             </div>
-                            <div class="info-item">
-                                <span class="info-label">Durum</span>
-                                <span class="info-value">
-                                    <span class="status-badge status-${account.durum.toLowerCase()}">${account.durum}</span>
+                            ${account.blokeBakiye > 0 ? `
+                            <div class="balance-secondary-item">
+                                <div class="balance-secondary-label">Bloke</div>
+                                <div class="balance-secondary-value">${formatCurrency(account.blokeBakiye, account.hesapTipi)}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="account-info-section">
+                        <div class="account-details-grid">
+                            <div class="account-detail-item">
+                                <span class="account-detail-label">Hesap No</span>
+                                <span class="account-detail-value">${account.hesapNo}</span>
+                            </div>
+                            <div class="account-detail-item">
+                                <span class="account-detail-label">Durum</span>
+                                <span class="account-detail-value">
+                                    <span class="account-status-badge account-status-${account.durum.toLowerCase()}">
+                                        ${account.durum === 'Aktif' ? '✓' : '⊘'} ${account.durum}
+                                    </span>
                                 </span>
                             </div>
-                            <div class="info-item">
-                                <span class="info-label">Açılış Tarihi</span>
-                                <span class="info-value">${formatDate(account.acilisTarihi)}</span>
+                            <div class="account-detail-item">
+                                <span class="account-detail-label">Açılış Tarihi</span>
+                                <span class="account-detail-value">${formatDate(account.acilisTarihi)}</span>
                             </div>
                             ${account.faizOrani > 0 ? `
-                            <div class="info-item">
-                                <span class="info-label">Faiz Oranı</span>
-                                <span class="info-value">%${account.faizOrani}</span>
+                            <div class="account-detail-item">
+                                <span class="account-detail-label">Faiz Oranı</span>
+                                <span class="account-detail-value">%${account.faizOrani}</span>
                             </div>
                             ` : ''}
                         </div>
                         
-                        <div class="account-actions">
-                            <button class="btn btn-primary" onclick="showDetails(${account.hesapID})">
-                                Hesap Detayları
+                        <div class="account-actions-modern">
+                            <button class="account-action-btn account-action-primary" onclick="showDetails(${account.hesapID})">
+                                Detaylar
                             </button>
-                            <a href="ekstre.html?hesapID=${account.hesapID}" class="btn btn-secondary">
+                            <a href="ekstre.html?hesapID=${account.hesapID}" class="account-action-btn account-action-secondary">
                                 Ekstre
                             </a>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
 
             grid.innerHTML = html;
         }
@@ -160,76 +239,78 @@
             if (!account) return;
 
             const modalHTML = `
-                <div class="detail-section">
+                <div class="modal-detail-section">
                     <h3>Genel Bilgiler</h3>
-                    <div class="detail-grid">
-                        <div class="info-item">
-                            <span class="info-label">Hesap Tipi</span>
-                            <span class="info-value">${account.hesapTipi}</span>
+                    <div class="modal-detail-grid">
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Hesap Tipi</span>
+                            <span class="modal-info-value">${account.hesapTipi}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Hesap Cinsi</span>
-                            <span class="info-value">${account.hesapCinsi}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Hesap Cinsi</span>
+                            <span class="modal-info-value">${account.hesapCinsi}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Hesap No</span>
-                            <span class="info-value">${account.hesapNo}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Hesap No</span>
+                            <span class="modal-info-value">${account.hesapNo}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">IBAN</span>
-                            <span class="info-value">${formatIBAN(account.iban)}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">IBAN</span>
+                            <span class="modal-info-value">${formatIBAN(account.iban)}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Durum</span>
-                            <span class="info-value">
-                                <span class="status-badge status-${account.durum.toLowerCase()}">${account.durum}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Durum</span>
+                            <span class="modal-info-value">
+                                <span class="account-status-badge account-status-${account.durum.toLowerCase()}">
+                                    ${account.durum === 'Aktif' ? '✓' : '⊘'} ${account.durum}
+                                </span>
                             </span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Açılış Tarihi</span>
-                            <span class="info-value">${formatDate(account.acilisTarihi)}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Açılış Tarihi</span>
+                            <span class="modal-info-value">${formatDate(account.acilisTarihi)}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="detail-section">
-                    <h3>Bakiye Bilgiler</h3>
-                    <div class="detail-grid">
-                        <div class="info-item">
-                            <span class="info-label">Normal Bakiye</span>
-                            <span class="info-value" style="font-size: 1.25rem; color: var(--primary);">
+                <div class="modal-detail-section">
+                    <h3>Bakiye Bilgileri</h3>
+                    <div class="modal-detail-grid">
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Toplam Bakiye</span>
+                            <span class="modal-info-value" style="font-size: 1.25rem; color: var(--primary);">
                                 ${formatCurrency(account.bakiye, account.hesapTipi)}
                             </span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Kullanılabilir Bakiye</span>
-                            <span class="info-value" style="font-size: 1.25rem; color: var(--success);">
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Kullanılabilir Bakiye</span>
+                            <span class="modal-info-value" style="font-size: 1.25rem; color: var(--success);">
                                 ${formatCurrency(account.kullanilabilirBakiye, account.hesapTipi)}
                             </span>
                         </div>
                         ${account.blokeBakiye > 0 ? `
-                        <div class="info-item">
-                            <span class="info-label">Bloke Bakiye</span>
-                            <span class="info-value">${formatCurrency(account.blokeBakiye, account.hesapTipi)}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Bloke Bakiye</span>
+                            <span class="modal-info-value" style="color: var(--danger);">${formatCurrency(account.blokeBakiye, account.hesapTipi)}</span>
                         </div>
                         ` : ''}
                     </div>
                 </div>
 
                 ${account.gunlukTransferLimiti || account.aylikTransferLimiti ? `
-                <div class="detail-section">
+                <div class="modal-detail-section">
                     <h3>Transfer Limitleri</h3>
-                    <div class="detail-grid">
+                    <div class="modal-detail-grid">
                         ${account.gunlukTransferLimiti ? `
-                        <div class="info-item">
-                            <span class="info-label">Günlük Limit</span>
-                            <span class="info-value">${formatCurrency(account.gunlukTransferLimiti, account.hesapTipi)}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Günlük Limit</span>
+                            <span class="modal-info-value">${formatCurrency(account.gunlukTransferLimiti, account.hesapTipi)}</span>
                         </div>
                         ` : ''}
                         ${account.aylikTransferLimiti ? `
-                        <div class="info-item">
-                            <span class="info-label">Aylık Limit</span>
-                            <span class="info-value">${formatCurrency(account.aylikTransferLimiti, account.hesapTipi)}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Aylık Limit</span>
+                            <span class="modal-info-value">${formatCurrency(account.aylikTransferLimiti, account.hesapTipi)}</span>
                         </div>
                         ` : ''}
                     </div>
@@ -237,19 +318,19 @@
                 ` : ''}
 
                 ${account.faizOrani > 0 || account.vadeTarihi ? `
-                <div class="detail-section">
+                <div class="modal-detail-section">
                     <h3>Faiz Bilgileri</h3>
-                    <div class="detail-grid">
+                    <div class="modal-detail-grid">
                         ${account.faizOrani > 0 ? `
-                        <div class="info-item">
-                            <span class="info-label">Faiz Oranı</span>
-                            <span class="info-value">%${account.faizOrani}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Faiz Oranı</span>
+                            <span class="modal-info-value" style="color: var(--success);">%${account.faizOrani}</span>
                         </div>
                         ` : ''}
                         ${account.vadeTarihi ? `
-                        <div class="info-item">
-                            <span class="info-label">Vade Tarihi</span>
-                            <span class="info-value">${formatDate(account.vadeTarihi)}</span>
+                        <div class="modal-info-item">
+                            <span class="modal-info-label">Vade Tarihi</span>
+                            <span class="modal-info-value">${formatDate(account.vadeTarihi)}</span>
                         </div>
                         ` : ''}
                     </div>
