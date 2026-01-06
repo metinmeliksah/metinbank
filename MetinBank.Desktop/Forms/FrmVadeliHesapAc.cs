@@ -198,7 +198,7 @@ namespace MetinBank.Desktop
                     HesapTipi = pb,
                     HesapCinsi = "Vadeli",
                     FaizOrani = _faizOrani,
-                    Bakiye = tutar,
+                    Bakiye = 0, // Bakiye ParaYatir veya Virman ile eklenecek
                     SubeID = _kullanici.SubeID ?? 1,
                     OlusturanKullaniciID = _kullanici.KullaniciID,
                     VadeTarihi = DateTime.Now.AddDays(gun),
@@ -261,25 +261,38 @@ namespace MetinBank.Desktop
                 }
                 else
                 {
-                    HesapModel yeniHesap;
-                    _sHesap.HesapGetir(hesapID, out yeniHesap);
-                    XtraMessageBox.Show($"Vadeli Hesap Açıldı!\nIBAN: {yeniHesap?.IBAN}\nVade Sonu: {hesap.VadeTarihi:dd.MM.yyyy}");
-                    
-                    // Formu sıfırla, kapatma
-                    _seciliMusteriID = 0;
-                    _seciliMusteriAd = "";
-                    _faizOrani = 0;
-                    lblSeciliMusteri.Text = "Seçili: -";
-                    txtMusteriArama.Text = "";
-                    gridMusteriler.DataSource = null;
-                    txtTutar.EditValue = null;
-                    txtGun.Text = "";
-                    cmbParaBirimi.SelectedIndex = 0;
-                    groupSonuc.Visible = false;
-                    lblFaiz.Text = "Faiz Oranı: %0.00";
-                    lblNetKazanc.Text = "Net Kazanç: 0.00 TL";
-                    lblToplam.Text = "Vade Sonu Toplam: 0.00 TL";
+                    // Nakit yatırma işlemi kaydet
+                    long islemID;
+                    string paraYatirHata = _sIslem.ParaYatir(hesapID, tutar, "Vadeli hesap açılış - Nakit yatırma", _kullanici.KullaniciID, _kullanici.SubeID ?? 1, out islemID);
+                    if (paraYatirHata != null)
+                    {
+                        XtraMessageBox.Show($"Hesap açıldı ancak para yatırma hatası: {paraYatirHata}", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
+                
+                // Başarılı mesajı göster
+                HesapModel yeniHesap;
+                _sHesap.HesapGetir(hesapID, out yeniHesap);
+                XtraMessageBox.Show($"Vadeli Hesap Açıldı!\nIBAN: {yeniHesap?.IBAN}\nVade Sonu: {hesap.VadeTarihi:dd.MM.yyyy}\nTutar: {tutar:N2} {pb}");
+                
+                // Formu sıfırla
+                _seciliMusteriID = 0;
+                _seciliMusteriAd = "";
+                _faizOrani = 0;
+                lblSeciliMusteri.Text = "Seçili: -";
+                txtMusteriArama.Text = "";
+                gridMusteriler.DataSource = null;
+                txtTutar.EditValue = null;
+                txtGun.Text = "";
+                cmbParaBirimi.SelectedIndex = 0;
+                rgOdemeYontemi.SelectedIndex = 0;
+                cmbKaynakHesap.Properties.Items.Clear();
+                lblKaynakHesap.Visible = false;
+                cmbKaynakHesap.Visible = false;
+                groupSonuc.Visible = false;
+                lblFaiz.Text = "Faiz Oranı: %0.00";
+                lblNetKazanc.Text = "Net Kazanç: 0.00 TL";
+                lblToplam.Text = "Vade Sonu Toplam: 0.00 TL";
             }
             catch (Exception ex)
             {
