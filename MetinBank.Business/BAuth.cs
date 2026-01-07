@@ -88,6 +88,7 @@ namespace MetinBank.Business
                     KullaniciAdi = row["KullaniciAdi"].ToString(),
                     RolID = Convert.ToInt32(row["RolID"]),
                     RolAdi = row["RolAdi"].ToString(),
+                    YetkiSeviyesi = Convert.ToInt32(row["YetkiSeviyesi"]),
                     SubeID = row["SubeID"] != DBNull.Value ? (int?)Convert.ToInt32(row["SubeID"]) : null,
                     SubeAdi = row["SubeAdi"] != DBNull.Value ? row["SubeAdi"].ToString() : null,
                     Ad = row["Ad"].ToString(),

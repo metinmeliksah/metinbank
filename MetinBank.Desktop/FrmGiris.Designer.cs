@@ -187,6 +187,7 @@ namespace MetinBank.Desktop
             this.ClientSize = new System.Drawing.Size(500, 350);
             this.Controls.Add(this.layoutControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("FrmGiris.IconOptions.Image")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FrmGiris";

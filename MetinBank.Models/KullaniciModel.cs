@@ -13,6 +13,7 @@ namespace MetinBank.Models
         public string SifreTuzu { get; set; }
         public int RolID { get; set; }
         public string RolAdi { get; set; }
+        public int YetkiSeviyesi { get; set; }
         public int? SubeID { get; set; }
         public string SubeAdi { get; set; }
         public string Ad { get; set; }
