@@ -208,6 +208,9 @@
     <EmbeddedResource Include="FrmBasvurular.resx">
       <DependentUpon>FrmBasvurular.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmDovizAlSat.resx">
+      <DependentUpon>FrmDovizAlSat.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmEFT.resx">
       <DependentUpon>FrmEFT.cs</DependentUpon>
     </EmbeddedResource>

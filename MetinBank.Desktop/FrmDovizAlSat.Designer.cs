@@ -43,9 +43,9 @@ namespace MetinBank.Desktop
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
@@ -71,9 +71,9 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControl1
@@ -104,17 +104,17 @@ namespace MetinBank.Desktop
             this.panelControl1.Size = new System.Drawing.Size(1176, 60);
             this.panelControl1.TabIndex = 0;
             // 
-            // lblUSD
+            // lblGBP
             // 
-            this.lblUSD.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblUSD.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.lblUSD.Appearance.Options.UseFont = true;
-            this.lblUSD.Appearance.Options.UseForeColor = true;
-            this.lblUSD.Location = new System.Drawing.Point(20, 20);
-            this.lblUSD.Name = "lblUSD";
-            this.lblUSD.Size = new System.Drawing.Size(300, 19);
-            this.lblUSD.TabIndex = 0;
-            this.lblUSD.Text = "💵 USD: --";
+            this.lblGBP.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblGBP.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(68)))), ((int)(((byte)(173)))));
+            this.lblGBP.Appearance.Options.UseFont = true;
+            this.lblGBP.Appearance.Options.UseForeColor = true;
+            this.lblGBP.Location = new System.Drawing.Point(780, 20);
+            this.lblGBP.Name = "lblGBP";
+            this.lblGBP.Size = new System.Drawing.Size(72, 19);
+            this.lblGBP.TabIndex = 2;
+            this.lblGBP.Text = "💷 GBP: --";
             // 
             // lblEUR
             // 
@@ -124,21 +124,21 @@ namespace MetinBank.Desktop
             this.lblEUR.Appearance.Options.UseForeColor = true;
             this.lblEUR.Location = new System.Drawing.Point(400, 20);
             this.lblEUR.Name = "lblEUR";
-            this.lblEUR.Size = new System.Drawing.Size(300, 19);
+            this.lblEUR.Size = new System.Drawing.Size(70, 19);
             this.lblEUR.TabIndex = 1;
             this.lblEUR.Text = "💶 EUR: --";
             // 
-            // lblGBP
+            // lblUSD
             // 
-            this.lblGBP.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblGBP.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(68)))), ((int)(((byte)(173)))));
-            this.lblGBP.Appearance.Options.UseFont = true;
-            this.lblGBP.Appearance.Options.UseForeColor = true;
-            this.lblGBP.Location = new System.Drawing.Point(780, 20);
-            this.lblGBP.Name = "lblGBP";
-            this.lblGBP.Size = new System.Drawing.Size(300, 19);
-            this.lblGBP.TabIndex = 2;
-            this.lblGBP.Text = "💷 GBP: --";
+            this.lblUSD.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblUSD.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.lblUSD.Appearance.Options.UseFont = true;
+            this.lblUSD.Appearance.Options.UseForeColor = true;
+            this.lblUSD.Location = new System.Drawing.Point(20, 20);
+            this.lblUSD.Name = "lblUSD";
+            this.lblUSD.Size = new System.Drawing.Size(72, 19);
+            this.lblUSD.TabIndex = 0;
+            this.lblUSD.Text = "💵 USD: --";
             // 
             // groupControl1
             // 
@@ -161,13 +161,14 @@ namespace MetinBank.Desktop
             // 
             // gridMusteriler
             // 
-            this.gridMusteriler.Location = new System.Drawing.Point(10, 60);
+            this.gridMusteriler.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridMusteriler.Location = new System.Drawing.Point(2, 23);
             this.gridMusteriler.MainView = this.gridViewMusteriler;
             this.gridMusteriler.Name = "gridMusteriler";
-            this.gridMusteriler.Size = new System.Drawing.Size(556, 260);
-            this.gridMusteriler.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridMusteriler.Size = new System.Drawing.Size(572, 325);
             this.gridMusteriler.TabIndex = 1;
-            this.gridMusteriler.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridViewMusteriler });
+            this.gridMusteriler.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridViewMusteriler});
             // 
             // gridViewMusteriler
             // 
@@ -187,13 +188,14 @@ namespace MetinBank.Desktop
             // 
             // gridHesaplar
             // 
-            this.gridHesaplar.Location = new System.Drawing.Point(10, 30);
+            this.gridHesaplar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridHesaplar.Location = new System.Drawing.Point(2, 23);
             this.gridHesaplar.MainView = this.gridViewHesaplar;
             this.gridHesaplar.Name = "gridHesaplar";
-            this.gridHesaplar.Size = new System.Drawing.Size(576, 290);
-            this.gridHesaplar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridHesaplar.Size = new System.Drawing.Size(592, 325);
             this.gridHesaplar.TabIndex = 0;
-            this.gridHesaplar.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] { this.gridViewHesaplar });
+            this.gridHesaplar.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridViewHesaplar});
             // 
             // gridViewHesaplar
             // 
@@ -211,9 +213,21 @@ namespace MetinBank.Desktop
             this.groupControl3.Controls.Add(this.numTutar);
             this.groupControl3.Location = new System.Drawing.Point(12, 430);
             this.groupControl3.Name = "groupControl3";
-            this.groupControl3.Size = new System.Drawing.Size(1176, 290);
+            this.groupControl3.Size = new System.Drawing.Size(1176, 329);
             this.groupControl3.TabIndex = 3;
             this.groupControl3.Text = "3️⃣ Döviz İşlemi";
+            // 
+            // lblOzet
+            // 
+            this.lblOzet.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblOzet.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.lblOzet.Appearance.Options.UseFont = true;
+            this.lblOzet.Appearance.Options.UseForeColor = true;
+            this.lblOzet.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.lblOzet.Location = new System.Drawing.Point(20, 213);
+            this.lblOzet.Name = "lblOzet";
+            this.lblOzet.Size = new System.Drawing.Size(1130, 60);
+            this.lblOzet.TabIndex = 5;
             // 
             // cmbTRYHesap
             // 
@@ -233,6 +247,15 @@ namespace MetinBank.Desktop
             this.cmbDovizHesap.Size = new System.Drawing.Size(550, 20);
             this.cmbDovizHesap.TabIndex = 1;
             // 
+            // cmbDovizCinsi
+            // 
+            this.cmbDovizCinsi.Location = new System.Drawing.Point(274, 154);
+            this.cmbDovizCinsi.Name = "cmbDovizCinsi";
+            this.cmbDovizCinsi.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.cmbDovizCinsi.Size = new System.Drawing.Size(196, 20);
+            this.cmbDovizCinsi.TabIndex = 3;
+            this.cmbDovizCinsi.SelectedIndexChanged += new System.EventHandler(this.CmbDovizCinsi_SelectedIndexChanged);
+            // 
             // rgIslemTipi
             // 
             this.rgIslemTipi.Location = new System.Drawing.Point(20, 90);
@@ -240,45 +263,31 @@ namespace MetinBank.Desktop
             this.rgIslemTipi.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
             new DevExpress.XtraEditors.Controls.RadioGroupItem(0, "💰 Döviz Al (TRY → Döviz)"),
             new DevExpress.XtraEditors.Controls.RadioGroupItem(1, "💵 Döviz Sat (Döviz → TRY)")});
-            this.rgIslemTipi.Size = new System.Drawing.Size(350, 60);
+            this.rgIslemTipi.Size = new System.Drawing.Size(1130, 34);
             this.rgIslemTipi.TabIndex = 2;
             this.rgIslemTipi.SelectedIndexChanged += new System.EventHandler(this.RgIslemTipi_SelectedIndexChanged);
             // 
-            // cmbDovizCinsi
-            // 
-            this.cmbDovizCinsi.Location = new System.Drawing.Point(480, 100);
-            this.cmbDovizCinsi.Name = "cmbDovizCinsi";
-            this.cmbDovizCinsi.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.cmbDovizCinsi.Size = new System.Drawing.Size(180, 20);
-            this.cmbDovizCinsi.TabIndex = 3;
-            this.cmbDovizCinsi.SelectedIndexChanged += new System.EventHandler(this.CmbDovizCinsi_SelectedIndexChanged);
-            // 
             // numTutar
             // 
-            this.numTutar.EditValue = new decimal(new int[] { 0, 0, 0, 0 });
-            this.numTutar.Location = new System.Drawing.Point(480, 130);
+            this.numTutar.EditValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numTutar.Location = new System.Drawing.Point(496, 154);
             this.numTutar.Name = "numTutar";
             this.numTutar.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.numTutar.Properties.DisplayFormat.FormatString = "N2";
             this.numTutar.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.numTutar.Properties.MaxValue = new decimal(new int[] { 100000000, 0, 0, 0 });
+            this.numTutar.Properties.MaxValue = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
             this.numTutar.Size = new System.Drawing.Size(250, 20);
             this.numTutar.TabIndex = 4;
             this.numTutar.EditValueChanged += new System.EventHandler(this.NumTutar_EditValueChanged);
-            // 
-            // lblOzet
-            // 
-            this.lblOzet.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblOzet.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.lblOzet.Appearance.Options.UseFont = true;
-            this.lblOzet.Appearance.Options.UseForeColor = true;
-            this.lblOzet.Location = new System.Drawing.Point(20, 180);
-            this.lblOzet.Name = "lblOzet";
-            this.lblOzet.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.lblOzet.Size = new System.Drawing.Size(1130, 60);
-            this.lblOzet.TabIndex = 5;
-            this.lblOzet.Text = "";
             // 
             // btnIslemYap
             // 
@@ -288,9 +297,10 @@ namespace MetinBank.Desktop
             this.btnIslemYap.Appearance.Options.UseBackColor = true;
             this.btnIslemYap.Appearance.Options.UseFont = true;
             this.btnIslemYap.Appearance.Options.UseForeColor = true;
-            this.btnIslemYap.Location = new System.Drawing.Point(12, 724);
+            this.btnIslemYap.Location = new System.Drawing.Point(12, 763);
             this.btnIslemYap.Name = "btnIslemYap";
-            this.btnIslemYap.Size = new System.Drawing.Size(250, 64);
+            this.btnIslemYap.Size = new System.Drawing.Size(250, 25);
+            this.btnIslemYap.StyleController = this.layoutControl1;
             this.btnIslemYap.TabIndex = 4;
             this.btnIslemYap.Text = "✓ İşlemi Gerçekleştir";
             this.btnIslemYap.Click += new System.EventHandler(this.BtnIslemYap_Click);
@@ -299,9 +309,10 @@ namespace MetinBank.Desktop
             // 
             this.btnKapat.Appearance.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnKapat.Appearance.Options.UseFont = true;
-            this.btnKapat.Location = new System.Drawing.Point(1038, 724);
+            this.btnKapat.Location = new System.Drawing.Point(1038, 763);
             this.btnKapat.Name = "btnKapat";
-            this.btnKapat.Size = new System.Drawing.Size(150, 64);
+            this.btnKapat.Size = new System.Drawing.Size(150, 22);
+            this.btnKapat.StyleController = this.layoutControl1;
             this.btnKapat.TabIndex = 5;
             this.btnKapat.Text = "✕ Kapat";
             this.btnKapat.Click += new System.EventHandler(this.BtnKapat_Click);
@@ -328,7 +339,6 @@ namespace MetinBank.Desktop
             this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem1.Name = "layoutControlItem1";
             this.layoutControlItem1.Size = new System.Drawing.Size(1180, 64);
-            this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
             // layoutControlItem2
@@ -337,7 +347,6 @@ namespace MetinBank.Desktop
             this.layoutControlItem2.Location = new System.Drawing.Point(0, 64);
             this.layoutControlItem2.Name = "layoutControlItem2";
             this.layoutControlItem2.Size = new System.Drawing.Size(580, 354);
-            this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
             // 
             // layoutControlItem3
@@ -346,7 +355,6 @@ namespace MetinBank.Desktop
             this.layoutControlItem3.Location = new System.Drawing.Point(580, 64);
             this.layoutControlItem3.Name = "layoutControlItem3";
             this.layoutControlItem3.Size = new System.Drawing.Size(600, 354);
-            this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 
             // layoutControlItem4
@@ -354,35 +362,30 @@ namespace MetinBank.Desktop
             this.layoutControlItem4.Control = this.groupControl3;
             this.layoutControlItem4.Location = new System.Drawing.Point(0, 418);
             this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(1180, 294);
-            this.layoutControlItem4.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem4.Size = new System.Drawing.Size(1180, 333);
             this.layoutControlItem4.TextVisible = false;
             // 
             // layoutControlItem5
             // 
             this.layoutControlItem5.Control = this.btnIslemYap;
-            this.layoutControlItem5.Location = new System.Drawing.Point(0, 712);
+            this.layoutControlItem5.Location = new System.Drawing.Point(0, 751);
             this.layoutControlItem5.Name = "layoutControlItem5";
-            this.layoutControlItem5.Size = new System.Drawing.Size(254, 68);
-            this.layoutControlItem5.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem5.Size = new System.Drawing.Size(254, 29);
             this.layoutControlItem5.TextVisible = false;
             // 
             // layoutControlItem6
             // 
             this.layoutControlItem6.Control = this.btnKapat;
-            this.layoutControlItem6.Location = new System.Drawing.Point(1026, 712);
+            this.layoutControlItem6.Location = new System.Drawing.Point(1026, 751);
             this.layoutControlItem6.Name = "layoutControlItem6";
-            this.layoutControlItem6.Size = new System.Drawing.Size(154, 68);
-            this.layoutControlItem6.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem6.Size = new System.Drawing.Size(154, 29);
             this.layoutControlItem6.TextVisible = false;
             // 
             // emptySpaceItem1
             // 
-            this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(254, 712);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(254, 751);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(772, 68);
-            this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(772, 29);
             // 
             // FrmDovizAlSat
             // 
@@ -410,7 +413,6 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.gridViewHesaplar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).EndInit();
             this.groupControl3.ResumeLayout(false);
-            this.groupControl3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cmbTRYHesap.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbDovizHesap.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbDovizCinsi.Properties)).EndInit();
@@ -421,10 +423,11 @@ namespace MetinBank.Desktop
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             this.ResumeLayout(false);
+
         }
 
         #endregion
